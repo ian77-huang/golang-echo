@@ -1,7 +1,7 @@
 package main
 
 import (
-	"myapp/internal/router"
+	"github.com/ian77-huang/golang-echo/internal/router"
 )
 
 func main() {

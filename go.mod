@@ -1,4 +1,4 @@
-module myapp
+module github.com/ian77-huang/golang-echo
 
 go 1.26.1
 
