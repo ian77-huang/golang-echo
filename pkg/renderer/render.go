@@ -8,6 +8,25 @@ import (
 )
 
 func (t *TemplateRenderer) buildTemplate(name string) (*template.Template, error) {
+	filePaths, err := t.resolveTemplateFiles(name)
+	if err != nil {
+		return nil, err
+	}
+
+	tmpl, err := t.shared.Clone()
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = tmpl.ParseFiles(filePaths...)
+	if err != nil {
+		return nil, err
+	}
+
+	return tmpl, nil
+}
+
+func (t *TemplateRenderer) resolveTemplateFiles(name string) ([]string, error) {
 	parts := strings.Split(name, ":")
 	if len(parts) < 2 {
 		return nil, fmt.Errorf("template name must be layout:tpl, got %q", name)
@@ -43,15 +62,5 @@ func (t *TemplateRenderer) buildTemplate(name string) (*template.Template, error
 
 	filePaths = append(filePaths, filepath.Join(tempPath, tpl))
 
-	tmpl, err := t.shared.Clone()
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = tmpl.ParseFiles(filePaths...)
-	if err != nil {
-		return nil, err
-	}
-
-	return tmpl, nil
+	return filePaths, nil
 }

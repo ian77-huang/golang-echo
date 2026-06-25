@@ -3,9 +3,45 @@ package renderer
 import (
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 )
+
+func TestResolveTemplateFilesWithNestedLayouts(t *testing.T) {
+	t.Parallel()
+
+	renderer := &TemplateRenderer{
+		config: &TemplateConfig{
+			BasePath: "views",
+			Layouts: map[string]TemplateNode{
+				"frontend": {
+					FilePath: "layout.html",
+					Layouts: map[string]TemplateNode{
+						"user": {
+							FilePath: "layout.html",
+						},
+					},
+				},
+			},
+		},
+	}
+
+	got, err := renderer.resolveTemplateFiles("frontend:user:index/index.html")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := []string{
+		filepath.Join("views", "frontend", "layout.html"),
+		filepath.Join("views", "frontend", "user", "layout.html"),
+		filepath.Join("views", "frontend", "user", "index", "index.html"),
+	}
+
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("resolved files mismatch:\nwant: %#v\n got: %#v", want, got)
+	}
+}
 
 func TestBuildTemplateReturnsErrorWhenTemplatePathIsEmpty(t *testing.T) {
 	t.Parallel()
