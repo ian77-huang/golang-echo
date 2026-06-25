@@ -1,12 +1,10 @@
 package router
 
 import (
-	"net/http"
-
-	"github.com/labstack/echo/v5/middleware"
-	// "myapp/internal/handler"
-
+	"github.com/ian77-huang/golang-echo/internal/handler"
+	"github.com/ian77-huang/golang-echo/internal/router/routing"
 	"github.com/labstack/echo/v5"
+	"github.com/labstack/echo/v5/middleware"
 )
 
 func New() *echo.Echo {
@@ -16,14 +14,9 @@ func New() *echo.Echo {
 	e.Use(middleware.Recover())
 
 	// root route
-	e.GET("/", func(c *echo.Context) error {
-		return c.JSON(http.StatusOK, map[string]string{"message": "Hello, World12!"})
-	})
+	e.GET("/", handler.GetIndex)
 
-	api := e.Group("/api/v1")
-	api.GET("/ping", func(c *echo.Context) error {
-		return c.JSON(http.StatusOK, map[string]string{"message": "Hello, World12!"})
-	})
+	routing.Api(e)
 
 	return e
 }

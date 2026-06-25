@@ -1,0 +1,13 @@
+{{define "base"}}
+<!doctype html>
+<html>
+  <head>
+    <title>{{block "title" .}}{{end}}</title>
+    {{block "include-javascript" .}}{{end}}
+    {{block "include-css" .}}{{end}}
+  </head>
+  <body>
+    {{block "content-layout" .}}{{end}}
+  </body>
+</html>
+{{end}}
