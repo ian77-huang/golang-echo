@@ -20,7 +20,7 @@ func (t *TemplateRenderer) Render(c *echo.Context, w io.Writer, name string, dat
 	t.mu.RUnlock()
 
 	if ok {
-		return tmpl.ExecuteTemplate(w, "base", data)
+		return t.executeTemplate(c, w, tmpl, data)
 	}
 
 	tmpl, err = t.buildTemplate(name)
@@ -32,11 +32,14 @@ func (t *TemplateRenderer) Render(c *echo.Context, w io.Writer, name string, dat
 	t.cache[name] = tmpl
 	t.mu.Unlock()
 
-	return tmpl.ExecuteTemplate(w, "base", data)
+	return t.executeTemplate(c, w, tmpl, data)
 }
 
 func New(config *TemplateConfig) *TemplateRenderer {
 	shared := template.New("shared")
+	if funcs := templateFuncs(config.Runtime.Funcs, nil, nil); len(funcs) > 0 {
+		shared.Funcs(funcs)
+	}
 
 	filePaths := make([]string, 0)
 
@@ -53,4 +56,47 @@ func New(config *TemplateConfig) *TemplateRenderer {
 		shared: shared,
 		cache:  make(map[string]*template.Template),
 	}
+}
+
+func WithFuncs(funcs ...TemplateFuncs) Option {
+	return func(config *RuntimeConfig) {
+		config.Funcs = append(config.Funcs, funcs...)
+	}
+}
+
+func (t *TemplateRenderer) executeTemplate(c *echo.Context, w io.Writer, tmpl *template.Template, data any) error {
+	tmpl, err := tmpl.Clone()
+	if err != nil {
+		return err
+	}
+
+	pageData, _ := data.(map[string]any)
+	if funcs := templateFuncs(t.config.Runtime.Funcs, c, pageData); len(funcs) > 0 {
+		tmpl.Funcs(funcs)
+	}
+
+	return tmpl.ExecuteTemplate(w, "base", data)
+}
+
+func templateFuncs(providers []TemplateFuncs, c *echo.Context, data map[string]any) template.FuncMap {
+	if len(providers) == 0 {
+		return nil
+	}
+
+	funcs := template.FuncMap{}
+	for _, provider := range providers {
+		if provider == nil {
+			continue
+		}
+
+		for name, fn := range provider(c, data) {
+			funcs[name] = fn
+		}
+	}
+
+	if len(funcs) == 0 {
+		return nil
+	}
+
+	return funcs
 }

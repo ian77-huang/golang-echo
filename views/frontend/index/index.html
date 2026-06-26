@@ -2,5 +2,5 @@
 
 {{define "content"}}
 <h2>Home Page</h2>
-<p>{{.message}}</p>
+<p>{{t "welcome" (kv "Name" .Name)}}</p>
 {{end}}

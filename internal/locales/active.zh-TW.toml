@@ -1,0 +1,2 @@
+[welcome]
+other = "歡迎，{{.Name}}"

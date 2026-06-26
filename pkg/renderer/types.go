@@ -7,6 +7,13 @@ import (
 	"github.com/labstack/echo/v5"
 )
 
+type TemplateFuncs func(c *echo.Context, data map[string]any) template.FuncMap
+type Option func(config *RuntimeConfig)
+
+type RuntimeConfig struct {
+	Funcs []TemplateFuncs
+}
+
 type TemplateNode struct {
 	FilePath string
 	Layouts  map[string]TemplateNode
@@ -15,6 +22,7 @@ type TemplateConfig struct {
 	BasePath        string
 	Layouts         map[string]TemplateNode
 	SharedTmplPaths []string
+	Runtime         RuntimeConfig
 	SharedData      func(c *echo.Context, layoutNames []string) map[string]any
 }
 type TemplateRenderer struct {

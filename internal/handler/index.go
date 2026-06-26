@@ -7,6 +7,7 @@ import (
 )
 
 func GetIndex(c *echo.Context) error {
-
-	return c.Render(http.StatusOK, "frontend:index/index.html", map[string]any{"message": "Hello, World12!"})
+	return c.Render(http.StatusOK, "frontend:index/index.html", map[string]any{
+		"Name": "Yien",
+	})
 }
