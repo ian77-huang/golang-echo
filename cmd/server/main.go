@@ -1,26 +1,14 @@
 package main
 
 import (
+	"github.com/ian77-huang/golang-echo/internal/config"
 	"github.com/ian77-huang/golang-echo/internal/router"
 	"github.com/ian77-huang/golang-echo/pkg/renderer"
 )
 
 func main() {
-	config := &renderer.TemplateConfig{
-		BasePath: "views",
-		Layouts: map[string]renderer.TemplateNode{
-			"frontend": {
-				FilePath: "layout.html",
-			},
-			"admin": {
-				FilePath: "layout.html",
-			},
-		},
-		SharedTmplPaths: []string{"base.html"},
-	}
-
 	e := router.New()
-	t := renderer.New(config)
+	t := renderer.New(config.RendererTemplate())
 
 	e.Renderer = t
 

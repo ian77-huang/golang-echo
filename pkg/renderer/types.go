@@ -3,6 +3,8 @@ package renderer
 import (
 	"html/template"
 	"sync"
+
+	"github.com/labstack/echo/v5"
 )
 
 type TemplateNode struct {
@@ -13,6 +15,7 @@ type TemplateConfig struct {
 	BasePath        string
 	Layouts         map[string]TemplateNode
 	SharedTmplPaths []string
+	SharedData      func(c *echo.Context, layoutNames []string) map[string]any
 }
 type TemplateRenderer struct {
 	config *TemplateConfig

@@ -1,6 +1,7 @@
 package renderer
 
 import (
+	// "fmt"
 	"html/template"
 	"io"
 	"path/filepath"
@@ -9,6 +10,11 @@ import (
 )
 
 func (t *TemplateRenderer) Render(c *echo.Context, w io.Writer, name string, data any) error {
+	data, err := t.mergeSharedData(c, name, data)
+	if err != nil {
+		return err
+	}
+
 	t.mu.RLock()
 	tmpl, ok := t.cache[name]
 	t.mu.RUnlock()
@@ -17,7 +23,7 @@ func (t *TemplateRenderer) Render(c *echo.Context, w io.Writer, name string, dat
 		return tmpl.ExecuteTemplate(w, "base", data)
 	}
 
-	tmpl, err := t.buildTemplate(name)
+	tmpl, err = t.buildTemplate(name)
 	if err != nil {
 		return err
 	}
