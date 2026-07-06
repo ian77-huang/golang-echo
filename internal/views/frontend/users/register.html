@@ -1,0 +1,111 @@
+{{define "title"}}{{t "users.title"}} - {{t "users.register"}}{{end}}
+
+{{define "content_users"}}
+<script type="text/javascript">
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('registerApp', (initialTitle) => ({
+            form: {
+                account: '',
+                password: '',
+                confirmPassword: ''
+            },
+            errorMessage: "",
+            errors: {
+                account: '',
+                password: '',
+                confirmPassword: ''
+            },
+            validateField(field) {
+                if (field === 'account') {
+                    if (!this.form.account) {
+                        this.errors.account = '{{t "error.cannot_be_empty" (kv "Name" (t "users.auth.account"))}}';
+                        this.errorMessage += `${this.errors.account}\n`;
+                    }
+                    else if (this.form.account.length < 4) {
+                        this.errors.account = '{{t "error.min_characters_required" (kv "Name" (t "users.auth.account")) (kv "Length" "4")}}';
+                        this.errorMessage += `${this.errors.account}\n`;
+                    }
+                    else this.errors.account = '';
+                }
+
+                if (field === 'password') {
+                    if (!this.form.password) {
+                        this.errors.password = '{{t "error.cannot_be_empty" (kv "Name" (t "users.auth.password"))}}';
+                        this.errorMessage += `${this.errors.password}\n`;
+                    }
+                    else if (this.form.password.length < 6) {
+                        this.errors.password = '{{t "error.min_characters_required" (kv "Name" (t "users.auth.password")) (kv "Length" "6")}}';
+                        this.errorMessage += `${this.errors.password}\n`;
+                    }
+                    else this.errors.password = '';
+
+                    if (this.form.confirmPassword) this.validateField('confirmPassword');
+                }
+
+                if (field === 'confirmPassword' && this.errors.password === '') {
+                    if (this.form.confirmPassword !== this.form.password) {
+                        this.errors.confirmPassword = '{{t "error.passwords_do_not_match"}}';
+                        this.errorMessage += `${this.errors.confirmPassword}\n`;
+                    } else {
+                        this.errors.confirmPassword = '';
+                    }
+                }
+            },
+            validateAll() {
+                this.errorMessage = "";
+                this.validateField('account');
+                this.validateField('password');
+                this.validateField('confirmPassword');
+
+                return !Object.values(this.errors).some(error => error !== '');
+            },
+            async handleSubmit(event) {
+                if (!this.validateAll()) {
+                    console.log('驗證未通過，拒絕送出');
+                    return;
+                }
+
+                console.log('驗證通過！準備送出資料到 Go 後端：', this.form);
+                // const data = new FormData(event.currentTarget);
+                // console.log(this.form)
+                // this.validateField('account');
+                // this.validateField('password');
+                // this.validateField('confirmPassword');
+                // const res = await fetch('/api/lang', {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //     },
+                //     body: JSON.stringify({
+                //         code: event.target.value,
+                //     }),
+                // })
+                // location.reload()
+            },
+        }))
+    })
+</script>
+<div class="divider">{{t "users.register"}}</div>
+<form method="post" id="formRegister" @submit.prevent="handleSubmit" x-data="registerApp">
+    <div class="card bg-base-100 m-auto w-full max-w-sm shrink-0 shadow-2xl">
+        <div class="card-body">
+            <fieldset class="fieldset">
+                <label class="label">{{t "users.auth.account"}}</label>
+                <input type="text" class="input" x-model="form.account"
+                    placeholder='{{t "placeholder.input.value" (kv "Name" (t "users.auth.account"))}}' />
+                <label class="label">{{t "users.auth.password"}}</label>
+                <input type="password" name="password" x-model="form.password" class="input" placeholder='{{t "placeholder.input.value" (kv "Name"
+                (t "users.auth.password" ))}}' />
+                <label class="label">{{t "users.auth.confirmPassword"}}</label>
+                <input type="password" nmae="confirmPassword" x-model="form.confirmPassword" class="input" placeholder='{{t "placeholder.input.value" (kv "Name"
+                (t "users.auth.confirmPassword" ))}}' />
+                <div x-show="errorMessage !== ''" role="alert"
+                    class="alert alert-error alert-soft whitespace-pre-line mt-3">
+                    <span x-html="errorMessage"></span>
+                </div>
+                <button class="btn btn-neutral mt-4">{{t "users.register"}}</button>
+            </fieldset>
+        </div>
+    </div>
+</form>
+{{end}}

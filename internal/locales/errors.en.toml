@@ -1,0 +1,17 @@
+[error.invalid_request]
+other = "Invalid request"
+
+[error.validation_failed]
+other = "Validation failed"
+
+[error.is_required]
+other = "{{.Name}} is required."
+
+[error.cannot_be_empty]
+other = "{{.Name}} cannot be empty."
+
+[error.min_characters_required]
+other = "{{.Name}} must be at least {{.Length}} characters."
+
+[error.passwords_do_not_match]
+other = "Passwords do not match."

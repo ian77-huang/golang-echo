@@ -1,7 +1,6 @@
 package renderer
 
 import (
-	// "fmt"
 	"html/template"
 	"io"
 	"path/filepath"

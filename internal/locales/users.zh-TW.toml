@@ -1,0 +1,20 @@
+[users.title]
+other = "使用者"
+
+[users.login]
+other = "登入"
+
+[users.logout]
+other = "登出"
+
+[users.register]
+other = "註冊"
+
+[users.auth.account]
+other = "帳號"
+
+[users.auth.password]
+other = "密碼"
+
+[users.auth.confirmPassword]
+other = "確認密碼"

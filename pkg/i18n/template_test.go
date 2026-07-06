@@ -20,8 +20,8 @@ func TestTemplateDataParsesTemplateDataPairs(t *testing.T) {
 	t.Parallel()
 
 	got := templateData([]any{
-		templateDataValue("Name", "Yien"),
-		templateDataValue("Count", 3),
+		KV("Name", "Yien"),
+		KV("Count", 3),
 	})
 
 	if got["Name"] != "Yien" {

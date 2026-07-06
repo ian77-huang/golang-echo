@@ -1,0 +1,8 @@
+[validation.required]
+other = "{{.Field}} is required"
+
+[validation.oneof]
+other = "{{.Field}} must be one of: {{.Choices}}"
+
+[validation.invalid]
+other = "{{.Field}} is invalid"

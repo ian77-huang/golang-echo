@@ -1,0 +1,8 @@
+[validation.required]
+other = "{{.Field}} 為必填"
+
+[validation.oneof]
+other = "{{.Field}} 必須是其中之一：{{.Choices}}"
+
+[validation.invalid]
+other = "{{.Field}} 格式錯誤"

@@ -1,0 +1,17 @@
+[error.invalid_request]
+other = "請求格式錯誤"
+
+[error.validation_failed]
+other = "驗證失敗"
+
+[error.is_required]
+other = "{{.Name}} 是必填的"
+
+[error.cannot_be_empty]
+other = "{{.Name}} 不能為空"
+
+[error.min_characters_required]
+other = "{{.Name}} 必須至少 {{.Length}} 個字元"
+
+[error.passwords_do_not_match]
+other = "密碼不相符"

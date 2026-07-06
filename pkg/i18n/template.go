@@ -9,11 +9,6 @@ import (
 	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
-type templateDataPair struct {
-	key   string
-	value any
-}
-
 func (i *I18n) TemplateFuncs(c *echo.Context, _ map[string]any) template.FuncMap {
 	if c == nil {
 		return fallbackTemplateFuncs()
@@ -25,34 +20,35 @@ func (i *I18n) TemplateFuncs(c *echo.Context, _ map[string]any) template.FuncMap
 	}
 
 	return template.FuncMap{
-		"kv": templateDataValue,
+		"kv": KV,
 		"t": func(messageID string, pairs ...any) string {
-			message, err := localizer.Localize(&goi18n.LocalizeConfig{
-				MessageID:    messageID,
-				TemplateData: templateData(pairs),
-			})
-			if err != nil {
-				return messageID
-			}
-
-			return message
+			return t(localizer, messageID, pairs...)
 		},
 	}
+}
+func (i *I18n) Localizer(c *echo.Context) (*goi18n.Localizer, bool) {
+	localizer, ok := c.Get(localizerKey).(*goi18n.Localizer)
+	return localizer, ok
+}
+
+func t(localizer *goi18n.Localizer, messageID string, pairs ...any) string {
+	message, err := localizer.Localize(&goi18n.LocalizeConfig{
+		MessageID:    messageID,
+		TemplateData: templateData(pairs),
+	})
+	if err != nil {
+		return messageID
+	}
+
+	return message
 }
 
 func fallbackTemplateFuncs() template.FuncMap {
 	return template.FuncMap{
-		"kv": templateDataValue,
+		"kv": KV,
 		"t": func(messageID string, _ ...any) string {
 			return messageID
 		},
-	}
-}
-
-func templateDataValue(key string, value any) templateDataPair {
-	return templateDataPair{
-		key:   key,
-		value: value,
 	}
 }
 

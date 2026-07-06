@@ -19,10 +19,6 @@ func normalizeConfig(config Config) (Config, []language.Tag, error) {
 		return config, nil, errors.New("message fs is required when message files are configured")
 	}
 
-	if config.LocalizerKey == "" {
-		config.LocalizerKey = defaultLocalizerKey
-	}
-
 	tags, err := languageTags(config.SupportedLanguageCodes)
 	if err != nil {
 		return config, nil, err

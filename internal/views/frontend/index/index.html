@@ -1,0 +1,19 @@
+{{define "title"}} Home2 {{end}}
+
+{{define "content"}}
+<h2>Home Page</h2>
+<p>{{t "welcome" (kv "Name" .Name)}}</p>
+
+<script type="text/javascript">
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('todoApp', () => ({
+            // title: initialTitle,
+            // tags: ["a", "b", "c", "d", "e"]
+        }))
+        console.log(`alpine:init...`)
+    })
+</script>
+<div x-data="todoApp('yien')">
+
+</div>
+{{end}}

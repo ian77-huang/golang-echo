@@ -1,0 +1,2 @@
+[placeholder.input.value]
+other = "Please enter your {{.Name}}"

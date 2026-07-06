@@ -1,13 +1,14 @@
 package renderer
 
-import "html/template"
+import (
+	"html/template"
+)
 
 func (t *TemplateRenderer) buildTemplate(name string) (*template.Template, error) {
 	filePaths, err := t.resolveTemplateFiles(name)
 	if err != nil {
 		return nil, err
 	}
-
 	tmpl, err := t.shared.Clone()
 	if err != nil {
 		return nil, err

@@ -1,0 +1,20 @@
+[users.title]
+other = "Users"
+
+[users.login]
+other = "Login"
+
+[users.logout]
+other = "Logout"
+
+[users.register]
+other = "Register"
+
+[users.auth.account]
+other = "Account"
+
+[users.auth.password]
+other = "Password"
+
+[users.auth.confirmPassword]
+other = "Confirm Password"

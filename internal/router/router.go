@@ -1,7 +1,8 @@
 package router
 
 import (
-	"github.com/ian77-huang/golang-echo/internal/handler"
+	"net/http"
+
 	"github.com/ian77-huang/golang-echo/internal/router/routing"
 	"github.com/labstack/echo/v5"
 )
@@ -9,10 +10,12 @@ import (
 func New() *echo.Echo {
 	e := echo.New()
 
-	// root route
-	e.GET("/", handler.GetIndex)
+	routing.FrontendRouting(e)
+	routing.ApiRouting(e)
 
-	routing.Api(e)
+	e.GET("/.well-known/appspecific/com.chrome.devtools.json", func(c *echo.Context) error {
+		return c.NoContent(http.StatusNotFound)
+	})
 
 	return e
 }
