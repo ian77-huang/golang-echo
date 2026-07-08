@@ -1,12 +1,10 @@
 package main
 
 import (
-	"log"
-	"os"
-
-	"github.com/ian77-huang/golang-echo/internal/config"
+	appConfig "github.com/ian77-huang/golang-echo/internal/config"
 
 	"github.com/ian77-huang/golang-echo/internal/router"
+	"github.com/ian77-huang/golang-echo/pkg/database"
 	"github.com/ian77-huang/golang-echo/pkg/renderer"
 	"github.com/ian77-huang/golang-echo/pkg/validator"
 
@@ -14,16 +12,17 @@ import (
 )
 
 func main() {
+	config := appConfig.Load()
 
-	log.Printf("==== 12345 %+v ====", os.Getenv("USERS_ACCOUNT_MIN_LENGTH"))
-
-	translator, err := config.I18n()
+	translator, err := appConfig.I18n()
 	if err != nil {
 		panic(err)
 	}
 
+	db := database.NewSqlite(config.Databases.Path)
+
 	e := router.New()
-	t := renderer.New(config.RendererTemplate(
+	t := renderer.New(appConfig.RendererTemplate(
 		renderer.WithFuncs(translator.TemplateFuncs),
 	))
 
@@ -33,6 +32,7 @@ func main() {
 	e.Use(echomiddleware.RequestLogger())
 	e.Use(echomiddleware.Recover())
 	e.Use(translator.Middleware())
+	e.Use(database.Middleware(db))
 
 	if err := e.Start(":1323"); err != nil {
 		e.Logger.Error("failed to start server", "error", err)

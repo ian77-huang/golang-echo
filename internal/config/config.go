@@ -9,6 +9,8 @@ import (
 	"github.com/ian77-huang/golang-echo/pkg/renderer"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/labstack/echo/v5"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 type UserMenus struct {
@@ -16,17 +18,24 @@ type UserMenus struct {
 	Url  string
 }
 
+type ConfigDatabases struct {
+	Path string
+}
 type ConfigUsers struct {
 	MinLengthAccount  int
 	MinLengthPassword int
 }
 
 type Config struct {
-	Users ConfigUsers
+	Databases ConfigDatabases
+	Users     ConfigUsers
 }
 
 func Load() Config {
 	return Config{
+		Databases: ConfigDatabases{
+			Path: os.Getenv("DATABASE_PATH"),
+		},
 		Users: ConfigUsers{
 			MinLengthAccount:  cast.Int(os.Getenv("USERS_ACCOUNT_MIN_LENGTH"), 6),
 			MinLengthPassword: cast.Int(os.Getenv("USERS_PASSWORD_MIN_LENGTH"), 8),
@@ -97,4 +106,14 @@ func RendererTemplate(options ...renderer.Option) *renderer.TemplateConfig {
 	}
 
 	return config
+}
+
+func DB() *gorm.DB {
+	config := Load()
+
+	db, err := gorm.Open(sqlite.Open(config.Databases.Path), &gorm.Config{})
+	if err != nil {
+		panic("=== Error：Unable to connect to the database. ====")
+	}
+	return db
 }
