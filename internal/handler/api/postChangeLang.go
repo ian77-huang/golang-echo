@@ -31,7 +31,7 @@ func PostChangeLang(c *echo.Context) error {
 		SameSite: http.SameSiteLaxMode,
 	})
 
-	return c.JSON(http.StatusOK, map[string]any{
+	return response.JSON(c, map[string]any{
 		"lang": req.Code,
 	})
 }

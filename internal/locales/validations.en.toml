@@ -6,3 +6,9 @@ other = "{{.Field}} must be one of: {{.Choices}}"
 
 [validation.invalid]
 other = "{{.Field}} is invalid"
+
+[validation.min]
+other = "The {{.Field}} must be at least {{.Length}} characters."
+
+[validation.eqfield]
+other = "The {{.Field}} does not match the {{.Target}} field."

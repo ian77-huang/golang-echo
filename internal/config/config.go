@@ -1,9 +1,13 @@
 package config
 
 import (
+	"os"
+
 	"github.com/ian77-huang/golang-echo/internal/locales"
+	"github.com/ian77-huang/golang-echo/pkg/cast"
 	appi18n "github.com/ian77-huang/golang-echo/pkg/i18n"
 	"github.com/ian77-huang/golang-echo/pkg/renderer"
+	_ "github.com/joho/godotenv/autoload"
 	"github.com/labstack/echo/v5"
 )
 
@@ -11,11 +15,23 @@ type UserMenus struct {
 	Name string
 	Url  string
 }
-type ConfigConst struct {
+
+type ConfigUsers struct {
+	MinLengthAccount  int
+	MinLengthPassword int
 }
 
-func Const() ConfigConst {
-	return ConfigConst{}
+type Config struct {
+	Users ConfigUsers
+}
+
+func Load() Config {
+	return Config{
+		Users: ConfigUsers{
+			MinLengthAccount:  cast.Int(os.Getenv("USERS_ACCOUNT_MIN_LENGTH"), 6),
+			MinLengthPassword: cast.Int(os.Getenv("USERS_PASSWORD_MIN_LENGTH"), 8),
+		},
+	}
 }
 
 func I18n() (*appi18n.I18n, error) {

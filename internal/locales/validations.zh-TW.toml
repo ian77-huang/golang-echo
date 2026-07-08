@@ -6,3 +6,9 @@ other = "{{.Field}} 必須是其中之一：{{.Choices}}"
 
 [validation.invalid]
 other = "{{.Field}} 格式錯誤"
+
+[validation.min]
+other = "{{.Field}} 長度至少需為 {{.Length}} 個字元。"
+
+[validation.eqfield]
+other = "{{.Field}} 與 {{.Target}} 不相符。"

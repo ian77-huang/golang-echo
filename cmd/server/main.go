@@ -1,7 +1,11 @@
 package main
 
 import (
+	"log"
+	"os"
+
 	"github.com/ian77-huang/golang-echo/internal/config"
+
 	"github.com/ian77-huang/golang-echo/internal/router"
 	"github.com/ian77-huang/golang-echo/pkg/renderer"
 	"github.com/ian77-huang/golang-echo/pkg/validator"
@@ -10,6 +14,9 @@ import (
 )
 
 func main() {
+
+	log.Printf("==== 12345 %+v ====", os.Getenv("USERS_ACCOUNT_MIN_LENGTH"))
+
 	translator, err := config.I18n()
 	if err != nil {
 		panic(err)
