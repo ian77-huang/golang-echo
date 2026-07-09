@@ -15,3 +15,18 @@ other = "{{.Name}} 必須至少 {{.Length}} 個字元"
 
 [error.passwords_do_not_match]
 other = "密碼不相符"
+
+[error.auth.AccountAlreadyExists]
+other = "帳號已存在"
+
+[error.auth.FailedToSecurePassword]
+other = "密碼加密失敗"
+
+[error.auth.CreateUserError]
+other = "建立使用者失敗"
+
+[error.auth.FailedToWriteSession]
+other = "寫入 session 失敗"
+
+[error.auth.FailedToIssueToken]
+other = "Token 簽發失敗"

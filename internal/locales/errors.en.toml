@@ -15,3 +15,18 @@ other = "{{.Name}} must be at least {{.Length}} characters."
 
 [error.passwords_do_not_match]
 other = "Passwords do not match."
+
+[error.auth.AccountAlreadyExists]
+other = "account already exists"
+
+[error.auth.FailedToSecurePassword]
+other = "failed to secure password"
+
+[error.auth.CreateUserError]
+other = "create user error"
+
+[error.auth.FailedToWriteSession]
+other = "failed to write session"
+
+[error.auth.FailedToIssueToken]
+other = "failed to issue token"

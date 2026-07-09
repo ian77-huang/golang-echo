@@ -4,6 +4,7 @@ import (
 	appConfig "github.com/ian77-huang/golang-echo/internal/config"
 
 	"github.com/ian77-huang/golang-echo/internal/router"
+
 	"github.com/ian77-huang/golang-echo/pkg/database"
 	"github.com/ian77-huang/golang-echo/pkg/renderer"
 	"github.com/ian77-huang/golang-echo/pkg/validator"
@@ -11,7 +12,13 @@ import (
 	echomiddleware "github.com/labstack/echo/v5/middleware"
 )
 
+type User struct {
+}
+type Session struct {
+}
+
 func main() {
+
 	config := appConfig.Load()
 
 	translator, err := appConfig.I18n()
@@ -20,6 +27,8 @@ func main() {
 	}
 
 	db := database.NewSqlite(config.Databases.Path)
+
+	auth := appConfig.Auth(db)
 
 	e := router.New()
 	t := renderer.New(appConfig.RendererTemplate(
@@ -33,6 +42,8 @@ func main() {
 	e.Use(echomiddleware.Recover())
 	e.Use(translator.Middleware())
 	e.Use(database.Middleware(db))
+
+	e.Use(auth.Middleware())
 
 	if err := e.Start(":1323"); err != nil {
 		e.Logger.Error("failed to start server", "error", err)

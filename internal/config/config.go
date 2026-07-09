@@ -2,8 +2,13 @@ package config
 
 import (
 	"os"
+	"strconv"
+	"time"
 
 	"github.com/ian77-huang/golang-echo/internal/locales"
+	"github.com/ian77-huang/golang-echo/internal/models/session"
+	"github.com/ian77-huang/golang-echo/internal/models/users"
+	appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
 	"github.com/ian77-huang/golang-echo/pkg/cast"
 	appi18n "github.com/ian77-huang/golang-echo/pkg/i18n"
 	"github.com/ian77-huang/golang-echo/pkg/renderer"
@@ -116,4 +121,34 @@ func DB() *gorm.DB {
 		panic("=== Error：Unable to connect to the database. ====")
 	}
 	return db
+}
+
+func Auth(db *gorm.DB) *appAuth.Auth[users.User, session.Session] {
+	return appAuth.New(&appAuth.Config[users.User, session.Session]{
+		Resolver: appAuth.Resolver[users.User, session.Session]{
+			IsAccountExist: func(account string) (bool, error) {
+				return users.IsAccountExist(db, account)
+			},
+			CreateUser: func(account, password string) (*appAuth.User[users.User], error) {
+				user, err := users.CreateUser(db, account, password)
+				if err != nil {
+					return nil, err
+				}
+				authUser := &appAuth.User[users.User]{ID: strconv.Itoa(user.Id)}
+				return authUser, nil
+			},
+			CreateSession: func(id, userId string, expiresAt time.Time) (*session.Session, error) {
+				return session.CreateSession(db, id, userId, expiresAt)
+			},
+			UpdateSession: func(id string, sess *session.Session) (*session.Session, error) {
+				return session.UpdateSession(db, id, sess)
+			},
+			DeleteSession: func(id string) (*session.Session, error) {
+				return session.DeleteSession(db, id)
+			},
+			GetSession: func(id string) (*session.Session, error) {
+				return session.GetSession(db, id)
+			},
+		},
+	})
 }
