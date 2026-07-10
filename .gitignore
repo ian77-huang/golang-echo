@@ -36,6 +36,11 @@ tmp/
 # Logs
 *.log
 
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
 # Databases
 databases/
 *.db
