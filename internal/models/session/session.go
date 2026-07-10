@@ -29,7 +29,7 @@ func CreateSession(db *gorm.DB, id, userId string, expiresAt time.Time) (*Sessio
 		ID: id, UserID: userId, ExpiresAt: expiresAt, UpdatedAt: time.Now(), Status: 0, CountUpdate: 0,
 	}
 	tx := db.Create(newSession)
-	if tx.Error == nil {
+	if tx.Error != nil {
 		return nil, tx.Error
 	}
 	return newSession, nil
@@ -55,7 +55,7 @@ func UpdateSession(db *gorm.DB, id string, expiresAt time.Time, sess *Session) (
 	}
 
 	tx := db.Model(&Session{}).Where("id = ?", id).Where("status = ?", 0).Updates(&updateSession)
-	if tx.Error == nil {
+	if tx.Error != nil {
 		return nil, tx.Error
 	}
 
@@ -73,7 +73,7 @@ func DeleteSession(db *gorm.DB, id string) (*Session, error) {
 	deleteSession := &Session{UpdatedAt: time.Now(), Status: 1}
 
 	tx := db.Model(&Session{}).Where("id = ?", id).Delete(deleteSession)
-	if tx.Error == nil {
+	if tx.Error != nil {
 		return nil, tx.Error
 	}
 	return deleteSession, nil
@@ -88,7 +88,7 @@ func DeleteSession(db *gorm.DB, id string) (*Session, error) {
 func GetSession(db *gorm.DB, id string) (*Session, error) {
 	getSession := &Session{}
 	tx := db.Model(&Session{}).Where("id = ?", id).Where("status = 0").First(getSession)
-	if tx.Error == nil {
+	if tx.Error != nil {
 		return nil, tx.Error
 	}
 	return getSession, nil

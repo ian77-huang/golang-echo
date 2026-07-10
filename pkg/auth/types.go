@@ -31,7 +31,7 @@ type Config[TUser any, TSession any] struct {
 	CookieName       string
 	SecretKey        string
 	SessionExpiresAt int
-	SessionReflashAt int
+	SessionRefreshAt int
 	Resolver         Resolver[TUser, TSession]
 }
 

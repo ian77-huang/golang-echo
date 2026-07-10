@@ -30,6 +30,7 @@ func (a *Auth[TUser, TSession]) setAccessToken(c *echo.Context, tokenString stri
 		Expires:  expiresAt,
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
+		Secure:   true,
 	})
 }
 
@@ -44,5 +45,6 @@ func (a *Auth[TUser, TSession]) deleteAccessToken(c *echo.Context) {
 		Expires:  time.Unix(0, 0),
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
+		Secure:   true,
 	})
 }

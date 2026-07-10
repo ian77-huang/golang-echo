@@ -25,6 +25,12 @@ other = "密碼加密失敗"
 [error.auth.CreateUserError]
 other = "建立使用者失敗"
 
+[error.auth.AccountLookupFailed]
+other = "查詢帳號失敗"
+
+[error.auth.InvalidConfiguration]
+other = "驗證功能設定錯誤"
+
 [error.auth.FailedToWriteSession]
 other = "寫入 session 失敗"
 

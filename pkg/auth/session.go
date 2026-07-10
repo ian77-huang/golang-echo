@@ -8,13 +8,16 @@ import (
 
 func (a *Auth[TUser, TSession]) isNeedRefreshSession(expires time.Time) bool {
 	config := a.config
-	refreshTime := expires.Add(-time.Hour * 24 * time.Duration(config.SessionReflashAt))
+	refreshTime := expires.Add(-time.Hour * 24 * time.Duration(config.SessionRefreshAt))
 
 	return time.Now().After(refreshTime) || time.Now().Equal(refreshTime)
 }
 
 func (a *Auth[TUser, TSession]) createSession(c *echo.Context, userId string) (bool, error) {
-	config := a.config
+	config, err := a.getConfig()
+	if err != nil {
+		return false, err
+	}
 	resolver := config.Resolver
 
 	expiresAt := a.extendDateDays(config.SessionExpiresAt)
@@ -26,6 +29,11 @@ func (a *Auth[TUser, TSession]) createSession(c *echo.Context, userId string) (b
 	}
 
 	sessionId := a.GenerateID(sessionToken)
+
+	if resolver.CreateSession == nil {
+		a.deleteAccessToken(c)
+		return false, NewError("error.auth.FailedToWriteSession", "session storage is not configured")
+	}
 
 	_, err = resolver.CreateSession(sessionId, userId, expiresAt)
 	if err != nil {
@@ -45,8 +53,14 @@ func (a *Auth[TUser, TSession]) createSession(c *echo.Context, userId string) (b
 }
 
 func (a *Auth[TUser, TSession]) refreshSession(c *echo.Context) (bool, error) {
-	config := a.config
+	config, err := a.getConfig()
+	if err != nil {
+		return false, err
+	}
 	resolver := config.Resolver
+	if resolver.GetSession == nil {
+		return false, NewError("error.auth.InvalidConfiguration", "session lookup resolver is not configured")
+	}
 
 	expiresAt := a.extendDateDays(config.SessionExpiresAt)
 
@@ -65,12 +79,19 @@ func (a *Auth[TUser, TSession]) refreshSession(c *echo.Context) (bool, error) {
 	sessionId := claims.ID
 
 	sess, err := resolver.GetSession(sessionId)
-	if err != nil {
+	if err != nil || sess == nil {
 		a.deleteAccessToken(c)
-		return false, err
+		if err != nil {
+			return false, err
+		}
+		return false, NewError("error.auth.InvalidConfiguration", "session lookup returned no session")
 	}
 
 	if a.isNeedRefreshSession(sess.ExpiresAt) {
+		if resolver.UpdateSession == nil {
+			a.deleteAccessToken(c)
+			return false, NewError("error.auth.InvalidConfiguration", "session update resolver is not configured")
+		}
 		_, err := resolver.UpdateSession(sessionId, expiresAt, sess.Data)
 		if err != nil {
 			a.deleteAccessToken(c)

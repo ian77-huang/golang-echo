@@ -32,12 +32,14 @@ type ConfigUsers struct {
 }
 
 type Config struct {
+	SecretKey string
 	Databases ConfigDatabases
 	Users     ConfigUsers
 }
 
 func Load() Config {
 	return Config{
+		SecretKey: os.Getenv("SECRET_KEY"),
 		Databases: ConfigDatabases{
 			Path: os.Getenv("DATABASE_PATH"),
 		},
@@ -124,7 +126,9 @@ func DB() *gorm.DB {
 }
 
 func Auth(db *gorm.DB) *appAuth.Auth[users.User, session.Session] {
+	config := Load()
 	return appAuth.New(&appAuth.Config[users.User, session.Session]{
+		SecretKey: config.SecretKey,
 		Resolver: appAuth.Resolver[users.User, session.Session]{
 			IsAccountExist: func(account string) (bool, error) {
 				return users.IsAccountExist(db, account)

@@ -25,6 +25,12 @@ other = "failed to secure password"
 [error.auth.CreateUserError]
 other = "create user error"
 
+[error.auth.AccountLookupFailed]
+other = "failed to look up account"
+
+[error.auth.InvalidConfiguration]
+other = "authentication is not configured correctly"
+
 [error.auth.FailedToWriteSession]
 other = "failed to write session"
 

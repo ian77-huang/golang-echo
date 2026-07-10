@@ -54,7 +54,7 @@ func PostRegister(c *echo.Context) error {
 	}
 	ID, err := auth.Register(c, req.Account, req.Password)
 	if err != nil {
-		return response.ValidationErrorAuth(c, err.(appAuth.FieldError))
+		return response.ValidationErrorAuth(c, err)
 	}
 
 	return c.JSON(http.StatusCreated, map[string]interface{}{
