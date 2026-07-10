@@ -1,13 +1,13 @@
 package auth
 
 import (
-	"net/http"
+	// "log"
 
 	"github.com/ian77-huang/golang-echo/pkg/argon2"
 	"github.com/labstack/echo/v5"
 )
 
-func GetAuth[TUser, TSession any](c *echo.Context) *Auth[TUser, TSession] {
+func Load[TUser, TSession any](c *echo.Context) *Auth[TUser, TSession] {
 	if auth, ok := c.Get(CONTEXT_KEY_AUTH).(*Auth[TUser, TSession]); ok {
 		return auth
 	}
@@ -17,6 +17,12 @@ func GetAuth[TUser, TSession any](c *echo.Context) *Auth[TUser, TSession] {
 func (a *Auth[TUser, TSession]) Middleware() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c *echo.Context) error {
+			// config := a.config
+			// resolver := config.Resolver
+
+			if ok, _ := a.refreshSession(c); !ok {
+				// return err
+			}
 
 			c.Set(CONTEXT_KEY_AUTH, a)
 			return next(c)
@@ -34,12 +40,7 @@ func New[TUser, TSession any](config *Config[TUser, TSession]) *Auth[TUser, TSes
 	if config.SessionReflashAt == 0 {
 		config.SessionReflashAt = DEFAULT_SESSION_REFLASH_DAYS
 	}
-	if config.ErrorMessage == nil {
-		// 給予預設邏輯
-		config.ErrorMessage = func(tag string) string {
-			return ""
-		}
-	}
+
 	return &Auth[TUser, TSession]{
 		config: config,
 	}
@@ -65,37 +66,4 @@ func (a *Auth[TUser, TSession]) Register(c *echo.Context, account string, passwo
 	}
 
 	return user.ID, nil
-}
-
-func (a *Auth[TUser, TSession]) createSession(c *echo.Context, userId string) (bool, error) {
-	config := a.config
-	resolver := config.Resolver
-
-	sessionToken, err := a.GenerateSessionToken()
-
-	sessionId := a.GenerateID(sessionToken)
-
-	expiresAt := a.CalculateExpiry(config.SessionExpiresAt)
-
-	session, err := resolver.CreateSession(sessionId, userId, expiresAt)
-	if err != nil {
-		return false, NewError("error.auth.FailedToWriteSession", "failed to write session")
-	}
-	tokenString, err := a.createToken(sessionId)
-	if err != nil {
-		return false, NewError("error.auth.FailedToIssueToken", "failed to issue token")
-	}
-
-	c.SetCookie(&http.Cookie{
-		Name:     config.CookieName,
-		Value:    tokenString,
-		Path:     "/",
-		Expires:  expiresAt,
-		HttpOnly: true,
-		SameSite: http.SameSiteLaxMode,
-	})
-
-	c.Set(CONTEXT_KEY_SESSION, session)
-
-	return true, nil
 }

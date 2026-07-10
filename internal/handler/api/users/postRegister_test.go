@@ -5,7 +5,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
+
+	// "time"
 
 	sessionModel "github.com/ian77-huang/golang-echo/internal/models/session"
 	userModel "github.com/ian77-huang/golang-echo/internal/models/users"
@@ -30,13 +31,13 @@ func TestPostRegisterUsesAuthFromMiddleware(t *testing.T) {
 			CreateUser: func(account string, password string) (*appAuth.User[userModel.User], error) {
 				return &appAuth.User[userModel.User]{ID: "user-1"}, nil
 			},
-			CreateSession: func(id string, userId string, expiresAt time.Time) (*sessionModel.Session, error) {
-				return &sessionModel.Session{
-					ID:        id,
-					UserID:    userId,
-					ExpiresAt: expiresAt,
-				}, nil
-			},
+			// CreateSession: func(id string, userId string, expiresAt time.Time) (*sessionModel.Session, error) {
+			// 	return &sessionModel.Session{
+			// 		ID:        id,
+			// 		UserID:    userId,
+			// 		ExpiresAt: expiresAt,
+			// 	}, nil
+			// },
 		},
 	})
 

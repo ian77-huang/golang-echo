@@ -137,18 +137,47 @@ func Auth(db *gorm.DB) *appAuth.Auth[users.User, session.Session] {
 				authUser := &appAuth.User[users.User]{ID: strconv.Itoa(user.Id)}
 				return authUser, nil
 			},
-			CreateSession: func(id, userId string, expiresAt time.Time) (*session.Session, error) {
-				return session.CreateSession(db, id, userId, expiresAt)
+			CreateSession: func(id, userId string, expiresAt time.Time) (*appAuth.Session[session.Session], error) {
+				sess, err := session.CreateSession(db, id, userId, expiresAt)
+				if err != nil {
+					return nil, err
+				}
+
+				return (&appAuth.Session[session.Session]{ID: sess.ID, ExpiresAt: sess.ExpiresAt, Data: sess}), nil
 			},
-			UpdateSession: func(id string, sess *session.Session) (*session.Session, error) {
-				return session.UpdateSession(db, id, sess)
+			// CreateSession: func(id, userId string, expiresAt time.Time) (*session.Session, error) {
+			// 	return session.CreateSession(db, id, userId, expiresAt)
+			// },
+			UpdateSession: func(id string, expiresAt time.Time, sess *session.Session) (*appAuth.Session[session.Session], error) {
+				sess, err := session.UpdateSession(db, id, expiresAt, sess)
+				if err != nil {
+					return nil, err
+				}
+				return (&appAuth.Session[session.Session]{ID: sess.ID, ExpiresAt: sess.ExpiresAt, Data: sess}), nil
 			},
-			DeleteSession: func(id string) (*session.Session, error) {
-				return session.DeleteSession(db, id)
+			// UpdateSession: func(id string, expiresAt time.Time, sess *session.Session) (*session.Session, error) {
+			// 	return session.UpdateSession(db, id, expiresAt, sess)
+			// },
+			DeleteSession: func(id string) (*appAuth.Session[session.Session], error) {
+				sess, err := session.DeleteSession(db, id)
+				if err != nil {
+					return nil, err
+				}
+				return (&appAuth.Session[session.Session]{ID: sess.ID, ExpiresAt: sess.ExpiresAt, Data: sess}), nil
 			},
-			GetSession: func(id string) (*session.Session, error) {
-				return session.GetSession(db, id)
+			// DeleteSession: func(id string) (*session.Session, error) {
+			// 	return session.DeleteSession(db, id)
+			// },
+			GetSession: func(id string) (*appAuth.Session[session.Session], error) {
+				sess, err := session.GetSession(db, id)
+				if err != nil {
+					return nil, err
+				}
+				return (&appAuth.Session[session.Session]{ID: sess.ID, ExpiresAt: sess.ExpiresAt, Data: sess}), nil
 			},
+			// GetSession: func(id string) (*session.Session, error) {
+			// 	return session.GetSession(db, id)
+			// },
 		},
 	})
 }

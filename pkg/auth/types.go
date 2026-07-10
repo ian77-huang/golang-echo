@@ -17,9 +17,11 @@ type User[T any] struct {
 	Data T
 }
 
-// type Session[T any] struct {
-// 	Data T
-// }
+type Session[T any] struct {
+	ID        string
+	ExpiresAt time.Time
+	Data      *T
+}
 
 type Auth[TUser any, TSession any] struct {
 	config *Config[TUser, TSession]
@@ -31,7 +33,6 @@ type Config[TUser any, TSession any] struct {
 	SessionExpiresAt int
 	SessionReflashAt int
 	Resolver         Resolver[TUser, TSession]
-	ErrorMessage     func(tag string) string
 }
 
 type Resolver[TUser any, TSession any] struct {
@@ -42,42 +43,17 @@ type Resolver[TUser any, TSession any] struct {
 
 	GetUserByAccount func(account string) (*User[TUser], error)
 
-	GetSession func(id string) (*TSession, error)
+	GetSession func(id string) (*Session[TSession], error)
 
-	CreateSession func(id string, userId string, expiresAt time.Time) (*TSession, error)
+	CreateSession func(id string, userId string, expiresAt time.Time) (*Session[TSession], error)
 
-	UpdateSession func(id string, sess *TSession) (*TSession, error)
+	UpdateSession func(id string, expiresAt time.Time, sess *TSession) (*Session[TSession], error)
 
-	DeleteSession func(id string) (*TSession, error)
+	DeleteSession func(id string) (*Session[TSession], error)
 }
-
-// export type Resolver<
-// 	TUser extends Record<string, any> = Record<string, any>,
-// 	TSession extends Record<string, any> = Record<string, any>
-// > = {
-// 	getUser: (id: string) => Awaitable<User<TUser> | null>;
-// 	getUserByAccount: (account: string) => Awaitable<User<TUser> | null>;
-// 	getSession: (sessionId: string) => Awaitable<Session<TSession> | null>;
-// 	createSession: (
-// 		sessionId: string,
-// 		userId: string,
-// 		expiresAt: Date
-// 	) => Awaitable<Session<TSession>>;
-// 	updateSession: (session: Session<TSession>) => Awaitable<Session<TSession>>;
-// 	createUser: (user: Omit<User<TUser>, 'id'>) => Awaitable<User<TUser>>;
-// 	deleteSession: (sessionId: string) => Awaitable<boolean>;
-// };
 
 type FieldError struct {
 	Tag     string
 	Message string
 	Params  []interface{}
 }
-
-// getUser: (id: string) => Awaitable<User<TUser> | null>;
-// getUserByAccount: (account: string) => Awaitable<User<TUser> | null>;
-// getSession: (sessionId: string) => Awaitable<Session<TSession> | null>;
-// createSession: (sessionId: string, userId: string, expiresAt: Date) => Awaitable<Session<TSession>>;
-// updateSession: (session: Session<TSession>) => Awaitable<Session<TSession>>;
-// createUser: (user: Omit<User<TUser>, 'id'>) => Awaitable<User<TUser>>;
-// deleteSession: (sessionId: string) => Awaitable<boolean>;

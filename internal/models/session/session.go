@@ -46,9 +46,10 @@ func CreateSession(db *gorm.DB, id, userId string, expiresAt time.Time) (*Sessio
 //			.where(and(eq(table.session.id, session.id), eq(table.session.status, 0)));
 //		return result[0];
 //	}
-func UpdateSession(db *gorm.DB, id string, sess *Session) (*Session, error) {
+
+func UpdateSession(db *gorm.DB, id string, expiresAt time.Time, sess *Session) (*Session, error) {
 	updateSession := &Session{
-		ExpiresAt:   sess.ExpiresAt,
+		ExpiresAt:   expiresAt,
 		UpdatedAt:   time.Now(),
 		CountUpdate: sess.CountUpdate + 1,
 	}

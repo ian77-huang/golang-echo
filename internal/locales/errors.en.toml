@@ -30,3 +30,9 @@ other = "failed to write session"
 
 [error.auth.FailedToIssueToken]
 other = "failed to issue token"
+
+[error.auth.CookieNotFound]
+other = "Specified cookie not found"
+
+[error.auth.ReadCookieFailed]
+other = "Failed to read cookie"

@@ -30,3 +30,9 @@ other = "寫入 session 失敗"
 
 [error.auth.FailedToIssueToken]
 other = "Token 簽發失敗"
+
+[error.auth.CookieNotFound]
+other = "找不到指定的 Cookie"
+
+[error.auth.ReadCookieFailed]
+other = "讀取 Cookie 失敗"
