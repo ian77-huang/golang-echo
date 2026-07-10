@@ -1,121 +1,126 @@
-# Go Echo Web 專案開發指南
+# Go Echo Web 專案
 
-本專案是一個基於 **Go (Echo v5)** 框架開發的 Web 應用程式，整合了 **SQLite** 資料庫、**golang-migrate** 遷移控制、自訂 HTML 模板渲染引擎（支援多層級 Layout）、多語系（i18n）支援，以及表單驗證機制。
+以 Go 與 Echo v5 建置的 Web 應用程式練習專案，提供 SQLite 資料庫遷移、HTML 模板、多語系與使用者註冊／session 驗證基礎功能。
 
----
+## 目前進度
 
-## 🛠 核心技術棧 (Tech Stack)
+| 功能 | 狀態 | 說明 |
+| --- | --- | --- |
+| Echo Web 伺服器 | 已完成 | 預設監聽 `http://localhost:1323`。 |
+| HTML 模板 | 已完成 | 包含首頁、登入頁與註冊頁，以及可巢狀使用的 layout。 |
+| 多語系 | 已完成 | 支援繁體中文（`zh-TW`）與英文（`en`）。 |
+| SQLite 與 migrations | 已完成 | 已建立 users、messages、session 三組遷移。 |
+| 使用者註冊 API | 已完成 | 建立帳號、以 Argon2 雜湊密碼並建立 session。 |
+| Session 驗證 | 已完成 | 透過 cookie 與 JWT 處理 session 的建立與刷新。 |
+| 登入／登出 API | 尚未實作 | 目前只有登入頁面，尚未提供對應 API。 |
 
-*   **後端框架**：[Echo v5](https://github.com/labstack/echo) (高效能、極簡的 Go Web 框架)
-*   **資料庫**：SQLite (搭配 Go 標準庫 `database/sql` 及 `github.com/mattn/go-sqlite3`)
-*   **資料庫遷移**：[golang-migrate](https://github.com/golang-migrate/migrate) (版本控制資料庫結構)
-*   **視圖引擎**：自訂 HTML 模板渲染（支援多層級 Layout，如 `base -> frontend -> users -> page`）
-*   **多語系支援 (i18n)**：基於 TOML 翻譯檔的多語系中介軟體 (支援繁體中文 `zh-TW` 與英文 `en`)
-*   **資料驗證**：[go-playground/validator/v10](https://github.com/go-playground/validator) (強大的結構體/表單驗證器)
-*   **熱重載**：[Air](https://github.com/air-verse/air) (開發環境程式碼變更自動重啟)
+## 技術棧
 
----
+- Go 1.26.1
+- Echo v5
+- GORM + SQLite
+- golang-migrate
+- go-i18n
+- go-playground/validator
+- Argon2、JWT 與 cookie session
 
-## 📁 專案目錄結構 (Project Structure)
+## 專案結構
 
 ```text
 .
 ├── cmd/
-│   ├── migrate/            # 資料庫遷移工具執行入口 (go run cmd/migrate/main.go)
-│   └── server/             # Web 伺服器啟動入口 (go run cmd/server/main.go)
+│   ├── migrate/       # 資料庫遷移入口
+│   └── server/        # Web 伺服器入口
 ├── internal/
-│   ├── config/             # 設定檔載入、i18n 與模板引擎初始化
-│   ├── handler/            # 控制器/處理器 (HTTP Handlers)
-│   │   ├── api/            # API 端點處理器 (例如：語系切換、註冊 API)
-│   │   └── frontend/       # 前端頁面渲染處理器 (例如：登入、註冊頁面)
-│   ├── locales/            # 嵌入式多語系翻譯檔 (TOML)
-│   ├── router/             # 路由定義與分組管理
-│   └── views/              # HTML 模板檔案 (支援巢狀 Layout 與元件)
-├── pkg/                    # 專案內置的共享模組 (i18n, renderer, validator, cast)
-├── migrations/             # SQL 資料庫遷移檔案 (.up.sql / .down.sql)
-├── databases/              # 本機 SQLite 資料庫儲存目錄 (已設定於 .gitignore 排除)
-├── .air.toml               # Air 熱重載設定檔
-├── .env                    # 環境變數設定檔
-├── go.mod                  # Go 模組定義檔
-└── README.md               # 本開發說明檔
+│   ├── config/        # 環境設定、i18n、模板設定
+│   ├── handler/       # 頁面與 API handlers
+│   ├── locales/       # TOML 翻譯檔
+│   ├── models/        # users、session 等資料模型
+│   ├── router/        # 路由設定
+│   └── views/         # HTML 模板
+├── migrations/        # SQLite migration SQL
+├── pkg/               # auth、database、i18n、renderer 等共用套件
+├── .env.example       # 可提交的環境變數範本
+└── .env               # 本機設定（不納入 Git）
 ```
 
----
+## 快速開始
 
-## 🚀 快速開始 (Quick Start)
+### 1. 安裝依賴
 
-### 1. 安裝環境與依賴
-請確保本機已安裝 Go 1.21+。複製專案後執行以下指令下載所有依賴：
+請先安裝 Go 1.26.1，接著下載模組：
+
 ```bash
 go mod download
 ```
 
-### 2. 設定環境變數
-專案根目錄下需包含 `.env` 檔案（若無可自行建立）：
-```env
-USERS_ACCOUNT_MIN_LENGTH=6
-USERS_PASSWORD_MIN_LENGTH=8
+### 2. 建立 `.env`
+
+從範本建立本機設定檔：
+
+```bash
+cp .env.example .env
 ```
 
-### 3. 執行資料庫遷移
-本專案的 SQLite 資料庫會在第一次執行遷移或啟動時自動建立於 `databases/main.db`。執行以下指令套用最新的資料庫結構：
+請將 `SECRET_KEY` 換成自己的高強度隨機字串。`.env` 已由 Git 忽略，請勿提交其中的機密值。
+
+| 變數 | 必填 | 用途 | 開發環境範例 |
+| --- | --- | --- | --- |
+| `SECRET_KEY` | 是 | JWT 簽章與 session 驗證金鑰；不可為空。 | `replace-with-a-long-random-secret` |
+| `DATABASE_PATH` | 是 | SQLite 資料庫檔案路徑。 | `databases/main.db` |
+| `USERS_ACCOUNT_MIN_LENGTH` | 是 | 註冊帳號最小長度。 | `6` |
+| `USERS_PASSWORD_MIN_LENGTH` | 是 | 註冊密碼最小長度。 | `8` |
+
+### 3. 套用資料庫遷移
+
 ```bash
 go run cmd/migrate/main.go
 ```
 
-### 4. 啟動開發伺服器
-*   **一般啟動**：
-    ```bash
-    go run cmd/server/main.go
-    ```
-*   **使用 Air 進行熱重載開發**（需先安裝 Air：`go install github.com/air-verse/air@latest`）：
-    ```bash
-    air
-    ```
-    伺服器預設會運行在 `http://localhost:1323`。
+此指令會建立 `DATABASE_PATH` 的父目錄，並套用 `migrations/` 中尚未執行的 migration。
 
----
+### 4. 啟動伺服器
 
-## 🗄 資料庫遷移 (Migrations)
-
-當你需要修改資料庫結構（例如新增資料表或欄位）時，請使用 `golang-migrate` 進行版本控制。
-
-### 建立新的遷移檔案
-若你安裝了 `migrate` CLI 工具，可執行：
 ```bash
-migrate create -ext sql -dir migrations -seq <migration_name>
-```
-*範例：*
-```bash
-migrate create -ext sql -dir migrations -seq create_messages_table
-```
-執行後會在 `migrations/` 目錄下產生兩個檔案：
-*   `00000X_<migration_name>.up.sql`：寫入結構變更的 SQL (例如 `CREATE TABLE...`)
-*   `00000X_<migration_name>.down.sql`：寫入還原該變更的 SQL (例如 `DROP TABLE...`)
-
-### 執行遷移
-編輯好 SQL 檔後，執行以下 Go 程式以自動更新資料庫：
-```bash
-go run cmd/migrate/main.go
+go run cmd/server/main.go
 ```
 
----
+開發時也可使用 Air 熱重載：
 
-## 🌐 多語系支援 (i18n)
+```bash
+go install github.com/air-verse/air@latest
+air
+```
 
-本專案支援多語系，翻譯檔案存放在 `internal/locales/` 下，採用 TOML 格式：
-*   語系切換 API：`POST /api/lang`
-*   模板中的多語系使用：可在 HTML 模板中直接調用翻譯函式。
+## 路由與 API
 
----
+| 方法 | 路徑 | 說明 |
+| --- | --- | --- |
+| `GET` | `/` | 首頁 |
+| `GET` | `/users/login` | 登入頁面 |
+| `GET` | `/users/register` | 註冊頁面 |
+| `GET` | `/api/ping` | 健康檢查範例 |
+| `POST` | `/api/lang` | 切換語系 |
+| `POST` | `/api/users/register` | 註冊使用者並建立 session |
 
-## 📝 開發規範
+註冊 API 的 JSON 請求內容：
 
-1.  **資料庫排除**：請勿提交任何本機的 SQLite 庫檔案 (`databases/*.db`) 至 Git。
-2.  **新增頁面**：
-    *   在 `internal/views/` 下建立對應的 HTML 模板。
-    *   在 `internal/handler/frontend/` 建立對應的渲染處理器。
-    *   在 `internal/router/routing/frontend.go` 配置路由。
-3.  **新增 API**：
-    *   在 `internal/handler/api/` 建立 API 邏輯。
-    *   在 `internal/router/routing/api.go` 配置路由。
+```json
+{
+  "account": "example_user",
+  "password": "your-secure-password",
+  "confirmPassword": "your-secure-password"
+}
+```
+
+## 執行測試
+
+```bash
+go test ./...
+```
+
+## 開發注意事項
+
+- `.env`、本機資料庫與日誌都不應提交至 Git。
+- 變更資料表時，請新增一組 `.up.sql` 與 `.down.sql` migration，再執行遷移指令。
+- 新增前端頁面時，請同步建立模板、handler 與路由；新增 API 時，請建立 handler 並在 `internal/router/routing/api.go` 註冊。
