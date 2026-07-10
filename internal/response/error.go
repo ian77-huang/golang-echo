@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
+	appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
 	appi18n "github.com/ian77-huang/golang-echo/pkg/i18n"
 	"github.com/labstack/echo/v5"
 )
@@ -59,6 +60,17 @@ func ValidationCustomError(c *echo.Context, err FieldError) error {
 		Errors:  customValidationMessages(c, err),
 	})
 }
+func ValidationErrorAuth(c *echo.Context, err error) error {
+	if fe, ok := err.(appAuth.FieldError); ok {
+		return c.JSON(http.StatusBadRequest, ErrorResponse{
+			Code:    "validation_failed",
+			Message: appi18n.T(c, fe.Tag),
+			Errors:  customValidationMessages(c, FieldError{Field: "", Tag: fe.Tag, Params: fe.Params}),
+		})
+
+	}
+	return errors.New("auth error: Type assertion failed")
+}
 
 func validationMessages(c *echo.Context, err error) map[string]string {
 	var validationErrors validator.ValidationErrors
@@ -100,8 +112,10 @@ func translateFieldError(c *echo.Context, fieldErr FieldError) string {
 		errorMessage = appi18n.T(c, "validation.min", appi18n.KV("Field", fieldErr.Field), appi18n.KV("Length", param))
 	case "eqfield":
 		errorMessage = appi18n.T(c, "validation.eqfield", appi18n.KV("Field", fieldErr.Field), appi18n.KV("Target", param))
-	default:
+	case "invalid":
 		errorMessage = appi18n.T(c, "validation.invalid", appi18n.KV("Field", fieldErr.Field))
+	default:
+		errorMessage = appi18n.T(c, fieldErr.Tag)
 	}
 	return errorMessage
 }

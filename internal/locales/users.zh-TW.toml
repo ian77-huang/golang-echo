@@ -18,3 +18,6 @@ other = "密碼"
 
 [users.auth.confirmPassword]
 other = "確認密碼"
+
+[users.auth.create.success]
+other = "使用者建立成功"

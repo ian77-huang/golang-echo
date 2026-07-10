@@ -3,30 +3,35 @@ package auth
 import (
 	"time"
 
-	"github.com/labstack/echo/v5"
+	"github.com/golang-jwt/jwt/v5"
 )
+
+type JwtCustomClaims struct {
+	ID string `json:"id"`
+	jwt.RegisteredClaims
+}
 
 type User[T any] struct {
 	ID string
 
 	Data T
 }
-type Session[T any] struct {
-	Data T
-}
+
+// type Session[T any] struct {
+// 	Data T
+// }
+
 type Auth[TUser any, TSession any] struct {
 	config *Config[TUser, TSession]
 }
+
 type Config[TUser any, TSession any] struct {
 	CookieName       string
 	SecretKey        string
 	SessionExpiresAt int
 	SessionReflashAt int
 	Resolver         Resolver[TUser, TSession]
-}
-type CustomContext[TUser, TSession any] struct {
-	*echo.Context
-	Auth *Auth[TUser, TSession] // 💡 直接用強型別欄位存取
+	ErrorMessage     func(tag string) string
 }
 
 type Resolver[TUser any, TSession any] struct {
