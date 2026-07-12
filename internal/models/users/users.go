@@ -1,6 +1,7 @@
 package users
 
 import (
+	"errors"
 	"time"
 
 	"gorm.io/gorm"
@@ -30,4 +31,25 @@ func CreateUser(db *gorm.DB, account string, password string) (*User, error) {
 	}
 
 	return newUser, nil
+}
+
+func GetUser(db *gorm.DB, id int) (*User, error) {
+	user := &User{}
+	if err := db.Where("id = ?", id).First(user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return user, nil
+}
+func GetUserByAccount(db *gorm.DB, account string) (*User, error) {
+	user := &User{}
+	if err := db.Where("account = ?", account).First(user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return user, nil
 }

@@ -52,7 +52,7 @@ func PostRegister(c *echo.Context) error {
 	if auth == nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "auth context not found")
 	}
-	ID, err := auth.Register(c, req.Account, req.Password)
+	ID, err := auth.ActionRegister(c, req.Account, req.Password)
 	if err != nil {
 		return response.ValidationErrorAuth(c, err)
 	}

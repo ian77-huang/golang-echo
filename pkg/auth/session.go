@@ -41,7 +41,7 @@ func (a *Auth[TUser, TSession]) createSession(c *echo.Context, userId string) (b
 		return false, NewError("error.auth.FailedToWriteSession", "failed to write session")
 	}
 
-	tokenString, err := a.createToken(sessionId, expiresAt)
+	tokenString, err := a.createToken(sessionToken, expiresAt)
 	if err != nil {
 		a.deleteAccessToken(c)
 		return false, NewError("error.auth.FailedToIssueToken", "failed to issue token")
@@ -52,55 +52,27 @@ func (a *Auth[TUser, TSession]) createSession(c *echo.Context, userId string) (b
 	return true, nil
 }
 
-func (a *Auth[TUser, TSession]) refreshSession(c *echo.Context) (bool, error) {
+func (a *Auth[TUser, TSession]) refreshSession(c *echo.Context, tokenId string, sess *Session[TSession]) (bool, error) {
 	config, err := a.getConfig()
 	if err != nil {
 		return false, err
 	}
 	resolver := config.Resolver
-	if resolver.GetSession == nil {
-		return false, NewError("error.auth.InvalidConfiguration", "session lookup resolver is not configured")
-	}
-
-	expiresAt := a.extendDateDays(config.SessionExpiresAt)
-
-	token, err := a.getAccessToken(c)
-	if err != nil {
-		a.deleteAccessToken(c)
-		return false, err
-	}
-
-	claims, err := a.parseToken(token)
-	if err != nil {
-		a.deleteAccessToken(c)
-		return false, err
-	}
-
-	sessionId := claims.ID
-
-	sess, err := resolver.GetSession(sessionId)
-	if err != nil || sess == nil {
-		a.deleteAccessToken(c)
-		if err != nil {
-			return false, err
-		}
-		return false, NewError("error.auth.InvalidConfiguration", "session lookup returned no session")
-	}
 
 	if a.isNeedRefreshSession(sess.ExpiresAt) {
 		if resolver.UpdateSession == nil {
 			a.deleteAccessToken(c)
 			return false, NewError("error.auth.InvalidConfiguration", "session update resolver is not configured")
 		}
-		_, err := resolver.UpdateSession(sessionId, expiresAt, sess.Data)
+		expiresAt := a.extendDateDays(config.SessionExpiresAt)
+
+		_, err := resolver.UpdateSession(sess.ID, expiresAt, sess.Data)
 		if err != nil {
-			a.deleteAccessToken(c)
 			return false, err
 		}
 
-		tokenString, err := a.createToken(sessionId, expiresAt)
+		tokenString, err := a.createToken(tokenId, expiresAt)
 		if err != nil {
-			a.deleteAccessToken(c)
 			return false, NewError("error.auth.FailedToIssueToken", "failed to issue token")
 		}
 

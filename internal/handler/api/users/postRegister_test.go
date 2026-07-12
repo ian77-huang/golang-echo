@@ -23,7 +23,7 @@ func TestPostRegisterUsesAuthFromMiddleware(t *testing.T) {
 
 	auth := appAuth.New(&appAuth.Config[userModel.User, sessionModel.Session]{
 		SecretKey: "test-secret",
-		Resolver: appAuth.Resolver[userModel.User, sessionModel.Session]{
+		Resolver: (&appAuth.Resolver[userModel.User, sessionModel.Session]{
 			IsAccountExist: func(account string) (bool, error) {
 				return false, nil
 			},
@@ -33,7 +33,7 @@ func TestPostRegisterUsesAuthFromMiddleware(t *testing.T) {
 			CreateSession: func(id string, userID string, expiresAt time.Time) (*appAuth.Session[sessionModel.Session], error) {
 				return &appAuth.Session[sessionModel.Session]{ID: id, ExpiresAt: expiresAt}, nil
 			},
-		},
+		}),
 	})
 
 	body := bytes.NewBufferString(`{"account":"tester","password":"password123","confirmPassword":"password123"}`)

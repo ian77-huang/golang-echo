@@ -16,26 +16,9 @@ import (
 	"github.com/labstack/echo/v5"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+
+	"github.com/ian77-huang/golang-echo/internal/shared"
 )
-
-type UserMenus struct {
-	Name string
-	Url  string
-}
-
-type ConfigDatabases struct {
-	Path string
-}
-type ConfigUsers struct {
-	MinLengthAccount  int
-	MinLengthPassword int
-}
-
-type Config struct {
-	SecretKey string
-	Databases ConfigDatabases
-	Users     ConfigUsers
-}
 
 func Load() Config {
 	return Config{
@@ -60,6 +43,8 @@ func I18n() (*appi18n.I18n, error) {
 			"active.en.toml",
 			"errors.en.toml",
 			"errors.zh-TW.toml",
+			"index.en.toml",
+			"index.zh-TW.toml",
 			"placeholders.en.toml",
 			"placeholders.zh-TW.toml",
 			"users.en.toml",
@@ -95,19 +80,33 @@ func RendererTemplate(options ...renderer.Option) *renderer.TemplateConfig {
 		Runtime:         runtime,
 		SharedData: func(c *echo.Context, layoutNames []string) map[string]any {
 			realPath := c.Request().URL.Path
+			lang, _ := c.Get("lang").(string)
 
-			users := []UserMenus{}
+			IsSignedIn := appAuth.IsSignedIn[users.User](c)
+
+			users := []MenusChilds{}
+
 			switch realPath {
 			case "/users/login":
-				users = append(users, UserMenus{Name: "register", Url: "/users/register"})
+				if !IsSignedIn {
+					users = append(users, MenusChilds{Name: shared.T(c, "users.register"), Url: "/users/register"})
+				}
 			case "/users/register":
-				users = append(users, UserMenus{Name: "login", Url: "/users/login"})
+				if !IsSignedIn {
+					users = append(users, MenusChilds{Name: shared.T(c, "users.login"), Url: "/users/login"})
+				}
+			}
+			users = append(users, MenusChilds{Name: shared.T(c, "users.login"), Url: "/users/login"})
+
+			menus := []Menus{
+				{Name: shared.T(c, "index.title"), Url: "/"},
+				{Name: shared.T(c, "users.title"), Url: "/users", Childs: users},
 			}
 
-			lang, _ := c.Get("lang").(string)
 			return map[string]any{
 				"Lang":  lang,
 				"Users": users,
+				"Menus": menus,
 			}
 		},
 	}
@@ -127,61 +126,83 @@ func DB() *gorm.DB {
 
 func Auth(db *gorm.DB) *appAuth.Auth[users.User, session.Session] {
 	config := Load()
+	guestOnly := &appAuth.RoutesPaths{
+		Rules:       []string{"/users/login", "/users/register"},
+		RedirectURL: "/",
+	}
+	AuthOnly := &appAuth.RoutesPaths{
+		Rules:       []string{},
+		RedirectURL: "/users/login",
+	}
+	route := &appAuth.Route[users.User]{
+		GuestOnly: guestOnly,
+		AuthOnly:  AuthOnly,
+	}
+	resolver := &appAuth.Resolver[users.User, session.Session]{
+		IsAccountExist: func(account string) (bool, error) {
+			return users.IsAccountExist(db, account)
+		},
+		CreateUser: func(account, password string) (*appAuth.User[users.User], error) {
+			user, err := users.CreateUser(db, account, password)
+			if err != nil {
+				return nil, err
+			}
+			authUser := &appAuth.User[users.User]{ID: strconv.Itoa(user.Id)}
+			return authUser, nil
+		},
+		GetUser: func(id string) (*appAuth.User[users.User], error) {
+			userId, err := strconv.Atoi(id)
+			if err != nil {
+				return nil, err
+			}
+			user, err := users.GetUser(db, userId)
+			if err != nil {
+				return nil, err
+			}
+			authUser := &appAuth.User[users.User]{ID: id, Data: user}
+			return authUser, nil
+		},
+		GetUserByAccount: func(account string) (*appAuth.User[users.User], error) {
+			user, err := users.GetUserByAccount(db, account)
+			if err != nil {
+				return nil, err
+			}
+			authUser := &appAuth.User[users.User]{ID: strconv.Itoa(user.Id), Data: user}
+			return authUser, nil
+		},
+		CreateSession: func(id, userId string, expiresAt time.Time) (*appAuth.Session[session.Session], error) {
+			sess, err := session.CreateSession(db, id, userId, expiresAt)
+			if err != nil {
+				return nil, err
+			}
+
+			return (&appAuth.Session[session.Session]{ID: sess.ID, UserID: userId, ExpiresAt: sess.ExpiresAt, Data: sess}), nil
+		},
+		UpdateSession: func(id string, expiresAt time.Time, sess *session.Session) (*appAuth.Session[session.Session], error) {
+			updateSess, err := session.UpdateSession(db, id, expiresAt, sess)
+			if err != nil {
+				return nil, err
+			}
+			return (&appAuth.Session[session.Session]{ID: sess.ID, UserID: updateSess.UserID, ExpiresAt: sess.ExpiresAt, Data: sess}), nil
+		},
+		DeleteSession: func(id string) (*appAuth.Session[session.Session], error) {
+			sess, err := session.DeleteSession(db, id)
+			if err != nil {
+				return nil, err
+			}
+			return (&appAuth.Session[session.Session]{ID: sess.ID, UserID: sess.UserID, ExpiresAt: sess.ExpiresAt, Data: sess}), nil
+		},
+		GetSession: func(id string) (*appAuth.Session[session.Session], error) {
+			sess, err := session.GetSession(db, id)
+			if err != nil {
+				return nil, err
+			}
+			return (&appAuth.Session[session.Session]{ID: sess.ID, UserID: sess.UserID, ExpiresAt: sess.ExpiresAt, Data: sess}), nil
+		},
+	}
 	return appAuth.New(&appAuth.Config[users.User, session.Session]{
 		SecretKey: config.SecretKey,
-		Resolver: appAuth.Resolver[users.User, session.Session]{
-			IsAccountExist: func(account string) (bool, error) {
-				return users.IsAccountExist(db, account)
-			},
-			CreateUser: func(account, password string) (*appAuth.User[users.User], error) {
-				user, err := users.CreateUser(db, account, password)
-				if err != nil {
-					return nil, err
-				}
-				authUser := &appAuth.User[users.User]{ID: strconv.Itoa(user.Id)}
-				return authUser, nil
-			},
-			CreateSession: func(id, userId string, expiresAt time.Time) (*appAuth.Session[session.Session], error) {
-				sess, err := session.CreateSession(db, id, userId, expiresAt)
-				if err != nil {
-					return nil, err
-				}
-
-				return (&appAuth.Session[session.Session]{ID: sess.ID, ExpiresAt: sess.ExpiresAt, Data: sess}), nil
-			},
-			// CreateSession: func(id, userId string, expiresAt time.Time) (*session.Session, error) {
-			// 	return session.CreateSession(db, id, userId, expiresAt)
-			// },
-			UpdateSession: func(id string, expiresAt time.Time, sess *session.Session) (*appAuth.Session[session.Session], error) {
-				sess, err := session.UpdateSession(db, id, expiresAt, sess)
-				if err != nil {
-					return nil, err
-				}
-				return (&appAuth.Session[session.Session]{ID: sess.ID, ExpiresAt: sess.ExpiresAt, Data: sess}), nil
-			},
-			// UpdateSession: func(id string, expiresAt time.Time, sess *session.Session) (*session.Session, error) {
-			// 	return session.UpdateSession(db, id, expiresAt, sess)
-			// },
-			DeleteSession: func(id string) (*appAuth.Session[session.Session], error) {
-				sess, err := session.DeleteSession(db, id)
-				if err != nil {
-					return nil, err
-				}
-				return (&appAuth.Session[session.Session]{ID: sess.ID, ExpiresAt: sess.ExpiresAt, Data: sess}), nil
-			},
-			// DeleteSession: func(id string) (*session.Session, error) {
-			// 	return session.DeleteSession(db, id)
-			// },
-			GetSession: func(id string) (*appAuth.Session[session.Session], error) {
-				sess, err := session.GetSession(db, id)
-				if err != nil {
-					return nil, err
-				}
-				return (&appAuth.Session[session.Session]{ID: sess.ID, ExpiresAt: sess.ExpiresAt, Data: sess}), nil
-			},
-			// GetSession: func(id string) (*session.Session, error) {
-			// 	return session.GetSession(db, id)
-			// },
-		},
+		Resolver:  resolver,
+		Route:     route,
 	})
 }
