@@ -40,9 +40,9 @@ func TestVerifyPasswordRejectsInvalidEncodedParts(t *testing.T) {
 }
 
 func TestHashPasswordReturnsRandomSourceError(t *testing.T) {
-	original := randomRead
-	randomRead = func([]byte) (int, error) { return 0, errors.New("random failed") }
-	t.Cleanup(func() { randomRead = original })
+	original := RandomRead
+	RandomRead = func([]byte) (int, error) { return 0, errors.New("random failed") }
+	t.Cleanup(func() { RandomRead = original })
 	if _, err := HashPassword("password"); err == nil {
 		t.Fatal("expected random source error")
 	}

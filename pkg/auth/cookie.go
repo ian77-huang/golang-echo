@@ -7,10 +7,14 @@ import (
 	"github.com/labstack/echo/v5"
 )
 
+var readCookie = func(c *echo.Context, name string) (*http.Cookie, error) {
+	return c.Cookie(name)
+}
+
 func (a *Auth[TUser, TSession]) getAccessToken(c *echo.Context) (string, error) {
 	config := a.config
 
-	token, err := c.Cookie(config.CookieName)
+	token, err := readCookie(c, config.CookieName)
 	if err != nil {
 		if err == http.ErrNoCookie {
 			return "", NewError("error.auth.CookieNotFound", "Specified cookie not found")

@@ -1,6 +1,6 @@
 # Go Echo Web 專案
 
-以 Go 與 Echo v5 建置的 Web 應用程式練習專案，提供 SQLite 資料庫遷移、HTML 模板、多語系與使用者註冊／session 驗證基礎功能。
+以 Go 與 Echo v5 建置的 Web 應用程式練習專案，提供 SQLite 資料庫遷移、HTML 模板、多語系與使用者註冊、登入／登出、session 驗證等基礎功能。
 
 ## 目前進度
 
@@ -12,7 +12,8 @@
 | SQLite 與 migrations | 已完成 | 已建立 users、messages、session 三組遷移。 |
 | 使用者註冊 API | 已完成 | 建立帳號、以 Argon2 雜湊密碼並建立 session。 |
 | Session 驗證 | 已完成 | 透過 cookie 與 JWT 處理 session 的建立與刷新。 |
-| 登入／登出 API | 尚未實作 | 目前只有登入頁面，尚未提供對應 API。 |
+| 登入 API | 已完成 | 驗證帳號密碼，成功後建立 session 並寫入 cookie。 |
+| 登出 API | 已完成 | 清除 session 並刪除 cookie，重新導向至登入頁。 |
 
 ## 技術棧
 
@@ -97,19 +98,31 @@ air
 | 方法 | 路徑 | 說明 |
 | --- | --- | --- |
 | `GET` | `/` | 首頁 |
+| `GET` | `/users` | 使用者首頁 |
 | `GET` | `/users/login` | 登入頁面 |
 | `GET` | `/users/register` | 註冊頁面 |
-| `GET` | `/api/ping` | 健康檢查範例 |
+| `GET` | `/users/logout` | 登出並重新導向至登入頁 |
+| `GET` | `/api/ping` | 健康檢查 |
 | `POST` | `/api/lang` | 切換語系 |
 | `POST` | `/api/users/register` | 註冊使用者並建立 session |
+| `POST` | `/api/users/login` | 登入並建立 session |
 
-註冊 API 的 JSON 請求內容：
+註冊 API（`POST /api/users/register`）請求內容：
 
 ```json
 {
   "account": "example_user",
   "password": "your-secure-password",
   "confirmPassword": "your-secure-password"
+}
+```
+
+登入 API（`POST /api/users/login`）請求內容：
+
+```json
+{
+  "account": "example_user",
+  "password": "your-secure-password"
 }
 ```
 

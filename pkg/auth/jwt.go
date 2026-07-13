@@ -9,6 +9,9 @@ import (
 )
 
 var signJWT = func(token *jwt.Token, key []byte) (string, error) { return token.SignedString(key) }
+var parseJWT = func(tokenStr string, claims jwt.Claims, keyFunc jwt.Keyfunc) (*jwt.Token, error) {
+	return jwt.ParseWithClaims(tokenStr, claims, keyFunc)
+}
 
 func (a *Auth[TUser, TSession]) getJwtSecret() []byte {
 	return []byte(a.config.SecretKey)
@@ -26,7 +29,7 @@ func (a *Auth[TUser, TSession]) createToken(id string, expiresAt time.Time) (str
 }
 
 func (a *Auth[TUser, TSession]) parseToken(tokenStr string) (*JwtCustomClaims, error) {
-	token, err := jwt.ParseWithClaims(tokenStr, &JwtCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := parseJWT(tokenStr, &JwtCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if token.Method != jwt.SigningMethodHS256 {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}

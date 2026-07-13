@@ -1,6 +1,7 @@
 package users
 
 import (
+	"errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -85,5 +86,38 @@ func TestGetLogoutDeletesSessionAndRedirects(t *testing.T) {
 	c.Set(appAuth.CONTEXT_KEY_USER, &appAuth.User[userModel.User]{ID: "user-1"})
 	if err := GetLogout(c); err != nil || !deleted || rec.Code != http.StatusSeeOther {
 		t.Fatalf("deleted=%v status=%d err=%v", deleted, rec.Code, err)
+	}
+}
+
+func TestGetLogoutActionLogoutError(t *testing.T) {
+	auth := appAuth.New(&appAuth.Config[userModel.User, sessionModel.Session]{SecretKey: "test-secret", Resolver: &appAuth.Resolver[userModel.User, sessionModel.Session]{
+		IsAccountExist: func(string) (bool, error) { return false, nil }, CreateUser: func(string, string) (*appAuth.User[userModel.User], error) {
+			return &appAuth.User[userModel.User]{ID: "user-1"}, nil
+		},
+		GetUser: func(id string) (*appAuth.User[userModel.User], error) {
+			return &appAuth.User[userModel.User]{ID: id}, nil
+		}, GetUserByAccount: func(string) (*appAuth.User[userModel.User], error) {
+			return &appAuth.User[userModel.User]{ID: "user-1"}, nil
+		},
+		GetSession: func(id string) (*appAuth.Session[sessionModel.Session], error) {
+			return &appAuth.Session[sessionModel.Session]{ID: id}, nil
+		}, CreateSession: func(id, userID string, expires time.Time) (*appAuth.Session[sessionModel.Session], error) {
+			return &appAuth.Session[sessionModel.Session]{ID: id, UserID: userID, ExpiresAt: expires}, nil
+		},
+		UpdateSession: func(id string, expires time.Time, _ *sessionModel.Session) (*appAuth.Session[sessionModel.Session], error) {
+			return &appAuth.Session[sessionModel.Session]{ID: id, ExpiresAt: expires}, nil
+		}, DeleteSession: func(id string) (*appAuth.Session[sessionModel.Session], error) {
+			return nil, errors.New("delete session failed")
+		},
+	}})
+	e := echo.New()
+	rec := httptest.NewRecorder()
+	c := e.NewContext(httptest.NewRequest(http.MethodGet, "/users/logout", nil), rec)
+	c.Set(appAuth.CONTEXT_KEY_AUTH, auth)
+	c.Set(appAuth.CONTEXT_KEY_USER, &appAuth.User[userModel.User]{ID: "user-1"})
+
+	err := GetLogout(c)
+	if err == nil {
+		t.Fatal("expected error, got nil")
 	}
 }

@@ -219,3 +219,145 @@ func writeTestFile(t *testing.T, path string, content string) {
 		t.Fatal(err)
 	}
 }
+
+func TestRenderUsesCache(t *testing.T) {
+	t.Parallel()
+
+	basePath := t.TempDir()
+	frontendPath := filepath.Join(basePath, "frontend", "index")
+	writeTestFile(t, filepath.Join(basePath, "base.html"), `{{define "base"}}{{template "content" .}}{{end}}`)
+	writeTestFile(t, filepath.Join(basePath, "frontend", "layout.html"), `{{define "layout"}}{{end}}`)
+	writeTestFile(t, filepath.Join(frontendPath, "index.html"), `{{define "content"}}hello{{end}}`)
+
+	renderer := New(&TemplateConfig{
+		BasePath: basePath,
+		Layouts: map[string]TemplateNode{
+			"frontend": {
+				FilePath: "layout.html",
+			},
+		},
+		SharedTmplPaths: []string{"base.html"},
+	})
+
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	var out1 bytes.Buffer
+	if err := renderer.Render(c, &out1, "frontend:index/index.html", map[string]any{}); err != nil {
+		t.Fatal(err)
+	}
+
+	// Now delete the template files to ensure it must read from cache
+	_ = os.RemoveAll(basePath)
+
+	var out2 bytes.Buffer
+	if err := renderer.Render(c, &out2, "frontend:index/index.html", map[string]any{}); err != nil {
+		t.Fatal(err)
+	}
+
+	if out2.String() != "hello" {
+		t.Fatalf("expected cached render output 'hello', got %q", out2.String())
+	}
+}
+
+func TestRenderInvokesSharedData(t *testing.T) {
+	t.Parallel()
+
+	basePath := t.TempDir()
+	frontendPath := filepath.Join(basePath, "frontend", "index")
+	writeTestFile(t, filepath.Join(basePath, "base.html"), `{{define "base"}}{{template "content" .}}{{end}}`)
+	writeTestFile(t, filepath.Join(basePath, "frontend", "layout.html"), `{{define "layout"}}{{end}}`)
+	writeTestFile(t, filepath.Join(frontendPath, "index.html"), `{{define "content"}}{{.val}}{{end}}`)
+
+	renderer := New(&TemplateConfig{
+		BasePath: basePath,
+		Layouts: map[string]TemplateNode{
+			"frontend": {
+				FilePath: "layout.html",
+			},
+		},
+		SharedTmplPaths: []string{"base.html"},
+		SharedData: func(c *echo.Context, layoutNames []string) map[string]any {
+			return map[string]any{"val": "shared-value"}
+		},
+	})
+
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	var out bytes.Buffer
+	if err := renderer.Render(c, &out, "frontend:index/index.html", map[string]any{}); err != nil {
+		t.Fatal(err)
+	}
+
+	if got, want := out.String(), "shared-value"; got != want {
+		t.Fatalf("expected %q, got %q", want, got)
+	}
+}
+
+func TestBuildTemplateFileNotExistError(t *testing.T) {
+	t.Parallel()
+
+	renderer := New(&TemplateConfig{
+		BasePath: "non-existent-directory-xyz",
+		Layouts: map[string]TemplateNode{
+			"frontend": {
+				FilePath: "layout.html",
+			},
+		},
+	})
+
+	_, err := renderer.buildTemplate("frontend:index/index.html")
+	if err == nil {
+		t.Fatal("expected error, got nil")
+	}
+}
+
+func TestExecuteTemplateCloneError(t *testing.T) {
+	t.Parallel()
+
+	basePath := t.TempDir()
+	frontendPath := filepath.Join(basePath, "frontend", "index")
+	writeTestFile(t, filepath.Join(basePath, "base.html"), `{{define "base"}}{{template "content" .}}{{end}}`)
+	writeTestFile(t, filepath.Join(basePath, "frontend", "layout.html"), `{{define "layout"}}{{end}}`)
+	writeTestFile(t, filepath.Join(frontendPath, "index.html"), `{{define "content"}}hello{{end}}`)
+
+	renderer := New(&TemplateConfig{
+		BasePath: basePath,
+		Layouts: map[string]TemplateNode{
+			"frontend": {
+				FilePath: "layout.html",
+			},
+		},
+		SharedTmplPaths: []string{"base.html"},
+	})
+
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	var out1 bytes.Buffer
+	if err := renderer.Render(c, &out1, "frontend:index/index.html", map[string]any{}); err != nil {
+		t.Fatal(err)
+	}
+
+	// Access the cache and execute the cached template directly
+	renderer.mu.Lock()
+	cachedTmpl := renderer.cache["frontend:index/index.html"]
+	renderer.mu.Unlock()
+
+	var dummy bytes.Buffer
+	if err := cachedTmpl.ExecuteTemplate(&dummy, "base", nil); err != nil {
+		t.Fatal(err)
+	}
+
+	// Now cachedTmpl is executed. Let's call Render again to trigger Clone error
+	if err := renderer.Render(c, io.Discard, "frontend:index/index.html", map[string]any{}); err == nil {
+		t.Fatal("expected clone error since cached template was executed")
+	}
+}

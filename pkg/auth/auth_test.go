@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/ian77-huang/golang-echo/pkg/argon2"
 	"github.com/labstack/echo/v5"
 )
 
@@ -487,4 +488,123 @@ func testResolver(update func(*Resolver[struct{}, struct{}])) *Resolver[struct{}
 		update(r)
 	}
 	return r
+}
+
+func TestGetAccessTokenMalformedCookie(t *testing.T) {
+	original := readCookie
+	readCookie = func(c *echo.Context, name string) (*http.Cookie, error) {
+		return nil, errors.New("mock read cookie error")
+	}
+	t.Cleanup(func() { readCookie = original })
+
+	auth := New(&Config[struct{}, struct{}]{SecretKey: "test-secret", Resolver: testResolver(nil)})
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	c := e.NewContext(req, httptest.NewRecorder())
+	_, err := auth.getAccessToken(c)
+	if err == nil {
+		t.Fatal("expected malformed cookie read error")
+	}
+	var fieldErr FieldError
+	if !errors.As(err, &fieldErr) || fieldErr.Tag != "error.auth.ReadCookieFailed" {
+		t.Fatalf("expected ReadCookieFailed error, got %v", err)
+	}
+}
+
+func TestCreateUserPasswordHashingError(t *testing.T) {
+	original := argon2.RandomRead
+	argon2.RandomRead = func([]byte) (int, error) { return 0, errors.New("mock rand failed") }
+	t.Cleanup(func() { argon2.RandomRead = original })
+
+	auth := New(&Config[struct{}, struct{}]{SecretKey: "test-secret", Resolver: testResolver(nil)})
+	_, err := auth.CreateUser("user", "password")
+	if err == nil {
+		t.Fatal("expected password hashing failure")
+	}
+	var fieldErr FieldError
+	if !errors.As(err, &fieldErr) || fieldErr.Tag != "error.auth.FailedToSecurePassword" {
+		t.Fatalf("expected FailedToSecurePassword error, got %v", err)
+	}
+}
+
+func TestParseTokenInvalidClaimsTypeOrValidFalse(t *testing.T) {
+	original := parseJWT
+	t.Cleanup(func() { parseJWT = original })
+
+	parseJWT = func(tokenStr string, claims jwt.Claims, keyFunc jwt.Keyfunc) (*jwt.Token, error) {
+		return &jwt.Token{Valid: false, Claims: claims}, nil
+	}
+
+	auth := New(&Config[struct{}, struct{}]{SecretKey: "test-secret", Resolver: testResolver(nil)})
+	_, err := auth.parseToken("some-token")
+	if err == nil || err.Error() != "invalid token claims" {
+		t.Fatalf("expected 'invalid token claims' error, got %v", err)
+	}
+}
+
+func TestMiddlewareSessionRefreshFails(t *testing.T) {
+	auth := New(&Config[struct{}, struct{}]{SecretKey: "test-secret", SessionRefreshAt: 15, Resolver: testResolver(func(r *Resolver[struct{}, struct{}]) {
+		r.GetSession = func(id string) (*Session[struct{}], error) {
+			return &Session[struct{}]{ID: id, UserID: "user-1", ExpiresAt: time.Now().Add(5 * 24 * time.Hour)}, nil
+		}
+		r.GetUser = func(id string) (*User[struct{}], error) { return &User[struct{}]{ID: id}, nil }
+	})})
+	auth.config.Resolver.UpdateSession = nil
+
+	token, err := auth.createToken("token", time.Now().Add(20*24*time.Hour))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	req.AddCookie(&http.Cookie{Name: DEFAULT_SESSION_COOKIE_NAME, Value: token})
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	called := false
+	err = auth.Middleware()(func(c *echo.Context) error {
+		called = true
+		return nil
+	})(c)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !called {
+		t.Fatal("expected middleware handler to be called")
+	}
+
+	// Verify that the cookie was deleted (i.e. has Max-Age = -1 or Expires in past)
+	cookies := rec.Result().Cookies()
+	if len(cookies) == 0 {
+		t.Fatal("expected at least one cookie in response to indicate deletion")
+	}
+	deleted := false
+	for _, cookie := range cookies {
+		if cookie.Name == DEFAULT_SESSION_COOKIE_NAME && (cookie.MaxAge < 0 || cookie.Expires.Before(time.Now())) {
+			deleted = true
+			break
+		}
+	}
+	if !deleted {
+		t.Fatalf("expected session cookie to be deleted, response cookies: %#v", cookies)
+	}
+}
+
+func TestCreateSessionGenerateTokenError(t *testing.T) {
+	original := randomRead
+	randomRead = func([]byte) (int, error) { return 0, errors.New("random failed") }
+	t.Cleanup(func() { randomRead = original })
+
+	auth := New(&Config[struct{}, struct{}]{SecretKey: "test-secret", Resolver: testResolver(nil)})
+	c := echo.New().NewContext(httptest.NewRequest(http.MethodPost, "/", nil), httptest.NewRecorder())
+	ok, err := auth.createSession(c, "user-1")
+	if ok || err == nil {
+		t.Fatalf("expected error from createSession, got ok=%v, err=%v", ok, err)
+	}
+	var fieldErr FieldError
+	if !errors.As(err, &fieldErr) || fieldErr.Tag != "error.auth.FailedToIssueToken" {
+		t.Fatalf("expected FailedToIssueToken error, got %v", err)
+	}
 }

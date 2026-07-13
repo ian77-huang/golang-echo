@@ -2,6 +2,7 @@ package users
 
 import (
 	"bytes"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -78,5 +79,38 @@ func TestPostLoginRejectsMalformedJSON(t *testing.T) {
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	if err := PostLogin(e.NewContext(req, rec)); err != nil || rec.Code != http.StatusBadRequest {
 		t.Fatalf("status=%d err=%v", rec.Code, err)
+	}
+}
+
+func TestPostLoginReturnsErrorWhenActionLoginFails(t *testing.T) {
+	e := echo.New()
+	e.Validator = appValidator.New()
+	auth := appAuth.New(&appAuth.Config[userModel.User, sessionModel.Session]{SecretKey: "test-secret", Resolver: &appAuth.Resolver[userModel.User, sessionModel.Session]{
+		IsAccountExist: func(string) (bool, error) { return false, nil }, CreateUser: func(string, string) (*appAuth.User[userModel.User], error) {
+			return &appAuth.User[userModel.User]{ID: "user-1"}, nil
+		},
+		GetUser: func(id string) (*appAuth.User[userModel.User], error) {
+			return &appAuth.User[userModel.User]{ID: id}, nil
+		}, GetUserByAccount: func(string) (*appAuth.User[userModel.User], error) {
+			return nil, errors.New("db error")
+		},
+		GetSession: func(id string) (*appAuth.Session[sessionModel.Session], error) {
+			return &appAuth.Session[sessionModel.Session]{ID: id}, nil
+		}, CreateSession: func(id, userID string, expires time.Time) (*appAuth.Session[sessionModel.Session], error) {
+			return &appAuth.Session[sessionModel.Session]{ID: id, UserID: userID, ExpiresAt: expires}, nil
+		},
+		UpdateSession: func(id string, expires time.Time, _ *sessionModel.Session) (*appAuth.Session[sessionModel.Session], error) {
+			return &appAuth.Session[sessionModel.Session]{ID: id, ExpiresAt: expires}, nil
+		}, DeleteSession: func(id string) (*appAuth.Session[sessionModel.Session], error) {
+			return &appAuth.Session[sessionModel.Session]{ID: id}, nil
+		},
+	}})
+	req := httptest.NewRequest(http.MethodPost, "/api/users/login", bytes.NewBufferString(`{"account":"tester","password":"password123"}`))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	err := auth.Middleware()(PostLogin)(c)
+	if err == nil {
+		t.Fatal("expected error from PostLogin when ActionLogin fails, got nil")
 	}
 }
