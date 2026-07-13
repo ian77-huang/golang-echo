@@ -11,6 +11,8 @@ func FrontendRouting(e *echo.Echo) {
 
 	usersGroup := e.Group("/users")
 
+	usersGroup.GET("", handlerUsers.GetIndex)
 	usersGroup.GET("/login", handlerUsers.GetLogin)
 	usersGroup.GET("/register", handlerUsers.GetRegister)
+	usersGroup.GET("/logout", handlerUsers.GetLogout)
 }

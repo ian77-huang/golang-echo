@@ -1,20 +1,23 @@
 package cast
 
 import (
-	"log"
+	"fmt"
 	"strconv"
 )
 
-func Int(val string, def int) int {
+func StringToInt(val string, def int) (int, error) {
 	if val == "" {
-		return def
+		return def, nil
 	}
 
 	castValue, err := strconv.Atoi(val)
 	if err != nil {
-		log.Printf("WARN: Failed to cast string %q to int, falling back to default: %d", val, def)
-		return def
+		return def, fmt.Errorf("WARN: Failed to cast string %q to int, falling back to default: %d", val, def)
 	}
 
-	return castValue
+	return castValue, nil
+}
+
+func IntToString(val int) string {
+	return strconv.Itoa(val)
 }

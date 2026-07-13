@@ -42,3 +42,9 @@ other = "Specified cookie not found"
 
 [error.auth.ReadCookieFailed]
 other = "Failed to read cookie"
+
+[error.auth.LogoutIsError]
+other = "Logout is error"
+
+[error.auth.login.failed]
+other = "Login is failed"

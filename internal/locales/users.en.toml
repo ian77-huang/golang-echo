@@ -20,4 +20,7 @@ other = "Password"
 other = "Confirm Password"
 
 [users.auth.create.success]
-other = "user created successfully"
+other = "User created successfully"
+
+[users.auth.login.success]
+other = "Login successfully"

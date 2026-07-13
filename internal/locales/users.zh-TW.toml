@@ -21,3 +21,6 @@ other = "確認密碼"
 
 [users.auth.create.success]
 other = "使用者建立成功"
+
+[users.auth.login.success]
+other = "登入成功"

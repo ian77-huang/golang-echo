@@ -70,6 +70,16 @@
                         },
                         body: JSON.stringify(this.form),
                     })
+
+                    const data = await res.json();
+                    if (typeof data.code !== "undefined" && data.code === "validation_failed") {
+                        alert(data.message)
+                    }
+                    else {
+                        alert(data.message)
+                        window.location.href = "/";
+                    }
+                    console.log(data);
                 },
             }
         })

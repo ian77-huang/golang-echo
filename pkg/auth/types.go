@@ -13,9 +13,9 @@ type JwtCustomClaims struct {
 }
 
 type User[T any] struct {
-	ID string
-
-	Data *T
+	ID       string
+	Password string
+	Data     *T
 }
 
 type Session[T any] struct {

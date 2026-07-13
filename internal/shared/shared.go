@@ -8,3 +8,9 @@ import (
 func T(c *echo.Context, messageID string, pairs ...any) string {
 	return appi18n.T(c, messageID, pairs...)
 }
+
+func TFactory(c *echo.Context) func(messageID string, pairs ...any) string {
+	return func(messageID string, pairs ...any) string {
+		return appi18n.T(c, messageID, pairs...)
+	}
+}
