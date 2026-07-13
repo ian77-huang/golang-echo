@@ -7,7 +7,5 @@ import (
 )
 
 func GetLogin(c *echo.Context) error {
-	return c.Render(http.StatusOK, "frontend:users:/login.html", map[string]any{
-		"Name": "Yien12345",
-	})
+	return c.Render(http.StatusOK, "frontend:users:/login.html", map[string]any{})
 }
