@@ -8,6 +8,8 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+var signJWT = func(token *jwt.Token, key []byte) (string, error) { return token.SignedString(key) }
+
 func (a *Auth[TUser, TSession]) getJwtSecret() []byte {
 	return []byte(a.config.SecretKey)
 }
@@ -20,7 +22,7 @@ func (a *Auth[TUser, TSession]) createToken(id string, expiresAt time.Time) (str
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	return token.SignedString(a.getJwtSecret())
+	return signJWT(token, a.getJwtSecret())
 }
 
 func (a *Auth[TUser, TSession]) parseToken(tokenStr string) (*JwtCustomClaims, error) {

@@ -1,0 +1,2430 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>migrate: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/ian77-huang/golang-echo/cmd/migrate/main.go (60.9%)</option>
+				
+				<option value="file1">github.com/ian77-huang/golang-echo/cmd/server/main.go (71.4%)</option>
+				
+				<option value="file2">github.com/ian77-huang/golang-echo/internal/config/auth.go (80.5%)</option>
+				
+				<option value="file3">github.com/ian77-huang/golang-echo/internal/config/config.go (100.0%)</option>
+				
+				<option value="file4">github.com/ian77-huang/golang-echo/internal/config/db.go (100.0%)</option>
+				
+				<option value="file5">github.com/ian77-huang/golang-echo/internal/config/i18n.go (100.0%)</option>
+				
+				<option value="file6">github.com/ian77-huang/golang-echo/internal/config/menus.go (100.0%)</option>
+				
+				<option value="file7">github.com/ian77-huang/golang-echo/internal/config/template.go (90.9%)</option>
+				
+				<option value="file8">github.com/ian77-huang/golang-echo/internal/handler/api/postChangeLang.go (100.0%)</option>
+				
+				<option value="file9">github.com/ian77-huang/golang-echo/internal/handler/api/users/postLogin.go (91.7%)</option>
+				
+				<option value="file10">github.com/ian77-huang/golang-echo/internal/handler/api/users/postRegister.go (94.7%)</option>
+				
+				<option value="file11">github.com/ian77-huang/golang-echo/internal/handler/frontend/users/getIndex.go (100.0%)</option>
+				
+				<option value="file12">github.com/ian77-huang/golang-echo/internal/handler/frontend/users/getLogin.go (100.0%)</option>
+				
+				<option value="file13">github.com/ian77-huang/golang-echo/internal/handler/frontend/users/getLogout.go (85.7%)</option>
+				
+				<option value="file14">github.com/ian77-huang/golang-echo/internal/handler/frontend/users/getRegister.go (100.0%)</option>
+				
+				<option value="file15">github.com/ian77-huang/golang-echo/internal/handler/index.go (100.0%)</option>
+				
+				<option value="file16">github.com/ian77-huang/golang-echo/internal/models/session/session.go (100.0%)</option>
+				
+				<option value="file17">github.com/ian77-huang/golang-echo/internal/models/users/users.go (100.0%)</option>
+				
+				<option value="file18">github.com/ian77-huang/golang-echo/internal/response/error.go (100.0%)</option>
+				
+				<option value="file19">github.com/ian77-huang/golang-echo/internal/router/router.go (100.0%)</option>
+				
+				<option value="file20">github.com/ian77-huang/golang-echo/internal/router/routing/api.go (100.0%)</option>
+				
+				<option value="file21">github.com/ian77-huang/golang-echo/internal/router/routing/frontend.go (100.0%)</option>
+				
+				<option value="file22">github.com/ian77-huang/golang-echo/internal/shared/shared.go (100.0%)</option>
+				
+				<option value="file23">github.com/ian77-huang/golang-echo/pkg/argon2/argon2.go (100.0%)</option>
+				
+				<option value="file24">github.com/ian77-huang/golang-echo/pkg/auth/actionLogin.go (100.0%)</option>
+				
+				<option value="file25">github.com/ian77-huang/golang-echo/pkg/auth/actionLogout.go (100.0%)</option>
+				
+				<option value="file26">github.com/ian77-huang/golang-echo/pkg/auth/actionRegister.go (100.0%)</option>
+				
+				<option value="file27">github.com/ian77-huang/golang-echo/pkg/auth/auth.go (100.0%)</option>
+				
+				<option value="file28">github.com/ian77-huang/golang-echo/pkg/auth/checkValues.go (100.0%)</option>
+				
+				<option value="file29">github.com/ian77-huang/golang-echo/pkg/auth/cookie.go (90.9%)</option>
+				
+				<option value="file30">github.com/ian77-huang/golang-echo/pkg/auth/crud.go (92.3%)</option>
+				
+				<option value="file31">github.com/ian77-huang/golang-echo/pkg/auth/crypto.go (100.0%)</option>
+				
+				<option value="file32">github.com/ian77-huang/golang-echo/pkg/auth/errors.go (100.0%)</option>
+				
+				<option value="file33">github.com/ian77-huang/golang-echo/pkg/auth/getters.go (100.0%)</option>
+				
+				<option value="file34">github.com/ian77-huang/golang-echo/pkg/auth/jwt.go (92.9%)</option>
+				
+				<option value="file35">github.com/ian77-huang/golang-echo/pkg/auth/middleware.go (97.6%)</option>
+				
+				<option value="file36">github.com/ian77-huang/golang-echo/pkg/auth/password.go (87.5%)</option>
+				
+				<option value="file37">github.com/ian77-huang/golang-echo/pkg/auth/session.go (95.3%)</option>
+				
+				<option value="file38">github.com/ian77-huang/golang-echo/pkg/auth/time.go (100.0%)</option>
+				
+				<option value="file39">github.com/ian77-huang/golang-echo/pkg/cast/cast.go (100.0%)</option>
+				
+				<option value="file40">github.com/ian77-huang/golang-echo/pkg/database/database.go (100.0%)</option>
+				
+				<option value="file41">github.com/ian77-huang/golang-echo/pkg/database/middleware.go (100.0%)</option>
+				
+				<option value="file42">github.com/ian77-huang/golang-echo/pkg/i18n/config.go (100.0%)</option>
+				
+				<option value="file43">github.com/ian77-huang/golang-echo/pkg/i18n/i18n.go (100.0%)</option>
+				
+				<option value="file44">github.com/ian77-huang/golang-echo/pkg/i18n/language.go (100.0%)</option>
+				
+				<option value="file45">github.com/ian77-huang/golang-echo/pkg/i18n/template.go (100.0%)</option>
+				
+				<option value="file46">github.com/ian77-huang/golang-echo/pkg/renderer/buildTemplate.go (80.0%)</option>
+				
+				<option value="file47">github.com/ian77-huang/golang-echo/pkg/renderer/lib.go (100.0%)</option>
+				
+				<option value="file48">github.com/ian77-huang/golang-echo/pkg/renderer/mergeSharedData.go (88.9%)</option>
+				
+				<option value="file49">github.com/ian77-huang/golang-echo/pkg/renderer/renderer.go (93.2%)</option>
+				
+				<option value="file50">github.com/ian77-huang/golang-echo/pkg/renderer/resolveTemplateFiles.go (100.0%)</option>
+				
+				<option value="file51">github.com/ian77-huang/golang-echo/pkg/validator/validator.go (100.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package main
+
+import (
+        "database/sql"
+        "log"
+        "os"
+        "path/filepath"
+
+        "github.com/golang-migrate/migrate/v4"
+        "github.com/golang-migrate/migrate/v4/database/sqlite3"
+        _ "github.com/golang-migrate/migrate/v4/source/file"
+        _ "github.com/mattn/go-sqlite3" // 引入 SQLite 驅動
+
+        appConfig "github.com/ian77-huang/golang-echo/internal/config"
+)
+
+func main() <span class="cov0" title="0">{
+
+        log.Printf("\n==== SQLite - 資料庫遷移 - 開始\n")
+
+        config := appConfig.Load()
+        if err := runMigrations(config.Databases.Path, "file://migrations"); err != nil </span><span class="cov0" title="0">{
+                log.Fatal(err)
+        }</span>
+
+        <span class="cov0" title="0">log.Printf("==== SQLite - 資料庫遷移 - 成功\n")</span>
+}
+
+func runMigrations(dbPath, migrationsURL string) error <span class="cov8" title="1">{
+
+        log.Printf("\n==== SQLite - 資料庫遷移 - 資料庫位置：%+v\n", dbPath)
+
+        dir := filepath.Dir(dbPath)
+        err := os.MkdirAll(dir, 0755)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">db, err := sql.Open("sqlite3", dbPath)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">defer db.Close()
+
+        driver, err := sqlite3.WithInstance(db, &amp;sqlite3.Config{})
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">m, err := migrate.NewWithDatabaseInstance(
+                migrationsURL,
+                "sqlite3",
+                driver,
+        )
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">if err := m.Up(); err != nil &amp;&amp; err != migrate.ErrNoChange </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package main
+
+import (
+        appConfig "github.com/ian77-huang/golang-echo/internal/config"
+
+        "github.com/ian77-huang/golang-echo/internal/router"
+
+        "github.com/ian77-huang/golang-echo/pkg/database"
+        "github.com/ian77-huang/golang-echo/pkg/renderer"
+        "github.com/ian77-huang/golang-echo/pkg/validator"
+
+        "github.com/labstack/echo/v5"
+        echomiddleware "github.com/labstack/echo/v5/middleware"
+)
+
+type User struct {
+}
+type Session struct {
+}
+
+func main() <span class="cov0" title="0">{
+        e, err := newServer()
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err)</span>
+        }
+
+        <span class="cov0" title="0">if err := e.Start(":1323"); err != nil </span><span class="cov0" title="0">{
+                e.Logger.Error("failed to start server", "error", err)
+        }</span>
+}
+
+func newServer() (*echo.Echo, error) <span class="cov8" title="1">{
+        config := appConfig.Load()
+
+        translator, err := appConfig.I18n()
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">db := database.NewSqlite(config.Databases.Path)
+
+        auth := appConfig.Auth(db)
+
+        e := router.New()
+        t := renderer.New(appConfig.RendererTemplate(
+                renderer.WithFuncs(translator.TemplateFuncs),
+        ))
+
+        e.Validator = validator.New()
+        e.Renderer = t
+
+        e.Use(echomiddleware.RequestLogger())
+        e.Use(echomiddleware.Recover())
+        e.Use(translator.Middleware())
+        e.Use(database.Middleware(db))
+
+        e.Use(auth.Middleware())
+
+        return e, nil</span>
+}
+
+// .
+// ├── cmd/
+// │   └── api/
+// │       └── main.go
+// ├── internal/
+// │   ├── config/
+// │   ├── handler/
+// │   ├── service/
+// │   ├── repository/
+// │   └── model/
+// ├── pkg/
+// ├── migrations/
+// ├── go.mod
+// └── .env
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package config
+
+import (
+        "time"
+
+        "github.com/ian77-huang/golang-echo/internal/models/session"
+        "github.com/ian77-huang/golang-echo/internal/models/users"
+        appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
+        "github.com/ian77-huang/golang-echo/pkg/cast"
+        "gorm.io/gorm"
+)
+
+func Auth(db *gorm.DB) *appAuth.Auth[users.User, session.Session] <span class="cov8" title="1">{
+        config := Load()
+        guestOnly := &amp;appAuth.RoutesPaths{
+                Rules:       []string{"/users/login", "/users/register"},
+                RedirectURL: "/",
+        }
+        AuthOnly := &amp;appAuth.RoutesPaths{
+                Rules:       []string{},
+                RedirectURL: "/users/login",
+        }
+        route := &amp;appAuth.Route[users.User]{
+                GuestOnly: guestOnly,
+                AuthOnly:  AuthOnly,
+        }
+        resolver := &amp;appAuth.Resolver[users.User, session.Session]{
+                IsAccountExist: func(account string) (bool, error) </span><span class="cov8" title="1">{
+                        return users.IsAccountExist(db, account)
+                }</span>,
+                CreateUser: func(account, password string) (*appAuth.User[users.User], error) <span class="cov8" title="1">{
+                        user, err := users.CreateUser(db, account, password)
+                        if err != nil </span><span class="cov8" title="1">{
+                                return nil, err
+                        }</span>
+                        <span class="cov8" title="1">authUser := &amp;appAuth.User[users.User]{ID: cast.IntToString(user.Id), Password: user.Password}
+                        return authUser, nil</span>
+                },
+                GetUser: func(id string) (*appAuth.User[users.User], error) <span class="cov8" title="1">{
+                        userId, err := cast.StringToInt(id, 0)
+                        if err != nil </span><span class="cov0" title="0">{
+                                return nil, err
+                        }</span>
+                        <span class="cov8" title="1">user, err := users.GetUser(db, userId)
+                        if err != nil </span><span class="cov0" title="0">{
+                                return nil, err
+                        }</span>
+                        <span class="cov8" title="1">authUser := &amp;appAuth.User[users.User]{ID: id, Data: user, Password: user.Password}
+                        return authUser, nil</span>
+                },
+                GetUserByAccount: func(account string) (*appAuth.User[users.User], error) <span class="cov8" title="1">{
+                        user, err := users.GetUserByAccount(db, account)
+                        if err != nil </span><span class="cov8" title="1">{
+                                return nil, err
+                        }</span>
+                        <span class="cov8" title="1">authUser := &amp;appAuth.User[users.User]{ID: cast.IntToString(user.Id), Data: user, Password: user.Password}
+                        return authUser, nil</span>
+                },
+                CreateSession: func(id, userId string, expiresAt time.Time) (*appAuth.Session[session.Session], error) <span class="cov8" title="1">{
+                        sess, err := session.CreateSession(db, id, userId, expiresAt)
+                        if err != nil </span><span class="cov0" title="0">{
+                                return nil, err
+                        }</span>
+
+                        <span class="cov8" title="1">return (&amp;appAuth.Session[session.Session]{ID: sess.ID, UserID: userId, ExpiresAt: sess.ExpiresAt, Data: sess}), nil</span>
+                },
+                UpdateSession: func(id string, expiresAt time.Time, sess *session.Session) (*appAuth.Session[session.Session], error) <span class="cov0" title="0">{
+                        updateSess, err := session.UpdateSession(db, id, expiresAt, sess)
+                        if err != nil </span><span class="cov0" title="0">{
+                                return nil, err
+                        }</span>
+                        <span class="cov0" title="0">return (&amp;appAuth.Session[session.Session]{ID: sess.ID, UserID: updateSess.UserID, ExpiresAt: sess.ExpiresAt, Data: sess}), nil</span>
+                },
+                DeleteSession: func(id string) (*appAuth.Session[session.Session], error) <span class="cov8" title="1">{
+                        sess, err := session.DeleteSession(db, id)
+                        if err != nil </span><span class="cov8" title="1">{
+                                return nil, err
+                        }</span>
+                        <span class="cov8" title="1">return (&amp;appAuth.Session[session.Session]{ID: sess.ID, UserID: sess.UserID, ExpiresAt: sess.ExpiresAt, Data: sess}), nil</span>
+                },
+                GetSession: func(id string) (*appAuth.Session[session.Session], error) <span class="cov8" title="1">{
+                        sess, err := session.GetSession(db, id)
+                        if err != nil </span><span class="cov0" title="0">{
+                                return nil, err
+                        }</span>
+                        <span class="cov8" title="1">return (&amp;appAuth.Session[session.Session]{ID: sess.ID, UserID: sess.UserID, ExpiresAt: sess.ExpiresAt, Data: sess}), nil</span>
+                },
+        }
+        <span class="cov8" title="1">return appAuth.New(&amp;appAuth.Config[users.User, session.Session]{
+                SecretKey: config.SecretKey,
+                Resolver:  resolver,
+                Route:     route,
+        })</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package config
+
+import (
+        "os"
+
+        "github.com/ian77-huang/golang-echo/pkg/cast"
+
+        _ "github.com/joho/godotenv/autoload"
+)
+
+func Load() Config <span class="cov8" title="1">{
+        minLengthAccount, err := cast.StringToInt(os.Getenv("USERS_ACCOUNT_MIN_LENGTH"), 6)
+        if err != nil </span><span class="cov8" title="1">{
+                panic(err)</span>
+        }
+        <span class="cov8" title="1">minLengthPassword, err := cast.StringToInt(os.Getenv("USERS_PASSWORD_MIN_LENGTH"), 8)
+        if err != nil </span><span class="cov8" title="1">{
+                panic(err)</span>
+        }
+        <span class="cov8" title="1">return Config{
+                SecretKey: os.Getenv("SECRET_KEY"),
+                Databases: ConfigDatabases{
+                        Path: os.Getenv("DATABASE_PATH"),
+                },
+                Users: ConfigUsers{
+                        MinLengthAccount:  minLengthAccount,
+                        MinLengthPassword: minLengthPassword,
+                },
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package config
+
+import (
+        "gorm.io/driver/sqlite"
+        "gorm.io/gorm"
+)
+
+func DB() *gorm.DB <span class="cov8" title="1">{
+        config := Load()
+
+        db, err := gorm.Open(sqlite.Open(config.Databases.Path), &amp;gorm.Config{})
+        if err != nil </span><span class="cov8" title="1">{
+                panic("=== Error：Unable to connect to the database. ====")</span>
+        }
+        <span class="cov8" title="1">return db</span>
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package config
+
+import (
+        "github.com/ian77-huang/golang-echo/internal/locales"
+        appi18n "github.com/ian77-huang/golang-echo/pkg/i18n"
+)
+
+func I18n() (*appi18n.I18n, error) <span class="cov8" title="1">{
+        return appi18n.New(appi18n.Config{
+                DefaultLang:            "zh-TW",
+                SupportedLanguageCodes: []string{"zh-TW", "en"},
+                MessageFS:              locales.FS,
+                MessageFiles: []string{
+                        "active.zh-TW.toml",
+                        "active.en.toml",
+                        "errors.en.toml",
+                        "errors.zh-TW.toml",
+                        "index.en.toml",
+                        "index.zh-TW.toml",
+                        "placeholders.en.toml",
+                        "placeholders.zh-TW.toml",
+                        "users.en.toml",
+                        "users.zh-TW.toml",
+                        "validations.en.toml",
+                        "validations.zh-TW.toml",
+                },
+        })
+}</span>
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package config
+
+func SetMenus(rule MenuRules) []Menus <span class="cov8" title="1">{
+        menus := []Menus{
+                {Name: rule.T("index.title"), Url: "/"},
+                {Name: rule.T("users.title"), Url: "/users", Childs: rule.users},
+        }
+        return menus
+}</span>
+func SetMenusUsers(rule MenuUsersRules) []MenusChilds <span class="cov8" title="1">{
+        users := []MenusChilds{}
+
+        switch rule.Path </span>{
+        case "/users/login":<span class="cov8" title="1">
+                if !rule.IsSignedIn </span><span class="cov8" title="1">{
+                        users = append(users, MenusChilds{Name: rule.T("users.register"), Url: "/users/register"})
+                }</span>
+        case "/users/register":<span class="cov8" title="1">
+                if !rule.IsSignedIn </span><span class="cov8" title="1">{
+                        users = append(users, MenusChilds{Name: rule.T("users.login"), Url: "/users/login"})
+                }</span>
+        default:<span class="cov8" title="1">
+                if !rule.IsSignedIn </span><span class="cov8" title="1">{
+                        users = append(users, MenusChilds{Name: rule.T("users.register"), Url: "/users/register"})
+                        users = append(users, MenusChilds{Name: rule.T("users.login"), Url: "/users/login"})
+                }</span>
+        }
+        <span class="cov8" title="1">return users</span>
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package config
+
+import (
+        "github.com/ian77-huang/golang-echo/internal/models/users"
+        "github.com/ian77-huang/golang-echo/internal/shared"
+        appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
+        "github.com/ian77-huang/golang-echo/pkg/renderer"
+        "github.com/labstack/echo/v5"
+)
+
+func RendererTemplate(options ...renderer.Option) *renderer.TemplateConfig <span class="cov8" title="1">{
+        runtime := renderer.RuntimeConfig{}
+        for _, option := range options </span><span class="cov0" title="0">{
+                option(&amp;runtime)
+        }</span>
+
+        <span class="cov8" title="1">config := &amp;renderer.TemplateConfig{
+                BasePath: "internal/views",
+                Layouts: map[string]renderer.TemplateNode{
+                        "frontend": {
+                                FilePath: "layout.html",
+                                Layouts: map[string]renderer.TemplateNode{
+                                        "users": {
+                                                FilePath: "layout.html",
+                                        },
+                                },
+                        },
+                        "admin": {
+                                FilePath: "layout.html",
+                        },
+                },
+                SharedTmplPaths: []string{"base.html"},
+                Runtime:         runtime,
+                SharedData: func(c *echo.Context, layoutNames []string) map[string]any </span><span class="cov8" title="1">{
+                        realPath := c.Request().URL.Path
+                        lang, _ := c.Get("lang").(string)
+
+                        isSignedIn := appAuth.IsSignedIn[users.User](c)
+
+                        users := SetMenusUsers(MenuUsersRules{Path: realPath, IsSignedIn: isSignedIn, T: shared.TFactory(c)})
+
+                        menus := SetMenus(MenuRules{users: users, T: shared.TFactory(c)})
+
+                        return map[string]any{
+                                "Lang":       lang,
+                                "Users":      users,
+                                "Menus":      menus,
+                                "IsSignedIn": isSignedIn,
+                        }
+                }</span>,
+        }
+
+        <span class="cov8" title="1">return config</span>
+}
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package api
+
+import (
+        "net/http"
+        "time"
+
+        "github.com/ian77-huang/golang-echo/internal/response"
+        "github.com/labstack/echo/v5"
+)
+
+type ChangeLangRequest struct {
+        Code string `json:"code" validate:"required,oneof=zh-TW en"`
+}
+
+func PostChangeLang(c *echo.Context) error <span class="cov8" title="1">{
+        var req ChangeLangRequest
+
+        if err := c.Bind(&amp;req); err != nil </span><span class="cov8" title="1">{
+                return response.Error(c, http.StatusBadRequest, "invalid request")
+        }</span>
+        <span class="cov8" title="1">if err := c.Validate(req); err != nil </span><span class="cov8" title="1">{
+                return response.ValidationError(c, err)
+        }</span>
+
+        <span class="cov8" title="1">c.SetCookie(&amp;http.Cookie{
+                Name:     "lang",
+                Value:    req.Code,
+                Path:     "/",
+                Expires:  time.Now().Add(365 * 24 * time.Hour),
+                HttpOnly: true,
+                SameSite: http.SameSiteLaxMode,
+        })
+
+        return response.JSON(c, map[string]any{
+                "lang": req.Code,
+        })</span>
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package users
+
+import (
+        "net/http"
+
+        "github.com/ian77-huang/golang-echo/internal/models/session"
+        "github.com/ian77-huang/golang-echo/internal/models/users"
+        "github.com/ian77-huang/golang-echo/internal/response"
+        "github.com/ian77-huang/golang-echo/internal/shared"
+
+        appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
+
+        "github.com/labstack/echo/v5"
+)
+
+func PostLogin(c *echo.Context) error <span class="cov8" title="1">{
+        var req RequestLogin
+
+        if err := c.Bind(&amp;req); err != nil </span><span class="cov8" title="1">{
+                return response.Error(c, http.StatusBadRequest, "invalid request")
+        }</span>
+
+        <span class="cov8" title="1">if err := c.Validate(req); err != nil </span><span class="cov8" title="1">{
+                return response.ValidationError(c, err)
+        }</span>
+
+        <span class="cov8" title="1">auth := appAuth.Load[users.User, session.Session](c)
+        if auth == nil </span><span class="cov8" title="1">{
+                return echo.NewHTTPError(http.StatusInternalServerError, "auth context not found")
+        }</span>
+
+        <span class="cov8" title="1">ID, err := auth.ActionLogin(c, req.Account, req.Password)
+        if err != nil </span><span class="cov0" title="0">{
+                return response.ValidationErrorAuth(c, err)
+        }</span>
+
+        <span class="cov8" title="1">return c.JSON(http.StatusCreated, map[string]interface{}{
+                "message": shared.T(c, "users.auth.login.success"),
+                "id":      ID,
+        })</span>
+}
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package users
+
+import (
+        "net/http"
+
+        appConfig "github.com/ian77-huang/golang-echo/internal/config"
+        "github.com/ian77-huang/golang-echo/internal/models/session"
+        "github.com/ian77-huang/golang-echo/internal/models/users"
+        "github.com/ian77-huang/golang-echo/internal/response"
+        "github.com/ian77-huang/golang-echo/internal/shared"
+
+        appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
+
+        "github.com/labstack/echo/v5"
+)
+
+func PostRegister(c *echo.Context) error <span class="cov8" title="1">{
+        var req RequestRegister
+
+        if err := c.Bind(&amp;req); err != nil </span><span class="cov8" title="1">{
+                return response.Error(c, http.StatusBadRequest, "invalid request")
+        }</span>
+
+        <span class="cov8" title="1">config := appConfig.Load()
+        if len(req.Account) &lt; config.Users.MinLengthAccount </span><span class="cov8" title="1">{
+                err := response.NewFieldError("account", "min", config.Users.MinLengthAccount)
+                return response.ValidationCustomError(c, err)
+        }</span>
+        <span class="cov8" title="1">if len(req.Password) &lt; config.Users.MinLengthPassword </span><span class="cov8" title="1">{
+                err := response.NewFieldError("password", "min", config.Users.MinLengthPassword)
+                return response.ValidationCustomError(c, err)
+        }</span>
+        <span class="cov8" title="1">if err := c.Validate(req); err != nil </span><span class="cov8" title="1">{
+                return response.ValidationError(c, err)
+        }</span>
+
+        <span class="cov8" title="1">auth := appAuth.Load[users.User, session.Session](c)
+        if auth == nil </span><span class="cov8" title="1">{
+                return echo.NewHTTPError(http.StatusInternalServerError, "auth context not found")
+        }</span>
+
+        <span class="cov8" title="1">ID, err := auth.ActionRegister(c, req.Account, req.Password)
+        if err != nil </span><span class="cov0" title="0">{
+                return response.ValidationErrorAuth(c, err)
+        }</span>
+
+        <span class="cov8" title="1">return c.JSON(http.StatusCreated, map[string]interface{}{
+                "message": shared.T(c, "users.auth.create.success"),
+                "id":      ID,
+        })</span>
+}
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package users
+
+import (
+        "net/http"
+
+        "github.com/labstack/echo/v5"
+)
+
+func GetIndex(c *echo.Context) error <span class="cov8" title="1">{
+        return c.Render(http.StatusOK, "frontend:users:/index.html", map[string]any{
+                "Name": "Yien12345",
+        })
+}</span>
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">package users
+
+import (
+        "net/http"
+
+        "github.com/labstack/echo/v5"
+)
+
+func GetLogin(c *echo.Context) error <span class="cov8" title="1">{
+        return c.Render(http.StatusOK, "frontend:users:/login.html", map[string]any{
+                "Name": "Yien12345",
+        })
+}</span>
+</pre>
+		
+		<pre class="file" id="file13" style="display: none">package users
+
+import (
+        "net/http"
+
+        "github.com/ian77-huang/golang-echo/internal/models/session"
+        "github.com/ian77-huang/golang-echo/internal/models/users"
+        "github.com/ian77-huang/golang-echo/internal/response"
+
+        appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
+
+        "github.com/labstack/echo/v5"
+)
+
+func GetLogout(c *echo.Context) error <span class="cov8" title="1">{
+        auth := appAuth.Load[users.User, session.Session](c)
+        if auth == nil </span><span class="cov8" title="1">{
+                return echo.NewHTTPError(http.StatusInternalServerError, "auth context not found")
+        }</span>
+
+        <span class="cov8" title="1">_, err := auth.ActionLogout(c)
+        if err != nil </span><span class="cov0" title="0">{
+                return response.ValidationErrorAuth(c, err)
+        }</span>
+
+        <span class="cov8" title="1">return c.Redirect(http.StatusSeeOther, "/users/login")</span>
+}
+</pre>
+		
+		<pre class="file" id="file14" style="display: none">package users
+
+import (
+        "net/http"
+
+        "github.com/ian77-huang/golang-echo/internal/config"
+        "github.com/labstack/echo/v5"
+)
+
+func GetRegister(c *echo.Context) error <span class="cov8" title="1">{
+
+        config := config.Load()
+
+        return c.Render(http.StatusOK, "frontend:users:/register.html", map[string]any{
+                "Name":              "Yien12345",
+                "MinLengthAccount":  config.Users.MinLengthAccount,
+                "MinLengthPassword": config.Users.MinLengthPassword,
+        })
+}</span>
+</pre>
+		
+		<pre class="file" id="file15" style="display: none">package handler
+
+import (
+        "net/http"
+
+        "github.com/labstack/echo/v5"
+)
+
+func GetIndex(c *echo.Context) error <span class="cov8" title="1">{
+        return c.Render(http.StatusOK, "frontend:index/index.html", map[string]any{
+                "Name": "Yien",
+        })
+}</span>
+</pre>
+		
+		<pre class="file" id="file16" style="display: none">package session
+
+import (
+        "time"
+
+        "github.com/ian77-huang/golang-echo/pkg/cast"
+
+        "gorm.io/gorm"
+)
+
+func (Session) TableName() string <span class="cov8" title="1">{
+        return "session"
+}</span>
+
+func CreateSession(db *gorm.DB, id, userId string, expiresAt time.Time) (*Session, error) <span class="cov8" title="1">{
+        newSession := &amp;Session{
+                ID: id, UserID: userId, ExpiresAt: expiresAt, UpdatedAt: time.Now(), Status: 0, CountUpdate: 0,
+        }
+        tx := db.Create(newSession)
+        if tx.Error != nil </span><span class="cov8" title="1">{
+                return nil, tx.Error
+        }</span>
+        <span class="cov8" title="1">return newSession, nil</span>
+}
+
+func UpdateSession(db *gorm.DB, id string, expiresAt time.Time, sess *Session) (*Session, error) <span class="cov8" title="1">{
+        updateSession := &amp;Session{
+                ExpiresAt:   expiresAt,
+                UpdatedAt:   time.Now(),
+                CountUpdate: sess.CountUpdate + 1,
+        }
+
+        tx := db.Model(&amp;Session{}).Where("id = ?", id).Where("status = ?", 0).Updates(&amp;updateSession)
+        if tx.Error != nil </span><span class="cov8" title="1">{
+                return nil, tx.Error
+        }</span>
+
+        <span class="cov8" title="1">return updateSession, nil</span>
+}
+
+func DeleteSession(db *gorm.DB, id string) (*Session, error) <span class="cov8" title="1">{
+        deleteSession := &amp;Session{UpdatedAt: time.Now(), Status: 1}
+
+        ID, err := cast.StringToInt(id, 0)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">tx := db.Model(&amp;Session{}).Where("userId = ?", ID).Updates(deleteSession)
+        if tx.Error != nil </span><span class="cov8" title="1">{
+                return nil, tx.Error
+        }</span>
+        <span class="cov8" title="1">return deleteSession, nil</span>
+}
+
+func GetSession(db *gorm.DB, id string) (*Session, error) <span class="cov8" title="1">{
+        getSession := &amp;Session{}
+        tx := db.Model(&amp;Session{}).Where("id = ?", id).Where("status = 0").First(getSession)
+        if tx.Error != nil </span><span class="cov8" title="1">{
+                return nil, tx.Error
+        }</span>
+        <span class="cov8" title="1">return getSession, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file17" style="display: none">package users
+
+import (
+        "errors"
+        "time"
+
+        "gorm.io/gorm"
+)
+
+func (User) TableName() string <span class="cov8" title="1">{
+        return "users"
+}</span>
+
+func IsAccountExist(db *gorm.DB, account string) (bool, error) <span class="cov8" title="1">{
+        var count int64
+
+        err := db.Model(&amp;User{}).Where("account = ?", account).Count(&amp;count).Error
+        if err != nil </span><span class="cov8" title="1">{
+                return false, err
+        }</span>
+
+        <span class="cov8" title="1">return count &gt; 0, nil</span>
+}
+
+func CreateUser(db *gorm.DB, account string, password string) (*User, error) <span class="cov8" title="1">{
+        now := time.Now()
+        newUser := &amp;User{Account: account, Password: password, CreatedAt: &amp;now, UpdatedAt: &amp;now}
+
+        if err := db.Create(newUser).Error; err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return newUser, nil</span>
+}
+
+func GetUser(db *gorm.DB, id int) (*User, error) <span class="cov8" title="1">{
+        user := &amp;User{}
+        if err := db.Where("id = ?", id).First(user).Error; err != nil </span><span class="cov8" title="1">{
+                if errors.Is(err, gorm.ErrRecordNotFound) </span><span class="cov8" title="1">{
+                        return nil, nil
+                }</span>
+                <span class="cov8" title="1">return nil, err</span>
+        }
+        <span class="cov8" title="1">return user, nil</span>
+}
+func GetUserByAccount(db *gorm.DB, account string) (*User, error) <span class="cov8" title="1">{
+        user := &amp;User{}
+        if err := db.Where("account = ?", account).First(user).Error; err != nil </span><span class="cov8" title="1">{
+                if errors.Is(err, gorm.ErrRecordNotFound) </span><span class="cov8" title="1">{
+                        return nil, nil
+                }</span>
+                <span class="cov8" title="1">return nil, err</span>
+        }
+        <span class="cov8" title="1">return user, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file18" style="display: none">package response
+
+import (
+        "errors"
+        "fmt"
+        "net/http"
+
+        "github.com/go-playground/validator/v10"
+        appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
+        appi18n "github.com/ian77-huang/golang-echo/pkg/i18n"
+        "github.com/labstack/echo/v5"
+)
+
+type ErrorResponse struct {
+        Code    string            `json:"code"`
+        Message string            `json:"message"`
+        Errors  map[string]string `json:"errors,omitempty"`
+}
+
+type FieldError struct {
+        Field  string
+        Tag    string
+        Params []interface{}
+}
+
+func (fe FieldError) Error() string <span class="cov8" title="1">{
+        return fmt.Sprintf("field: %s, tag: %s, params: %v", fe.Field, fe.Tag, fe.Params)
+}</span>
+
+func NewFieldError(field, tag string, params ...interface{}) FieldError <span class="cov8" title="1">{
+        return FieldError{
+                Field:  field,
+                Tag:    tag,
+                Params: params,
+        }
+}</span>
+
+func JSON(c *echo.Context, i any) error <span class="cov8" title="1">{
+        return c.JSON(http.StatusOK, i)
+}</span>
+
+func Error(c *echo.Context, status int, code string) error <span class="cov8" title="1">{
+        return c.JSON(status, ErrorResponse{
+                Code:    code,
+                Message: appi18n.T(c, "error."+code),
+        })
+}</span>
+
+func ValidationError(c *echo.Context, err error) error <span class="cov8" title="1">{
+        return c.JSON(http.StatusBadRequest, ErrorResponse{
+                Code:    "validation_failed",
+                Message: appi18n.T(c, "error.validation_failed"),
+                Errors:  validationMessages(c, err),
+        })
+}</span>
+func ValidationCustomError(c *echo.Context, err FieldError) error <span class="cov8" title="1">{
+        return c.JSON(http.StatusBadRequest, ErrorResponse{
+                Code:    "validation_failed",
+                Message: appi18n.T(c, "error.validation_failed"),
+                Errors:  customValidationMessages(c, err),
+        })
+}</span>
+func ValidationErrorAuth(c *echo.Context, err error) error <span class="cov8" title="1">{
+        if fe, ok := err.(appAuth.FieldError); ok </span><span class="cov8" title="1">{
+                return c.JSON(http.StatusBadRequest, ErrorResponse{
+                        Code:    "validation_failed",
+                        Message: appi18n.T(c, fe.Tag),
+                        Errors:  customValidationMessages(c, FieldError{Field: "", Tag: fe.Tag, Params: fe.Params}),
+                })
+
+        }</span>
+        <span class="cov8" title="1">return errors.New("auth error: Type assertion failed")</span>
+}
+
+func validationMessages(c *echo.Context, err error) map[string]string <span class="cov8" title="1">{
+        var validationErrors validator.ValidationErrors
+
+        if !errors.As(err, &amp;validationErrors) </span><span class="cov8" title="1">{
+                return map[string]string{
+                        "_": appi18n.T(c, "error.invalid_request"),
+                }
+        }</span>
+
+        <span class="cov8" title="1">messages := make(map[string]string)
+
+        for _, fieldErr := range validationErrors </span><span class="cov8" title="1">{
+                messages[fieldErr.Field()] = translateFieldError(c, NewFieldError(fieldErr.Field(), fieldErr.Tag(), fieldErr.Param()))
+        }</span>
+
+        <span class="cov8" title="1">return messages</span>
+}
+func customValidationMessages(c *echo.Context, fe FieldError) map[string]string <span class="cov8" title="1">{
+        messages := make(map[string]string)
+
+        messages[fe.Field] = translateFieldError(c, fe)
+
+        return messages
+}</span>
+
+func translateFieldError(c *echo.Context, fieldErr FieldError) string <span class="cov8" title="1">{
+        var param interface{}
+        if len(fieldErr.Params) &gt; 0 </span><span class="cov8" title="1">{
+                param = fieldErr.Params[0]
+        }</span>
+        <span class="cov8" title="1">errorMessage := ""
+        switch fieldErr.Tag </span>{
+        case "required":<span class="cov8" title="1">
+                errorMessage = appi18n.T(c, "validation.required", appi18n.KV("Field", fieldErr.Field))</span>
+        case "oneof":<span class="cov8" title="1">
+                errorMessage = appi18n.T(c, "validation.oneof", appi18n.KV("Field", fieldErr.Field), appi18n.KV("Choices", param))</span>
+        case "min":<span class="cov8" title="1">
+                errorMessage = appi18n.T(c, "validation.min", appi18n.KV("Field", fieldErr.Field), appi18n.KV("Length", param))</span>
+        case "eqfield":<span class="cov8" title="1">
+                errorMessage = appi18n.T(c, "validation.eqfield", appi18n.KV("Field", fieldErr.Field), appi18n.KV("Target", param))</span>
+        case "invalid":<span class="cov8" title="1">
+                errorMessage = appi18n.T(c, "validation.invalid", appi18n.KV("Field", fieldErr.Field))</span>
+        default:<span class="cov8" title="1">
+                errorMessage = appi18n.T(c, fieldErr.Tag)</span>
+        }
+        <span class="cov8" title="1">return errorMessage</span>
+}
+</pre>
+		
+		<pre class="file" id="file19" style="display: none">package router
+
+import (
+        "net/http"
+
+        "github.com/ian77-huang/golang-echo/internal/router/routing"
+        "github.com/labstack/echo/v5"
+)
+
+func New() *echo.Echo <span class="cov8" title="1">{
+        e := echo.New()
+
+        routing.FrontendRouting(e)
+        routing.ApiRouting(e)
+
+        e.GET("/.well-known/appspecific/com.chrome.devtools.json", func(c *echo.Context) error </span><span class="cov8" title="1">{
+                return c.NoContent(http.StatusNotFound)
+        }</span>)
+
+        <span class="cov8" title="1">return e</span>
+}
+</pre>
+		
+		<pre class="file" id="file20" style="display: none">package routing
+
+import (
+        "net/http"
+
+        apiHandler "github.com/ian77-huang/golang-echo/internal/handler/api"
+        apiUsersHandler "github.com/ian77-huang/golang-echo/internal/handler/api/users"
+        "github.com/labstack/echo/v5"
+)
+
+func ApiRouting(e *echo.Echo) <span class="cov8" title="1">{
+        apiGroup := e.Group("/api")
+        apiGroup.POST("/lang", apiHandler.PostChangeLang)
+
+        apiGroup.GET("/ping", func(c *echo.Context) error </span><span class="cov8" title="1">{
+                return c.JSON(http.StatusOK, map[string]string{"message": "Hello, World12!"})
+        }</span>)
+
+        <span class="cov8" title="1">apiUsersGroup := apiGroup.Group("/users")
+        apiUsersGroup.POST("/register", apiUsersHandler.PostRegister)
+        apiUsersGroup.POST("/login", apiUsersHandler.PostLogin)</span>
+}
+</pre>
+		
+		<pre class="file" id="file21" style="display: none">package routing
+
+import (
+        "github.com/ian77-huang/golang-echo/internal/handler"
+        handlerUsers "github.com/ian77-huang/golang-echo/internal/handler/frontend/users"
+        "github.com/labstack/echo/v5"
+)
+
+func FrontendRouting(e *echo.Echo) <span class="cov8" title="1">{
+        e.GET("/", handler.GetIndex)
+
+        usersGroup := e.Group("/users")
+
+        usersGroup.GET("", handlerUsers.GetIndex)
+        usersGroup.GET("/login", handlerUsers.GetLogin)
+        usersGroup.GET("/register", handlerUsers.GetRegister)
+        usersGroup.GET("/logout", handlerUsers.GetLogout)
+}</span>
+</pre>
+		
+		<pre class="file" id="file22" style="display: none">package shared
+
+import (
+        appi18n "github.com/ian77-huang/golang-echo/pkg/i18n"
+        "github.com/labstack/echo/v5"
+)
+
+func T(c *echo.Context, messageID string, pairs ...any) string <span class="cov8" title="1">{
+        return appi18n.T(c, messageID, pairs...)
+}</span>
+
+func TFactory(c *echo.Context) func(messageID string, pairs ...any) string <span class="cov8" title="1">{
+        return func(messageID string, pairs ...any) string </span><span class="cov8" title="1">{
+                return appi18n.T(c, messageID, pairs...)
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file23" style="display: none">package argon2
+
+import (
+        "crypto/rand"
+        "crypto/subtle"
+        "encoding/base64"
+        "fmt"
+        "strings"
+
+        "golang.org/x/crypto/argon2"
+)
+
+type Params struct {
+        Memory      uint32
+        Iterations  uint32
+        Parallelism uint8
+        SaltLength  uint32
+        KeyLength   uint32
+}
+
+var p = Params{
+        Memory:      64 * 1024,
+        Iterations:  3,
+        Parallelism: 2,
+        SaltLength:  16,
+        KeyLength:   32,
+}
+
+var randomRead = rand.Read
+
+func HashPassword(password string) (string, error) <span class="cov8" title="1">{
+        salt := make([]byte, p.SaltLength)
+        if _, err := randomRead(salt); err != nil </span><span class="cov8" title="1">{
+                return "", err
+        }</span>
+
+        <span class="cov8" title="1">hash := argon2.IDKey([]byte(password), salt, p.Iterations, p.Memory, p.Parallelism, p.KeyLength)
+
+        b64Salt := base64.RawStdEncoding.EncodeToString(salt)
+        b64Hash := base64.RawStdEncoding.EncodeToString(hash)
+
+        encoded := fmt.Sprintf("$argon2id$v=%d$m=%d,t=%d,p=%d$%s$%s",
+                argon2.Version, p.Memory, p.Iterations, p.Parallelism, b64Salt, b64Hash)
+
+        return encoded, nil</span>
+}
+
+func VerifyPassword(password, encodedHash string) (bool, error) <span class="cov8" title="1">{
+        parts := strings.Split(encodedHash, "$")
+        if len(parts) != 6 </span><span class="cov8" title="1">{
+                return false, fmt.Errorf("invalid hash format")
+        }</span>
+
+        <span class="cov8" title="1">var memory, iterations uint32
+        var parallelism uint8
+        _, err := fmt.Sscanf(parts[3], "m=%d,t=%d,p=%d", &amp;memory, &amp;iterations, &amp;parallelism)
+        if err != nil </span><span class="cov8" title="1">{
+                return false, err
+        }</span>
+
+        <span class="cov8" title="1">salt, err := base64.RawStdEncoding.DecodeString(parts[4])
+        if err != nil </span><span class="cov8" title="1">{
+                return false, err
+        }</span>
+
+        <span class="cov8" title="1">existingHash, err := base64.RawStdEncoding.DecodeString(parts[5])
+        if err != nil </span><span class="cov8" title="1">{
+                return false, err
+        }</span>
+
+        <span class="cov8" title="1">keyLength := uint32(len(existingHash))
+        newHash := argon2.IDKey([]byte(password), salt, iterations, memory, parallelism, keyLength)
+
+        if subtle.ConstantTimeCompare(existingHash, newHash) == 1 </span><span class="cov8" title="1">{
+                return true, nil
+        }</span>
+
+        <span class="cov8" title="1">return false, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file24" style="display: none">package auth
+
+import (
+        "github.com/labstack/echo/v5"
+)
+
+func (a *Auth[TUser, TSession]) ActionLogin(c *echo.Context, account string, password string) (bool, error) <span class="cov8" title="1">{
+        config, err := a.getConfig()
+        if err != nil </span><span class="cov8" title="1">{
+                return false, err
+        }</span>
+        <span class="cov8" title="1">resolver := config.Resolver
+
+        user, err := resolver.GetUserByAccount(account)
+        if err != nil || user == nil || user.ID == "" </span><span class="cov8" title="1">{
+                return false, NewError("error.auth.AccountLookupFailed", "error.auth - Account lookup Failed")
+        }</span>
+
+        <span class="cov8" title="1">verify, err := VerifyPassword(password, user.Password)
+
+        if err != nil </span><span class="cov8" title="1">{
+                return false, NewError("error.auth.AccountLookupFailed", "error.auth - Account lookup Failed")
+        }</span>
+        <span class="cov8" title="1">if !verify </span><span class="cov8" title="1">{
+                return false, NewError("error.auth.AccountLookupFailed", "error.auth - Account lookup Failed")
+        }</span>
+
+        <span class="cov8" title="1">status, err := a.createSession(c, user.ID)
+        if err != nil </span><span class="cov8" title="1">{
+                return false, NewError("error.auth.login.failed", "error.auth - Auth login failed")
+        }</span>
+
+        <span class="cov8" title="1">return status, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file25" style="display: none">package auth
+
+import (
+        "github.com/labstack/echo/v5"
+)
+
+func (a *Auth[TUser, TSession]) ActionLogout(c *echo.Context) (bool, error) <span class="cov8" title="1">{
+        config, err := a.getConfig()
+        if err != nil </span><span class="cov8" title="1">{
+                return false, err
+        }</span>
+        <span class="cov8" title="1">resolver := config.Resolver
+
+        user := GetUser[TUser](c)
+
+        _, err = resolver.DeleteSession(user.ID)
+        if err != nil </span><span class="cov8" title="1">{
+                return false, err
+        }</span>
+
+        <span class="cov8" title="1">a.deleteAccessToken(c)
+
+        return true, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file26" style="display: none">package auth
+
+import (
+        "github.com/labstack/echo/v5"
+)
+
+func (a *Auth[TUser, TSession]) ActionRegister(c *echo.Context, account string, password string) (string, error) <span class="cov8" title="1">{
+        exists, err := a.IsAccountExist(account)
+        if err != nil </span><span class="cov8" title="1">{
+                return "", err
+        }</span>
+        <span class="cov8" title="1">if exists </span><span class="cov8" title="1">{
+                return "", NewError("error.auth.AccountAlreadyExists", "error.auth - Account already exists")
+        }</span>
+
+        <span class="cov8" title="1">user, err := a.CreateUser(account, password)
+        if err != nil </span><span class="cov8" title="1">{
+                return "", err
+        }</span>
+
+        <span class="cov8" title="1">if _, err := a.createSession(c, user.ID); err != nil </span><span class="cov8" title="1">{
+                return "", err
+        }</span>
+
+        <span class="cov8" title="1">return user.ID, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file27" style="display: none">package auth
+
+import (
+        "strings"
+
+        "github.com/labstack/echo/v5"
+)
+
+func Load[TUser any, TSession any](c *echo.Context) *Auth[TUser, TSession] <span class="cov8" title="1">{
+        if auth, ok := c.Get(CONTEXT_KEY_AUTH).(*Auth[TUser, TSession]); ok </span><span class="cov8" title="1">{
+                return auth
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func New[TUser any, TSession any](config *Config[TUser, TSession]) *Auth[TUser, TSession] <span class="cov8" title="1">{
+        if config == nil </span><span class="cov8" title="1">{
+                panic("auth config cannot be nil")</span>
+        }
+        <span class="cov8" title="1">if strings.TrimSpace(config.SecretKey) == "" </span><span class="cov8" title="1">{
+                panic("auth secret key cannot be empty")</span>
+        }
+        <span class="cov8" title="1">if err := checkResolver(config); err != nil </span><span class="cov8" title="1">{
+                panic(err)</span>
+        }
+
+        <span class="cov8" title="1">if config.CookieName == "" </span><span class="cov8" title="1">{
+                config.CookieName = DEFAULT_SESSION_COOKIE_NAME
+        }</span>
+        <span class="cov8" title="1">if config.SessionExpiresAt == 0 </span><span class="cov8" title="1">{
+                config.SessionExpiresAt = DEFAULT_SESSION_EXPIRES_DAYS
+        }</span>
+        <span class="cov8" title="1">if config.SessionRefreshAt == 0 </span><span class="cov8" title="1">{
+                config.SessionRefreshAt = DEFAULT_SESSION_REFLASH_DAYS
+        }</span>
+
+        <span class="cov8" title="1">checkRoute(config)
+
+        return &amp;Auth[TUser, TSession]{
+                config: config,
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file28" style="display: none">package auth
+
+import (
+        "errors"
+
+        "github.com/labstack/echo/v5"
+)
+
+func IsSignedIn[TUser any](c *echo.Context) bool <span class="cov8" title="1">{
+        return GetUser[TUser](c) != nil
+}</span>
+func (a *Auth[TUser, TSession]) IsAccountExist(account string) (bool, error) <span class="cov8" title="1">{
+        config, err := a.getConfig()
+        if err != nil </span><span class="cov8" title="1">{
+                return false, err
+        }</span>
+        <span class="cov8" title="1">resolver := config.Resolver
+
+        if resolver.IsAccountExist == nil </span><span class="cov8" title="1">{
+                return false, NewError("error.auth.InvalidConfiguration", "account lookup resolver is not configured")
+        }</span>
+
+        <span class="cov8" title="1">exists, err := resolver.IsAccountExist(account)
+        if err != nil </span><span class="cov8" title="1">{
+                if fieldErr, ok := errors.AsType[FieldError](err); ok </span><span class="cov8" title="1">{
+                        return false, fieldErr
+                }</span>
+                <span class="cov8" title="1">return false, NewError("error.auth.AccountLookupFailed", "failed to look up account")</span>
+        }
+        <span class="cov8" title="1">return exists, nil</span>
+}
+func checkRoute[TUser any, TSession any](config *Config[TUser, TSession]) <span class="cov8" title="1">{
+        if config.Route == nil </span><span class="cov8" title="1">{
+                config.Route = &amp;Route[TUser]{}
+        }</span>
+        <span class="cov8" title="1">if config.Route.AuthOnly == nil </span><span class="cov8" title="1">{
+                config.Route.AuthOnly = &amp;RoutesPaths{}
+        }</span>
+        <span class="cov8" title="1">if config.Route.GuestOnly == nil </span><span class="cov8" title="1">{
+                config.Route.GuestOnly = &amp;RoutesPaths{}
+        }</span>
+        <span class="cov8" title="1">if config.Route.AuthOnly.Rules == nil </span><span class="cov8" title="1">{
+                config.Route.AuthOnly.Rules = []string{}
+        }</span>
+        <span class="cov8" title="1">if config.Route.GuestOnly.Rules == nil </span><span class="cov8" title="1">{
+                config.Route.GuestOnly.Rules = []string{}
+        }</span>
+        <span class="cov8" title="1">if config.Route.SpecialValidate == nil </span><span class="cov8" title="1">{
+                config.Route.SpecialValidate = func(c *echo.Context, validateRule *ValidateRule[TUser]) </span>{<span class="cov8" title="1">}</span>
+        }
+}
+func checkResolver[TUser any, TSession any](config *Config[TUser, TSession]) error <span class="cov8" title="1">{
+        if config.Resolver == nil </span><span class="cov8" title="1">{
+                return errors.New("Auth - config.Resolver property not set")
+        }</span>
+        <span class="cov8" title="1">if config.Resolver.CreateSession == nil </span><span class="cov8" title="1">{
+                return errors.New("Auth - config.Resolver.CreateSession property not set")
+        }</span>
+        <span class="cov8" title="1">if config.Resolver.CreateUser == nil </span><span class="cov8" title="1">{
+                return errors.New("Auth - config.Resolver.CreateUser property not set")
+        }</span>
+        <span class="cov8" title="1">if config.Resolver.DeleteSession == nil </span><span class="cov8" title="1">{
+                return errors.New("Auth - config.Resolver.DeleteSession property not set")
+        }</span>
+        <span class="cov8" title="1">if config.Resolver.GetSession == nil </span><span class="cov8" title="1">{
+                return errors.New("Auth - config.Resolver.GetSession property not set")
+        }</span>
+        <span class="cov8" title="1">if config.Resolver.GetUser == nil </span><span class="cov8" title="1">{
+                return errors.New("Auth - config.Resolver.GetUser property not set")
+        }</span>
+        <span class="cov8" title="1">if config.Resolver.GetUserByAccount == nil </span><span class="cov8" title="1">{
+                return errors.New("Auth - config.Resolver.GetUserByAccount property not set")
+        }</span>
+        <span class="cov8" title="1">if config.Resolver.IsAccountExist == nil </span><span class="cov8" title="1">{
+                return errors.New("Auth - config.Resolver.IsAccountExist property not set")
+        }</span>
+        <span class="cov8" title="1">if config.Resolver.UpdateSession == nil </span><span class="cov8" title="1">{
+                return errors.New("Auth - config.Resolver.UpdateSession property not set")
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file29" style="display: none">package auth
+
+import (
+        "net/http"
+        "time"
+
+        "github.com/labstack/echo/v5"
+)
+
+func (a *Auth[TUser, TSession]) getAccessToken(c *echo.Context) (string, error) <span class="cov8" title="1">{
+        config := a.config
+
+        token, err := c.Cookie(config.CookieName)
+        if err != nil </span><span class="cov8" title="1">{
+                if err == http.ErrNoCookie </span><span class="cov8" title="1">{
+                        return "", NewError("error.auth.CookieNotFound", "Specified cookie not found")
+                }</span>
+                <span class="cov0" title="0">return "", NewError("error.auth.ReadCookieFailed", "Failed to read cookie")</span>
+        }
+        <span class="cov8" title="1">return token.Value, nil</span>
+}
+
+func (a *Auth[TUser, TSession]) setAccessToken(c *echo.Context, tokenString string, expiresAt time.Time) <span class="cov8" title="1">{
+        config := a.config
+
+        c.SetCookie(&amp;http.Cookie{
+                Name:     config.CookieName,
+                Value:    tokenString,
+                Path:     "/",
+                Expires:  expiresAt,
+                HttpOnly: true,
+                SameSite: http.SameSiteLaxMode,
+                Secure:   true,
+        })
+}</span>
+
+func (a *Auth[TUser, TSession]) deleteAccessToken(c *echo.Context) <span class="cov8" title="1">{
+        config := a.config
+
+        c.SetCookie(&amp;http.Cookie{
+                Name:     config.CookieName,
+                Value:    "",
+                Path:     "/",
+                MaxAge:   -1,
+                Expires:  time.Unix(0, 0),
+                HttpOnly: true,
+                SameSite: http.SameSiteLaxMode,
+                Secure:   true,
+        })
+}</span>
+</pre>
+		
+		<pre class="file" id="file30" style="display: none">package auth
+
+func (a *Auth[TUser, TSession]) CreateUser(account string, password string) (*User[TUser], error) <span class="cov8" title="1">{
+        config, err := a.getConfig()
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">resolver := config.Resolver
+
+        if resolver.CreateUser == nil </span><span class="cov8" title="1">{
+                return nil, NewError("error.auth.InvalidConfiguration", "user creation resolver is not configured")
+        }</span>
+
+        <span class="cov8" title="1">passwordHash, err := HashPassword(password)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">user, err := resolver.CreateUser(account, passwordHash)
+        if err != nil || user == nil || user.ID == "" </span><span class="cov8" title="1">{
+                return nil, NewError("error.auth.CreateUserError", "create user error")
+        }</span>
+
+        <span class="cov8" title="1">return user, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file31" style="display: none">package auth
+
+import (
+        "crypto/rand"
+        "crypto/sha256"
+        "encoding/base64"
+        "encoding/hex"
+)
+
+var randomRead = rand.Read
+
+func (a *Auth[TUser, TSession]) GenerateSessionToken() (string, error) <span class="cov8" title="1">{
+        bytes := make([]byte, 32)
+
+        _, err := randomRead(bytes)
+        if err != nil </span><span class="cov8" title="1">{
+                return "", err
+        }</span>
+
+        <span class="cov8" title="1">return base64.RawURLEncoding.EncodeToString(bytes), nil</span>
+}
+
+func (a *Auth[TUser, TSession]) GenerateID(token string) string <span class="cov8" title="1">{
+        hash := sha256.Sum256([]byte(token))
+
+        return hex.EncodeToString(hash[:])
+}</span>
+</pre>
+		
+		<pre class="file" id="file32" style="display: none">package auth
+
+import "fmt"
+
+func NewError(tag string, message string, params ...interface{}) FieldError <span class="cov8" title="1">{
+        return FieldError{
+                Tag:     tag,
+                Message: message,
+                Params:  params,
+        }
+}</span>
+
+func (fe FieldError) Error() string <span class="cov8" title="1">{
+        return fmt.Sprintf("message: %s, tag: %s, params: %v", fe.Message, fe.Tag, fe.Params)
+}</span>
+</pre>
+		
+		<pre class="file" id="file33" style="display: none">package auth
+
+import "github.com/labstack/echo/v5"
+
+func GetUser[TUser any](c *echo.Context) *User[TUser] <span class="cov8" title="1">{
+        if sess, ok := c.Get(CONTEXT_KEY_USER).(*User[TUser]); ok </span><span class="cov8" title="1">{
+                return sess
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+func GetSession[TSession any](c *echo.Context) *Session[TSession] <span class="cov8" title="1">{
+        if sess, ok := c.Get(CONTEXT_KEY_SESSION).(*Session[TSession]); ok </span><span class="cov8" title="1">{
+                return sess
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+func (a *Auth[TUser, TSession]) getConfig() (*Config[TUser, TSession], error) <span class="cov8" title="1">{
+        if a == nil || a.config == nil </span><span class="cov8" title="1">{
+                return nil, NewError("error.auth.InvalidConfiguration", "auth config is not configured")
+        }</span>
+        <span class="cov8" title="1">return a.config, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file34" style="display: none">package auth
+
+import (
+        "errors"
+        "fmt"
+        "time"
+
+        "github.com/golang-jwt/jwt/v5"
+)
+
+var signJWT = func(token *jwt.Token, key []byte) (string, error) <span class="cov8" title="1">{ return token.SignedString(key) }</span>
+
+func (a *Auth[TUser, TSession]) getJwtSecret() []byte <span class="cov8" title="1">{
+        return []byte(a.config.SecretKey)
+}</span>
+func (a *Auth[TUser, TSession]) createToken(id string, expiresAt time.Time) (string, error) <span class="cov8" title="1">{
+        claims := &amp;JwtCustomClaims{
+                id,
+                jwt.RegisteredClaims{
+                        ExpiresAt: jwt.NewNumericDate(expiresAt),
+                },
+        }
+        token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+        return signJWT(token, a.getJwtSecret())
+}</span>
+
+func (a *Auth[TUser, TSession]) parseToken(tokenStr string) (*JwtCustomClaims, error) <span class="cov8" title="1">{
+        token, err := jwt.ParseWithClaims(tokenStr, &amp;JwtCustomClaims{}, func(token *jwt.Token) (interface{}, error) </span><span class="cov8" title="1">{
+                if token.Method != jwt.SigningMethodHS256 </span><span class="cov8" title="1">{
+                        return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+                }</span>
+
+                <span class="cov8" title="1">return a.getJwtSecret(), nil</span>
+        })
+
+        <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">if claims, ok := token.Claims.(*JwtCustomClaims); ok &amp;&amp; token.Valid </span><span class="cov8" title="1">{
+                return claims, nil
+        }</span>
+
+        <span class="cov0" title="0">return nil, errors.New("invalid token claims")</span>
+}
+</pre>
+		
+		<pre class="file" id="file35" style="display: none">package auth
+
+import (
+        "net/http"
+        "slices"
+
+        "github.com/labstack/echo/v5"
+)
+
+func (a *Auth[TUser, TSession]) Middleware() echo.MiddlewareFunc <span class="cov8" title="1">{
+        return func(next echo.HandlerFunc) echo.HandlerFunc </span><span class="cov8" title="1">{
+                return func(c *echo.Context) error </span><span class="cov8" title="1">{
+                        isValid := true
+                        config, err := a.getConfig()
+                        if err != nil </span><span class="cov8" title="1">{
+                                return err
+                        }</span>
+
+                        <span class="cov8" title="1">resolver := config.Resolver
+
+                        token, err := a.getAccessToken(c)
+                        if err != nil </span><span class="cov8" title="1">{
+                                isValid = false
+                        }</span> else<span class="cov8" title="1"> {
+                                claims, err := a.parseToken(token)
+                                if err != nil </span><span class="cov8" title="1">{
+                                        isValid = false
+                                }</span> else<span class="cov8" title="1"> {
+                                        sessionId := a.GenerateID(claims.ID)
+                                        sess, err := resolver.GetSession(sessionId)
+                                        if err != nil </span><span class="cov8" title="1">{
+                                                isValid = false
+                                        }</span> else<span class="cov8" title="1"> {
+                                                if a.isNeedRefreshSession(sess.ExpiresAt) </span><span class="cov8" title="1">{
+                                                        if ok, _ := a.refreshSession(c, claims.ID, sess); !ok </span><span class="cov0" title="0">{
+                                                                isValid = false
+                                                        }</span>
+                                                }
+                                                // sess.UserID
+                                                <span class="cov8" title="1">c.Set(CONTEXT_KEY_SESSION, sess)
+
+                                                user, err := resolver.GetUser(sess.UserID)
+                                                if err != nil || user == nil || user.ID == "" </span><span class="cov8" title="1">{
+                                                        return NewError("error.auth.CreateUserError", "create user error")
+                                                }</span>
+
+                                                <span class="cov8" title="1">c.Set(CONTEXT_KEY_USER, user)</span>
+                                        }
+                                }
+                        }
+
+                        <span class="cov8" title="1">if !isValid </span><span class="cov8" title="1">{
+                                a.deleteAccessToken(c)
+                        }</span>
+
+                        <span class="cov8" title="1">isSignedIn := IsSignedIn[TUser](c)
+                        route := config.Route
+                        var routeCondition *RoutesPaths
+                        if !isSignedIn </span><span class="cov8" title="1">{
+                                routeCondition = route.AuthOnly
+
+                        }</span> else<span class="cov8" title="1"> {
+                                routeCondition = route.GuestOnly
+                        }</span>
+                        <span class="cov8" title="1">if slices.Contains(routeCondition.Rules, c.Path()) </span><span class="cov8" title="1">{
+                                return c.Redirect(http.StatusSeeOther, routeCondition.RedirectURL)
+                        }</span>
+                        <span class="cov8" title="1">validateRule := &amp;ValidateRule[TUser]{IsSignedIn: isSignedIn, Path: c.Path(), User: nil}
+                        if validateRule.IsSignedIn </span><span class="cov8" title="1">{
+                                validateRule.User = GetUser[TUser](c)
+                        }</span>
+
+                        <span class="cov8" title="1">route.SpecialValidate(c, validateRule)
+
+                        c.Set(CONTEXT_KEY_AUTH, a)
+
+                        return next(c)</span>
+                }
+        }
+}
+</pre>
+		
+		<pre class="file" id="file36" style="display: none">package auth
+
+import "github.com/ian77-huang/golang-echo/pkg/argon2"
+
+func HashPassword(password string) (string, error) <span class="cov8" title="1">{
+        passwordHash, err := argon2.HashPassword(password)
+        if err != nil </span><span class="cov0" title="0">{
+                return "", NewError("error.auth.FailedToSecurePassword", "failed to secure password")
+        }</span>
+        <span class="cov8" title="1">return passwordHash, nil</span>
+}
+
+func VerifyPassword(password, encodedHash string) (bool, error) <span class="cov8" title="1">{
+        verify, err := argon2.VerifyPassword(password, encodedHash)
+        if err != nil </span><span class="cov8" title="1">{
+                return false, NewError("error.auth.FailedToSecurePassword", "failed to secure password")
+        }</span>
+        <span class="cov8" title="1">return verify, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file37" style="display: none">package auth
+
+import (
+        "time"
+
+        "github.com/labstack/echo/v5"
+)
+
+func (a *Auth[TUser, TSession]) isNeedRefreshSession(expires time.Time) bool <span class="cov8" title="1">{
+        config := a.config
+        refreshTime := expires.Add(-time.Hour * 24 * time.Duration(config.SessionRefreshAt))
+
+        return time.Now().After(refreshTime) || time.Now().Equal(refreshTime)
+}</span>
+
+func (a *Auth[TUser, TSession]) createSession(c *echo.Context, userId string) (bool, error) <span class="cov8" title="1">{
+        config, err := a.getConfig()
+        if err != nil </span><span class="cov8" title="1">{
+                return false, err
+        }</span>
+        <span class="cov8" title="1">resolver := config.Resolver
+
+        expiresAt := a.extendDateDays(config.SessionExpiresAt)
+
+        sessionToken, err := a.GenerateSessionToken()
+        if err != nil </span><span class="cov0" title="0">{
+                a.deleteAccessToken(c)
+                return false, NewError("error.auth.FailedToIssueToken", "failed to generate session token")
+        }</span>
+
+        <span class="cov8" title="1">sessionId := a.GenerateID(sessionToken)
+
+        if resolver.CreateSession == nil </span><span class="cov8" title="1">{
+                a.deleteAccessToken(c)
+                return false, NewError("error.auth.FailedToWriteSession", "session storage is not configured")
+        }</span>
+
+        <span class="cov8" title="1">_, err = resolver.CreateSession(sessionId, userId, expiresAt)
+        if err != nil </span><span class="cov8" title="1">{
+                a.deleteAccessToken(c)
+                return false, NewError("error.auth.FailedToWriteSession", "failed to write session")
+        }</span>
+
+        <span class="cov8" title="1">tokenString, err := a.createToken(sessionToken, expiresAt)
+        if err != nil </span><span class="cov8" title="1">{
+                a.deleteAccessToken(c)
+                return false, NewError("error.auth.FailedToIssueToken", "failed to issue token")
+        }</span>
+
+        <span class="cov8" title="1">a.setAccessToken(c, tokenString, expiresAt)
+
+        return true, nil</span>
+}
+
+func (a *Auth[TUser, TSession]) refreshSession(c *echo.Context, tokenId string, sess *Session[TSession]) (bool, error) <span class="cov8" title="1">{
+        config, err := a.getConfig()
+        if err != nil </span><span class="cov8" title="1">{
+                return false, err
+        }</span>
+        <span class="cov8" title="1">resolver := config.Resolver
+
+        if a.isNeedRefreshSession(sess.ExpiresAt) </span><span class="cov8" title="1">{
+                if resolver.UpdateSession == nil </span><span class="cov8" title="1">{
+                        a.deleteAccessToken(c)
+                        return false, NewError("error.auth.InvalidConfiguration", "session update resolver is not configured")
+                }</span>
+                <span class="cov8" title="1">expiresAt := a.extendDateDays(config.SessionExpiresAt)
+
+                _, err := resolver.UpdateSession(sess.ID, expiresAt, sess.Data)
+                if err != nil </span><span class="cov8" title="1">{
+                        return false, err
+                }</span>
+
+                <span class="cov8" title="1">tokenString, err := a.createToken(tokenId, expiresAt)
+                if err != nil </span><span class="cov8" title="1">{
+                        return false, NewError("error.auth.FailedToIssueToken", "failed to issue token")
+                }</span>
+
+                <span class="cov8" title="1">a.setAccessToken(c, tokenString, expiresAt)</span>
+        }
+
+        <span class="cov8" title="1">return true, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file38" style="display: none">package auth
+
+import "time"
+
+func (a *Auth[TUser, TSession]) extendDateDays(days int) time.Time <span class="cov8" title="1">{
+        return time.Now().Add(time.Duration(days) * time.Hour * 24)
+}</span>
+</pre>
+		
+		<pre class="file" id="file39" style="display: none">package cast
+
+import (
+        "fmt"
+        "strconv"
+)
+
+func StringToInt(val string, def int) (int, error) <span class="cov8" title="1">{
+        if val == "" </span><span class="cov8" title="1">{
+                return def, nil
+        }</span>
+
+        <span class="cov8" title="1">castValue, err := strconv.Atoi(val)
+        if err != nil </span><span class="cov8" title="1">{
+                return def, fmt.Errorf("WARN: Failed to cast string %q to int, falling back to default: %d", val, def)
+        }</span>
+
+        <span class="cov8" title="1">return castValue, nil</span>
+}
+
+func IntToString(val int) string <span class="cov8" title="1">{
+        return strconv.Itoa(val)
+}</span>
+</pre>
+		
+		<pre class="file" id="file40" style="display: none">package database
+
+import (
+        "net/http"
+
+        "github.com/labstack/echo/v5"
+        "gorm.io/driver/sqlite"
+        "gorm.io/gorm"
+)
+
+func NewSqlite(path string) *gorm.DB <span class="cov8" title="1">{
+        db, err := gorm.Open(sqlite.Open(path), &amp;gorm.Config{})
+        if err != nil </span><span class="cov8" title="1">{
+                panic("=== Error：Unable to connect to the database. ====")</span>
+        }
+        <span class="cov8" title="1">return db</span>
+}
+
+func GetDBConnect(c *echo.Context) (*gorm.DB, error) <span class="cov8" title="1">{
+        value := c.Get(contextDBKey)
+        if value == nil </span><span class="cov8" title="1">{
+                return nil, echo.NewHTTPError(http.StatusInternalServerError, "database connection not found in context")
+        }</span>
+        <span class="cov8" title="1">db, ok := value.(*gorm.DB)
+        if !ok </span><span class="cov8" title="1">{
+                return nil, echo.NewHTTPError(http.StatusInternalServerError, "invalid database connection type")
+        }</span>
+
+        <span class="cov8" title="1">return db, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file41" style="display: none">package database
+
+import (
+        "github.com/labstack/echo/v5"
+        "gorm.io/gorm"
+)
+
+func Middleware(db *gorm.DB) echo.MiddlewareFunc <span class="cov8" title="1">{
+        return func(next echo.HandlerFunc) echo.HandlerFunc </span><span class="cov8" title="1">{
+                return func(c *echo.Context) error </span><span class="cov8" title="1">{
+                        c.Set(contextDBKey, db)
+                        return next(c)
+                }</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file42" style="display: none">package i18n
+
+import (
+        "errors"
+
+        "golang.org/x/text/language"
+)
+
+func normalizeConfig(config Config) (Config, []language.Tag, error) <span class="cov8" title="1">{
+        if config.DefaultLang == "" </span><span class="cov8" title="1">{
+                return config, nil, errors.New("default language is required")
+        }</span>
+
+        <span class="cov8" title="1">if len(config.SupportedLanguageCodes) == 0 </span><span class="cov8" title="1">{
+                return config, nil, errors.New("at least one supported language code is required")
+        }</span>
+
+        <span class="cov8" title="1">if len(config.MessageFiles) &gt; 0 &amp;&amp; config.MessageFS == nil </span><span class="cov8" title="1">{
+                return config, nil, errors.New("message fs is required when message files are configured")
+        }</span>
+
+        <span class="cov8" title="1">tags, err := languageTags(config.SupportedLanguageCodes)
+        if err != nil </span><span class="cov8" title="1">{
+                return config, nil, err
+        }</span>
+
+        <span class="cov8" title="1">return config, tags, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file43" style="display: none">package i18n
+
+import (
+        "github.com/BurntSushi/toml"
+        "github.com/labstack/echo/v5"
+        goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
+        "golang.org/x/text/language"
+)
+
+const localizerKey = "localizer"
+
+func New(config Config) (*I18n, error) <span class="cov8" title="1">{
+        config, tags, err := normalizeConfig(config)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">defaultTag, err := language.Parse(config.DefaultLang)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">bundle := goi18n.NewBundle(defaultTag)
+        bundle.RegisterUnmarshalFunc("toml", toml.Unmarshal)
+
+        for _, messageFile := range config.MessageFiles </span><span class="cov8" title="1">{
+                if _, err := bundle.LoadMessageFileFS(config.MessageFS, messageFile); err != nil </span><span class="cov8" title="1">{
+                        return nil, err
+                }</span>
+        }
+
+        <span class="cov8" title="1">return &amp;I18n{
+                bundle:                 bundle,
+                defaultLang:            config.DefaultLang,
+                supportedLanguageCodes: config.SupportedLanguageCodes,
+                langMatcher:            language.NewMatcher(tags),
+        }, nil</span>
+}
+
+func T(c *echo.Context, messageID string, pairs ...any) string <span class="cov8" title="1">{
+
+        localizer, ok := c.Get(localizerKey).(*goi18n.Localizer)
+        if !ok </span><span class="cov8" title="1">{
+                return "localizer does not exist."
+        }</span>
+
+        <span class="cov8" title="1">return t(localizer, messageID, pairs...)</span>
+}
+
+func KV(key string, value any) templateDataPair <span class="cov8" title="1">{
+        return templateDataPair{
+                key:   key,
+                value: value,
+        }
+}</span>
+
+func (i *I18n) Middleware() echo.MiddlewareFunc <span class="cov8" title="1">{
+        return func(next echo.HandlerFunc) echo.HandlerFunc </span><span class="cov8" title="1">{
+                return func(c *echo.Context) error </span><span class="cov8" title="1">{
+                        langCandidates := []string{}
+
+                        if cookie, err := c.Cookie("lang"); err == nil &amp;&amp; cookie.Value != "" </span><span class="cov8" title="1">{
+                                langCandidates = append(langCandidates, cookie.Value)
+                        }</span>
+                        <span class="cov8" title="1">langCandidates = append(
+                                langCandidates,
+                                c.Request().Header.Get("X-Language"),
+                                c.Request().Header.Get("Accept-Language"),
+                        )
+
+                        langCode := i.supportedLang(langCandidates...)
+
+                        c.Set(localizerKey, goi18n.NewLocalizer(i.bundle, langCode))
+                        c.Set("lang", langCode)
+
+                        return next(c)</span>
+                }
+        }
+}
+</pre>
+		
+		<pre class="file" id="file44" style="display: none">package i18n
+
+import "golang.org/x/text/language"
+
+func languageTags(codes []string) ([]language.Tag, error) <span class="cov8" title="1">{
+        tags := make([]language.Tag, 0, len(codes))
+        for _, code := range codes </span><span class="cov8" title="1">{
+                tag, err := language.Parse(code)
+                if err != nil </span><span class="cov8" title="1">{
+                        return nil, err
+                }</span>
+
+                <span class="cov8" title="1">tags = append(tags, tag)</span>
+        }
+
+        <span class="cov8" title="1">return tags, nil</span>
+}
+
+func (i *I18n) supportedLang(candidates ...string) string <span class="cov8" title="1">{
+        for _, candidate := range candidates </span><span class="cov8" title="1">{
+                tags, _, err := language.ParseAcceptLanguage(candidate)
+                if err != nil || len(tags) == 0 </span><span class="cov8" title="1">{
+                        continue</span>
+                }
+
+                <span class="cov8" title="1">_, index, confidence := i.langMatcher.Match(tags...)
+                if confidence == language.No </span><span class="cov8" title="1">{
+                        continue</span>
+                }
+
+                <span class="cov8" title="1">return i.supportedLanguageCodes[index]</span>
+        }
+
+        <span class="cov8" title="1">return i.defaultLang</span>
+}
+</pre>
+		
+		<pre class="file" id="file45" style="display: none">package i18n
+
+import (
+        "fmt"
+        "html/template"
+        "strings"
+
+        "github.com/labstack/echo/v5"
+        goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
+)
+
+func (i *I18n) TemplateFuncs(c *echo.Context, _ map[string]any) template.FuncMap <span class="cov8" title="1">{
+        if c == nil </span><span class="cov8" title="1">{
+                return fallbackTemplateFuncs()
+        }</span>
+
+        <span class="cov8" title="1">localizer, ok := i.Localizer(c)
+        if !ok </span><span class="cov8" title="1">{
+                return fallbackTemplateFuncs()
+        }</span>
+
+        <span class="cov8" title="1">return template.FuncMap{
+                "kv": KV,
+                "t": func(messageID string, pairs ...any) string </span><span class="cov8" title="1">{
+                        return t(localizer, messageID, pairs...)
+                }</span>,
+        }
+}
+func (i *I18n) Localizer(c *echo.Context) (*goi18n.Localizer, bool) <span class="cov8" title="1">{
+        localizer, ok := c.Get(localizerKey).(*goi18n.Localizer)
+        return localizer, ok
+}</span>
+
+func t(localizer *goi18n.Localizer, messageID string, pairs ...any) string <span class="cov8" title="1">{
+        message, err := localizer.Localize(&amp;goi18n.LocalizeConfig{
+                MessageID:    messageID,
+                TemplateData: templateData(pairs),
+        })
+        if err != nil </span><span class="cov8" title="1">{
+                return messageID
+        }</span>
+
+        <span class="cov8" title="1">return message</span>
+}
+
+func fallbackTemplateFuncs() template.FuncMap <span class="cov8" title="1">{
+        return template.FuncMap{
+                "kv": KV,
+                "t": func(messageID string, _ ...any) string </span><span class="cov8" title="1">{
+                        return messageID
+                }</span>,
+        }
+}
+
+func templateData(pairs []any) map[string]any <span class="cov8" title="1">{
+        if len(pairs) == 0 </span><span class="cov8" title="1">{
+                return nil
+        }</span>
+
+        <span class="cov8" title="1">data := make(map[string]any, len(pairs))
+        for _, pair := range pairs </span><span class="cov8" title="1">{
+                if kv, ok := pair.(templateDataPair); ok </span><span class="cov8" title="1">{
+                        data[kv.key] = kv.value
+                        continue</span>
+                }
+
+                <span class="cov8" title="1">key, value, ok := strings.Cut(fmt.Sprint(pair), "=")
+                if !ok </span><span class="cov8" title="1">{
+                        continue</span>
+                }
+
+                <span class="cov8" title="1">data[strings.TrimSpace(key)] = strings.TrimSpace(value)</span>
+        }
+
+        <span class="cov8" title="1">return data</span>
+}
+</pre>
+		
+		<pre class="file" id="file46" style="display: none">package renderer
+
+import (
+        "html/template"
+)
+
+func (t *TemplateRenderer) buildTemplate(name string) (*template.Template, error) <span class="cov8" title="1">{
+        filePaths, err := t.resolveTemplateFiles(name)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">tmpl, err := t.shared.Clone()
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">_, err = tmpl.ParseFiles(filePaths...)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return tmpl, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file47" style="display: none">package renderer
+
+import (
+        "fmt"
+        "strings"
+)
+
+func parseTemplateName(name string) ([]string, string, error) <span class="cov8" title="1">{
+        parts := strings.Split(name, ":")
+        if len(parts) &lt; 2 </span><span class="cov8" title="1">{
+                return nil, "", fmt.Errorf("template name must be layout:tpl, got %q", name)
+        }</span>
+
+        <span class="cov8" title="1">tpl := parts[len(parts)-1]
+        if tpl == "" </span><span class="cov8" title="1">{
+                return nil, "", fmt.Errorf("template path is empty, got %q", name)
+        }</span>
+
+        <span class="cov8" title="1">layoutNames := parts[:len(parts)-1]
+
+        return layoutNames, tpl, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file48" style="display: none">package renderer
+
+import (
+        "maps"
+
+        "github.com/labstack/echo/v5"
+)
+
+func (t *TemplateRenderer) mergeSharedData(c *echo.Context, name string, data any) (any, error) <span class="cov8" title="1">{
+        layoutNames, _, err := parseTemplateName(name)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">shared := map[string]any{}
+
+        if t.config.SharedData != nil </span><span class="cov0" title="0">{
+                maps.Copy(shared, t.config.SharedData(c, layoutNames))
+        }</span>
+
+        <span class="cov8" title="1">if pageData, ok := data.(map[string]any); ok </span><span class="cov8" title="1">{
+                maps.Copy(shared, pageData)
+        }</span>
+
+        <span class="cov8" title="1">return shared, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file49" style="display: none">package renderer
+
+import (
+        "html/template"
+        "io"
+        "path/filepath"
+
+        "github.com/labstack/echo/v5"
+)
+
+func (t *TemplateRenderer) Render(c *echo.Context, w io.Writer, name string, data any) error <span class="cov8" title="1">{
+        data, err := t.mergeSharedData(c, name, data)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">t.mu.RLock()
+        tmpl, ok := t.cache[name]
+        t.mu.RUnlock()
+
+        if ok </span><span class="cov0" title="0">{
+                return t.executeTemplate(c, w, tmpl, data)
+        }</span>
+
+        <span class="cov8" title="1">tmpl, err = t.buildTemplate(name)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">t.mu.Lock()
+        t.cache[name] = tmpl
+        t.mu.Unlock()
+
+        return t.executeTemplate(c, w, tmpl, data)</span>
+}
+
+func New(config *TemplateConfig) *TemplateRenderer <span class="cov8" title="1">{
+        shared := template.New("shared")
+        if funcs := templateFuncs(config.Runtime.Funcs, nil, nil); len(funcs) &gt; 0 </span><span class="cov8" title="1">{
+                shared.Funcs(funcs)
+        }</span>
+
+        <span class="cov8" title="1">filePaths := make([]string, 0)
+
+        for _, path := range config.SharedTmplPaths </span><span class="cov8" title="1">{
+                filePaths = append(filePaths, filepath.Join(config.BasePath, path))
+        }</span>
+
+        <span class="cov8" title="1">if len(filePaths) &gt; 0 </span><span class="cov8" title="1">{
+                template.Must(shared.ParseFiles(filePaths...))
+        }</span>
+
+        <span class="cov8" title="1">return &amp;TemplateRenderer{
+                config: config,
+                shared: shared,
+                cache:  make(map[string]*template.Template),
+        }</span>
+}
+
+func WithFuncs(funcs ...TemplateFuncs) Option <span class="cov8" title="1">{
+        return func(config *RuntimeConfig) </span><span class="cov8" title="1">{
+                config.Funcs = append(config.Funcs, funcs...)
+        }</span>
+}
+
+func (t *TemplateRenderer) executeTemplate(c *echo.Context, w io.Writer, tmpl *template.Template, data any) error <span class="cov8" title="1">{
+        tmpl, err := tmpl.Clone()
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">pageData, _ := data.(map[string]any)
+        if funcs := templateFuncs(t.config.Runtime.Funcs, c, pageData); len(funcs) &gt; 0 </span><span class="cov8" title="1">{
+                tmpl.Funcs(funcs)
+        }</span>
+
+        <span class="cov8" title="1">return tmpl.ExecuteTemplate(w, "base", data)</span>
+}
+
+func templateFuncs(providers []TemplateFuncs, c *echo.Context, data map[string]any) template.FuncMap <span class="cov8" title="1">{
+        if len(providers) == 0 </span><span class="cov8" title="1">{
+                return nil
+        }</span>
+
+        <span class="cov8" title="1">funcs := template.FuncMap{}
+        for _, provider := range providers </span><span class="cov8" title="1">{
+                if provider == nil </span><span class="cov8" title="1">{
+                        continue</span>
+                }
+
+                <span class="cov8" title="1">for name, fn := range provider(c, data) </span><span class="cov8" title="1">{
+                        funcs[name] = fn
+                }</span>
+        }
+
+        <span class="cov8" title="1">if len(funcs) == 0 </span><span class="cov8" title="1">{
+                return nil
+        }</span>
+
+        <span class="cov8" title="1">return funcs</span>
+}
+</pre>
+		
+		<pre class="file" id="file50" style="display: none">package renderer
+
+import (
+        "fmt"
+        "path/filepath"
+)
+
+func (t *TemplateRenderer) resolveTemplateFiles(name string) ([]string, error) <span class="cov8" title="1">{
+        layoutNames, tpl, err := parseTemplateName(name)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">filePaths := make([]string, 0)
+
+        tempPath := t.config.BasePath
+        tempNodes := t.config.Layouts
+
+        for _, layoutName := range layoutNames </span><span class="cov8" title="1">{
+                node, ok := tempNodes[layoutName]
+                if !ok </span><span class="cov8" title="1">{
+                        return nil, fmt.Errorf("layout %q not found", layoutName)
+                }</span>
+
+                <span class="cov8" title="1">if node.FilePath == "" </span><span class="cov8" title="1">{
+                        return nil, fmt.Errorf("layout %q FilePath is empty", layoutName)
+                }</span>
+
+                <span class="cov8" title="1">tempPath = filepath.Join(tempPath, layoutName)
+                filePaths = append(filePaths, filepath.Join(tempPath, node.FilePath))
+
+                tempNodes = node.Layouts</span>
+        }
+
+        <span class="cov8" title="1">filePaths = append(filePaths, filepath.Join(tempPath, tpl))
+
+        return filePaths, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file51" style="display: none">package validator
+
+import (
+        "errors"
+
+        "github.com/go-playground/validator/v10"
+)
+
+type CustomValidator struct {
+        validator *validator.Validate
+}
+
+func New() *CustomValidator <span class="cov8" title="1">{
+        return &amp;CustomValidator{
+                validator: validator.New(),
+        }
+}</span>
+
+func (cv *CustomValidator) Validate(i any) error <span class="cov8" title="1">{
+        return cv.validator.Struct(i)
+}</span>
+
+func (cv *CustomValidator) Messages(err error) map[string]string <span class="cov8" title="1">{
+        var validationErrors validator.ValidationErrors
+        if !errors.As(err, &amp;validationErrors) </span><span class="cov8" title="1">{
+                return map[string]string{
+                        "_": err.Error(),
+                }
+        }</span>
+
+        <span class="cov8" title="1">messages := make(map[string]string)
+
+        for _, fieldErr := range validationErrors </span><span class="cov8" title="1">{
+                field := fieldErr.Field()
+
+                switch fieldErr.Tag() </span>{
+                case "required":<span class="cov8" title="1">
+                        messages[field] = field + " is required"</span>
+                case "oneof":<span class="cov8" title="1">
+                        messages[field] = field + " must be one of: " + fieldErr.Param()</span>
+                default:<span class="cov8" title="1">
+                        messages[field] = field + " is invalid"</span>
+                }
+        }
+
+        <span class="cov8" title="1">return messages</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

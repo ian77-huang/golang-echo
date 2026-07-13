@@ -26,9 +26,11 @@ var p = Params{
 	KeyLength:   32,
 }
 
+var randomRead = rand.Read
+
 func HashPassword(password string) (string, error) {
 	salt := make([]byte, p.SaltLength)
-	if _, err := rand.Read(salt); err != nil {
+	if _, err := randomRead(salt); err != nil {
 		return "", err
 	}
 

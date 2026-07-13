@@ -9,6 +9,7 @@ import (
 	"github.com/ian77-huang/golang-echo/pkg/renderer"
 	"github.com/ian77-huang/golang-echo/pkg/validator"
 
+	"github.com/labstack/echo/v5"
 	echomiddleware "github.com/labstack/echo/v5/middleware"
 )
 
@@ -18,12 +19,22 @@ type Session struct {
 }
 
 func main() {
+	e, err := newServer()
+	if err != nil {
+		panic(err)
+	}
 
+	if err := e.Start(":1323"); err != nil {
+		e.Logger.Error("failed to start server", "error", err)
+	}
+}
+
+func newServer() (*echo.Echo, error) {
 	config := appConfig.Load()
 
 	translator, err := appConfig.I18n()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	db := database.NewSqlite(config.Databases.Path)
@@ -45,9 +56,7 @@ func main() {
 
 	e.Use(auth.Middleware())
 
-	if err := e.Start(":1323"); err != nil {
-		e.Logger.Error("failed to start server", "error", err)
-	}
+	return e, nil
 }
 
 // .

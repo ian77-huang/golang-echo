@@ -7,10 +7,12 @@ import (
 	"encoding/hex"
 )
 
+var randomRead = rand.Read
+
 func (a *Auth[TUser, TSession]) GenerateSessionToken() (string, error) {
 	bytes := make([]byte, 32)
 
-	_, err := rand.Read(bytes)
+	_, err := randomRead(bytes)
 	if err != nil {
 		return "", err
 	}

@@ -14,6 +14,9 @@ import (
 
 func GetLogout(c *echo.Context) error {
 	auth := appAuth.Load[users.User, session.Session](c)
+	if auth == nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "auth context not found")
+	}
 
 	_, err := auth.ActionLogout(c)
 	if err != nil {

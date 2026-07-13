@@ -182,6 +182,32 @@ func TestRenderDoesNotRequireTemplateFuncs(t *testing.T) {
 	}
 }
 
+func TestWithFuncsAndTemplateFuncsIgnoreNilProvider(t *testing.T) {
+	runtime := RuntimeConfig{}
+	WithFuncs(nil)(&runtime)
+	if len(runtime.Funcs) != 1 || templateFuncs(runtime.Funcs, nil, nil) != nil {
+		t.Fatalf("unexpected funcs: %#v", runtime.Funcs)
+	}
+}
+
+func TestTemplateResolutionAndRenderErrors(t *testing.T) {
+	renderer := &TemplateRenderer{config: &TemplateConfig{BasePath: "views", Layouts: map[string]TemplateNode{"frontend": {}}}}
+	if _, _, err := parseTemplateName("invalid"); err == nil {
+		t.Fatal("expected invalid template name error")
+	}
+	if _, err := renderer.resolveTemplateFiles("missing:index.html"); err == nil {
+		t.Fatal("expected missing layout error")
+	}
+	if _, err := renderer.resolveTemplateFiles("frontend:index.html"); err == nil {
+		t.Fatal("expected empty layout file path error")
+	}
+	e := echo.New()
+	c := e.NewContext(httptest.NewRequest(http.MethodGet, "/", nil), httptest.NewRecorder())
+	if err := renderer.Render(c, io.Discard, "invalid", nil); err == nil {
+		t.Fatal("expected render template name error")
+	}
+}
+
 func writeTestFile(t *testing.T, path string, content string) {
 	t.Helper()
 

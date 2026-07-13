@@ -43,7 +43,7 @@ func checkRoute[TUser any, TSession any](config *Config[TUser, TSession]) {
 		config.Route.AuthOnly.Rules = []string{}
 	}
 	if config.Route.GuestOnly.Rules == nil {
-		config.Route.AuthOnly.Rules = []string{}
+		config.Route.GuestOnly.Rules = []string{}
 	}
 	if config.Route.SpecialValidate == nil {
 		config.Route.SpecialValidate = func(c *echo.Context, validateRule *ValidateRule[TUser]) {}

@@ -19,40 +19,46 @@ func main() {
 	log.Printf("\n==== SQLite - 資料庫遷移 - 開始\n")
 
 	config := appConfig.Load()
+	if err := runMigrations(config.Databases.Path, "file://migrations"); err != nil {
+		log.Fatal(err)
+	}
 
-	dbPath := config.Databases.Path
+	log.Printf("==== SQLite - 資料庫遷移 - 成功\n")
+}
+
+func runMigrations(dbPath, migrationsURL string) error {
 
 	log.Printf("\n==== SQLite - 資料庫遷移 - 資料庫位置：%+v\n", dbPath)
 
 	dir := filepath.Dir(dbPath)
 	err := os.MkdirAll(dir, 0755)
 	if err != nil {
-		log.Fatalf("==== SQLite - 無法建立資料夾: %v\n", err)
+		return err
 	}
 
 	db, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer db.Close()
 
 	driver, err := sqlite3.WithInstance(db, &sqlite3.Config{})
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	m, err := migrate.NewWithDatabaseInstance(
-		"file://migrations",
+		migrationsURL,
 		"sqlite3",
 		driver,
 	)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
-		log.Fatal(err)
+		return err
 	}
 
-	log.Printf("==== SQLite - 資料庫遷移 - 成功\n")
+	return nil
 }

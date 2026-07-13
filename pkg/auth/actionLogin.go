@@ -12,7 +12,7 @@ func (a *Auth[TUser, TSession]) ActionLogin(c *echo.Context, account string, pas
 	resolver := config.Resolver
 
 	user, err := resolver.GetUserByAccount(account)
-	if err != nil {
+	if err != nil || user == nil || user.ID == "" {
 		return false, NewError("error.auth.AccountLookupFailed", "error.auth - Account lookup Failed")
 	}
 
