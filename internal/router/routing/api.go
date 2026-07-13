@@ -18,4 +18,5 @@ func ApiRouting(e *echo.Echo) {
 
 	apiUsersGroup := apiGroup.Group("/users")
 	apiUsersGroup.POST("/register", apiUsersHandler.PostRegister)
+	apiUsersGroup.POST("/login", apiUsersHandler.PostLogin)
 }

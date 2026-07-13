@@ -1,19 +1,90 @@
 {{define "title"}}{{t "users.title"}} - {{t "users.login"}}{{end}}
 
 {{define "content_users"}}
+<script type="text/javascript">
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('loginApp', (initialTitle) => {
+            return {
+                form: {
+                    account: '',
+                    password: ''
+                },
+                __errorMessage: [],
+                getErrorMessage() {
+                    return this.__errorMessage.join("\n");
+                },
+                setErrorMessage(value = "", reset = false) {
+                    if (reset) {
+                        this.__errorMessage = [];
+                    }
+                    if (value !== "") {
+                        this.__errorMessage.push(value);
+                    }
+                },
+                validateField(field) {
+                    if (field === 'account') {
+                        if (!this.form.account) {
+                            this.setErrorMessage('{{t "error.cannot_be_empty" (kv "Name" (t "users.auth.account"))}}');
+                        }
+                    }
+
+                    if (field === 'password') {
+                        if (!this.form.password) {
+                            this.setErrorMessage('{{t "error.cannot_be_empty" (kv "Name" (t "users.auth.password"))}}');
+                        }
+                    }
+                },
+                validateAll() {
+                    this.setErrorMessage("", true);
+                    this.validateField('account');
+                    this.validateField('password');
+                    return this.__errorMessage.length === 0;
+                },
+                async handleSubmit(event) {
+                    if (!this.validateAll()) {
+                        return;
+                    }
+                    const res = await fetch('/api/users/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(this.form),
+                    })
+
+                    const data = await res.json();
+                    if (typeof data.code !== "undefined" && data.code === "validation_failed") {
+                        alert(data.message)
+                    }
+                    else {
+                        alert(data.message)
+                        window.location.href = "/";
+                    }
+                    console.log(data);
+                },
+            }
+        })
+    })
+</script>
 <div class="divider">{{t "users.login"}}</div>
-<div class="card bg-base-100 m-auto w-full max-w-sm shrink-0 shadow-2xl">
-    <div class="card-body">
-        <fieldset class="fieldset">
-            <form method="post" id="formRegister">
-                <label class="label">Email</label>
-                <input type="email" class="input" placeholder="Email" />
-                <label class="label">Password</label>
-                <input type="password" class="input" placeholder="Password" />
-                <div><a class="link link-hover">Forgot password?</a></div>
-                <button class="btn btn-neutral mt-4">Login</button>
-            </form>
-        </fieldset>
+<form method="post" id="formLogin" @submit.prevent="handleSubmit" x-data="loginApp">
+    <div class="card bg-base-100 m-auto w-full max-w-sm shrink-0 shadow-2xl">
+        <div class="card-body">
+            <fieldset class="fieldset">
+                <label class="label">{{t "users.auth.account"}}</label>
+                <input type="text" class="input" x-model="form.account"
+                    placeholder='{{t "placeholder.input.value" (kv "Name" (t "users.auth.account"))}}'
+                    autocomplete="username" />
+                <label class="label">{{t "users.auth.password"}}</label>
+                <input type="password" name="password" x-model="form.password" class="input" placeholder='{{t "placeholder.input.value" (kv "Name"
+                (t "users.auth.password" ))}}' autocomplete="new-password" />
+                <div x-show="getErrorMessage() !== ''" role="alert"
+                    class="alert alert-error alert-soft whitespace-pre-line mt-3">
+                    <span x-html='getErrorMessage()'></span>
+                </div>
+                <button class="btn btn-neutral mt-4">{{t "users.login"}}</button>
+            </fieldset>
+        </div>
     </div>
-</div>
+</form>
 {{end}}
