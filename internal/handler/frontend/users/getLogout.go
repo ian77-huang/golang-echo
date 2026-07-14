@@ -3,9 +3,8 @@ package users
 import (
 	"net/http"
 
-	"github.com/ian77-huang/golang-echo/internal/models/session"
-	"github.com/ian77-huang/golang-echo/internal/models/users"
 	"github.com/ian77-huang/golang-echo/internal/response"
+	"github.com/ian77-huang/golang-echo/model"
 
 	appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
 
@@ -13,7 +12,7 @@ import (
 )
 
 func (h *UserHandler) GetLogout(c *echo.Context) error {
-	auth := appAuth.Load[users.User, session.Session](c)
+	auth := appAuth.Load[model.User, model.Session](c)
 	if auth == nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "auth context not found")
 	}

@@ -17,7 +17,6 @@ func (a *Auth[TUser, TSession]) ActionLogin(c *echo.Context, account string, pas
 	}
 
 	verify, err := VerifyPassword(password, user.Password)
-
 	if err != nil {
 		return false, NewError("error.auth.AccountLookupFailed", "error.auth - Account lookup Failed")
 	}

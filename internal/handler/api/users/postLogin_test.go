@@ -8,8 +8,7 @@ import (
 	"testing"
 	"time"
 
-	sessionModel "github.com/ian77-huang/golang-echo/internal/models/session"
-	userModel "github.com/ian77-huang/golang-echo/internal/models/users"
+	"github.com/ian77-huang/golang-echo/model"
 	appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
 	appValidator "github.com/ian77-huang/golang-echo/pkg/validator"
 	"github.com/labstack/echo/v5"
@@ -23,24 +22,24 @@ func TestPostLoginUsesAuthFromMiddleware(t *testing.T) {
 	e := echo.New()
 	e.Validator = appValidator.New()
 	h := &ApiUserHandler{}
-	auth := appAuth.New(&appAuth.Config[userModel.User, sessionModel.Session]{SecretKey: "test-secret", Resolver: &appAuth.Resolver[userModel.User, sessionModel.Session]{
-		IsAccountExist: func(string) (bool, error) { return false, nil }, CreateUser: func(string, string) (*appAuth.User[userModel.User], error) {
-			return &appAuth.User[userModel.User]{ID: "user-1"}, nil
+	auth := appAuth.New(&appAuth.Config[model.User, model.Session]{SecretKey: "test-secret", Resolver: &appAuth.Resolver[model.User, model.Session]{
+		IsAccountExist: func(string) (bool, error) { return false, nil }, CreateUser: func(string, string) (*appAuth.User[model.User], error) {
+			return &appAuth.User[model.User]{ID: "user-1"}, nil
 		},
-		GetUser: func(id string) (*appAuth.User[userModel.User], error) {
-			return &appAuth.User[userModel.User]{ID: id}, nil
-		}, GetUserByAccount: func(string) (*appAuth.User[userModel.User], error) {
-			return &appAuth.User[userModel.User]{ID: "user-1", Password: hash}, nil
+		GetUser: func(id string) (*appAuth.User[model.User], error) {
+			return &appAuth.User[model.User]{ID: id}, nil
+		}, GetUserByAccount: func(string) (*appAuth.User[model.User], error) {
+			return &appAuth.User[model.User]{ID: "user-1", Password: hash}, nil
 		},
-		GetSession: func(id string) (*appAuth.Session[sessionModel.Session], error) {
-			return &appAuth.Session[sessionModel.Session]{ID: id}, nil
-		}, CreateSession: func(id, userID string, expires time.Time) (*appAuth.Session[sessionModel.Session], error) {
-			return &appAuth.Session[sessionModel.Session]{ID: id, UserID: userID, ExpiresAt: expires}, nil
+		GetSession: func(id string) (*appAuth.Session[model.Session], error) {
+			return &appAuth.Session[model.Session]{ID: id}, nil
+		}, CreateSession: func(id, userID string, expires time.Time) (*appAuth.Session[model.Session], error) {
+			return &appAuth.Session[model.Session]{ID: id, UserID: userID, ExpiresAt: expires}, nil
 		},
-		UpdateSession: func(id string, expires time.Time, _ *sessionModel.Session) (*appAuth.Session[sessionModel.Session], error) {
-			return &appAuth.Session[sessionModel.Session]{ID: id, ExpiresAt: expires}, nil
-		}, DeleteSession: func(id string) (*appAuth.Session[sessionModel.Session], error) {
-			return &appAuth.Session[sessionModel.Session]{ID: id}, nil
+		UpdateSession: func(id string, expires time.Time, _ *model.Session) (*appAuth.Session[model.Session], error) {
+			return &appAuth.Session[model.Session]{ID: id, ExpiresAt: expires}, nil
+		}, DeleteSession: func(id string) (*appAuth.Session[model.Session], error) {
+			return &appAuth.Session[model.Session]{ID: id}, nil
 		},
 	}})
 	req := httptest.NewRequest(http.MethodPost, "/api/users/login", bytes.NewBufferString(`{"account":"tester","password":"password123"}`))
@@ -89,24 +88,24 @@ func TestPostLoginReturnsErrorWhenActionLoginFails(t *testing.T) {
 	e := echo.New()
 	e.Validator = appValidator.New()
 	h := &ApiUserHandler{}
-	auth := appAuth.New(&appAuth.Config[userModel.User, sessionModel.Session]{SecretKey: "test-secret", Resolver: &appAuth.Resolver[userModel.User, sessionModel.Session]{
-		IsAccountExist: func(string) (bool, error) { return false, nil }, CreateUser: func(string, string) (*appAuth.User[userModel.User], error) {
-			return &appAuth.User[userModel.User]{ID: "user-1"}, nil
+	auth := appAuth.New(&appAuth.Config[model.User, model.Session]{SecretKey: "test-secret", Resolver: &appAuth.Resolver[model.User, model.Session]{
+		IsAccountExist: func(string) (bool, error) { return false, nil }, CreateUser: func(string, string) (*appAuth.User[model.User], error) {
+			return &appAuth.User[model.User]{ID: "user-1"}, nil
 		},
-		GetUser: func(id string) (*appAuth.User[userModel.User], error) {
-			return &appAuth.User[userModel.User]{ID: id}, nil
-		}, GetUserByAccount: func(string) (*appAuth.User[userModel.User], error) {
+		GetUser: func(id string) (*appAuth.User[model.User], error) {
+			return &appAuth.User[model.User]{ID: id}, nil
+		}, GetUserByAccount: func(string) (*appAuth.User[model.User], error) {
 			return nil, errors.New("db error")
 		},
-		GetSession: func(id string) (*appAuth.Session[sessionModel.Session], error) {
-			return &appAuth.Session[sessionModel.Session]{ID: id}, nil
-		}, CreateSession: func(id, userID string, expires time.Time) (*appAuth.Session[sessionModel.Session], error) {
-			return &appAuth.Session[sessionModel.Session]{ID: id, UserID: userID, ExpiresAt: expires}, nil
+		GetSession: func(id string) (*appAuth.Session[model.Session], error) {
+			return &appAuth.Session[model.Session]{ID: id}, nil
+		}, CreateSession: func(id, userID string, expires time.Time) (*appAuth.Session[model.Session], error) {
+			return &appAuth.Session[model.Session]{ID: id, UserID: userID, ExpiresAt: expires}, nil
 		},
-		UpdateSession: func(id string, expires time.Time, _ *sessionModel.Session) (*appAuth.Session[sessionModel.Session], error) {
-			return &appAuth.Session[sessionModel.Session]{ID: id, ExpiresAt: expires}, nil
-		}, DeleteSession: func(id string) (*appAuth.Session[sessionModel.Session], error) {
-			return &appAuth.Session[sessionModel.Session]{ID: id}, nil
+		UpdateSession: func(id string, expires time.Time, _ *model.Session) (*appAuth.Session[model.Session], error) {
+			return &appAuth.Session[model.Session]{ID: id, ExpiresAt: expires}, nil
+		}, DeleteSession: func(id string) (*appAuth.Session[model.Session], error) {
+			return &appAuth.Session[model.Session]{ID: id}, nil
 		},
 	}})
 	req := httptest.NewRequest(http.MethodPost, "/api/users/login", bytes.NewBufferString(`{"account":"tester","password":"password123"}`))

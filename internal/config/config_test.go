@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ian77-huang/golang-echo/internal/models/session"
-	"github.com/ian77-huang/golang-echo/internal/models/users"
+	"github.com/ian77-huang/golang-echo/model"
 	appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
+	"github.com/ian77-huang/golang-echo/repository"
 	"github.com/labstack/echo/v5"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -63,7 +63,7 @@ func TestAuthBuildsWorkingResolvers(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := db.AutoMigrate(&users.User{}, &session.Session{}); err != nil {
+	if err := db.AutoMigrate(&model.User{}, &model.Session{}); err != nil {
 		t.Fatal(err)
 	}
 	auth := Auth(db)
@@ -78,7 +78,7 @@ func TestAuthBuildsWorkingResolvers(t *testing.T) {
 	if err != nil || !loggedIn || len(loginRec.Result().Cookies()) != 1 {
 		t.Fatalf("login=%v cookies=%#v err=%v", loggedIn, loginRec.Result().Cookies(), err)
 	}
-	var saved session.Session
+	var saved model.Session
 	if err := db.Where("userId = ?", id).First(&saved).Error; err != nil {
 		t.Fatal(err)
 	}
@@ -88,7 +88,8 @@ func TestAuthBuildsWorkingResolvers(t *testing.T) {
 	if _, err := auth.ActionLogout(contextWithUser(e, auth, id)); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := session.UpdateSession(db, saved.ID, time.Now().Add(time.Hour), &saved); err != nil {
+	sessionRepository := repository.NewSessionRepository(db)
+	if _, err := sessionRepository.UpdateSession(saved.ID, time.Now().Add(time.Hour), &saved); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -99,7 +100,7 @@ func TestAuthResolversPropagateDatabaseErrors(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := db.AutoMigrate(&users.User{}, &session.Session{}); err != nil {
+	if err := db.AutoMigrate(&model.User{}, &model.Session{}); err != nil {
 		t.Fatal(err)
 	}
 	auth := Auth(db)
@@ -120,7 +121,7 @@ func TestAuthResolversPropagateDatabaseErrors(t *testing.T) {
 		t.Fatal("expected login lookup error")
 	}
 	c := echo.New().NewContext(httptest.NewRequest(http.MethodPost, "/", nil), httptest.NewRecorder())
-	c.Set(appAuth.CONTEXT_KEY_USER, &appAuth.User[users.User]{ID: "1"})
+	c.Set(appAuth.CONTEXT_KEY_USER, &appAuth.User[model.User]{ID: "1"})
 	if _, err := auth.ActionLogout(c); err == nil {
 		t.Fatal("expected delete session error")
 	}
@@ -131,9 +132,9 @@ func requestWithCookie(cookie *http.Cookie) *http.Request {
 	req.AddCookie(cookie)
 	return req
 }
-func contextWithUser(e *echo.Echo, auth *appAuth.Auth[users.User, session.Session], id string) *echo.Context {
+func contextWithUser(e *echo.Echo, auth *appAuth.Auth[model.User, model.Session], id string) *echo.Context {
 	c := e.NewContext(httptest.NewRequest(http.MethodPost, "/", nil), httptest.NewRecorder())
-	c.Set(appAuth.CONTEXT_KEY_USER, &appAuth.User[users.User]{ID: id})
+	c.Set(appAuth.CONTEXT_KEY_USER, &appAuth.User[model.User]{ID: id})
 	c.Set(appAuth.CONTEXT_KEY_AUTH, auth)
 	return c
 }

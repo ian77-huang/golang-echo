@@ -1,8 +1,8 @@
 package config
 
 import (
-	"github.com/ian77-huang/golang-echo/internal/models/users"
 	"github.com/ian77-huang/golang-echo/internal/shared"
+	"github.com/ian77-huang/golang-echo/model"
 	appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
 	"github.com/ian77-huang/golang-echo/pkg/renderer"
 	"github.com/labstack/echo/v5"
@@ -35,7 +35,7 @@ func RendererTemplate(options ...renderer.Option) *renderer.TemplateConfig {
 			realPath := c.Request().URL.Path
 			lang, _ := c.Get("lang").(string)
 
-			isSignedIn := appAuth.IsSignedIn[users.User](c)
+			isSignedIn := appAuth.IsSignedIn[model.User](c)
 
 			users := SetMenusUsers(MenuUsersRules{Path: realPath, IsSignedIn: isSignedIn, T: shared.TFactory(c)})
 

@@ -7,8 +7,7 @@ import (
 	"testing"
 	"time"
 
-	sessionModel "github.com/ian77-huang/golang-echo/internal/models/session"
-	userModel "github.com/ian77-huang/golang-echo/internal/models/users"
+	"github.com/ian77-huang/golang-echo/model"
 	appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
 	appValidator "github.com/ian77-huang/golang-echo/pkg/validator"
 	"github.com/labstack/echo/v5"
@@ -22,32 +21,32 @@ func TestPostRegisterUsesAuthFromMiddleware(t *testing.T) {
 	e.Validator = appValidator.New()
 
 	h := &ApiUserHandler{}
-	auth := appAuth.New(&appAuth.Config[userModel.User, sessionModel.Session]{
+	auth := appAuth.New(&appAuth.Config[model.User, model.Session]{
 		SecretKey: "test-secret",
-		Resolver: (&appAuth.Resolver[userModel.User, sessionModel.Session]{
+		Resolver: (&appAuth.Resolver[model.User, model.Session]{
 			IsAccountExist: func(account string) (bool, error) {
 				return false, nil
 			},
-			CreateUser: func(account string, password string) (*appAuth.User[userModel.User], error) {
-				return &appAuth.User[userModel.User]{ID: "user-1"}, nil
+			CreateUser: func(account string, password string) (*appAuth.User[model.User], error) {
+				return &appAuth.User[model.User]{ID: "user-1"}, nil
 			},
-			CreateSession: func(id string, userID string, expiresAt time.Time) (*appAuth.Session[sessionModel.Session], error) {
-				return &appAuth.Session[sessionModel.Session]{ID: id, ExpiresAt: expiresAt}, nil
+			CreateSession: func(id string, userID string, expiresAt time.Time) (*appAuth.Session[model.Session], error) {
+				return &appAuth.Session[model.Session]{ID: id, ExpiresAt: expiresAt}, nil
 			},
-			GetSession: func(id string) (*appAuth.Session[sessionModel.Session], error) {
-				return &appAuth.Session[sessionModel.Session]{ID: id}, nil
+			GetSession: func(id string) (*appAuth.Session[model.Session], error) {
+				return &appAuth.Session[model.Session]{ID: id}, nil
 			},
-			GetUser: func(id string) (*appAuth.User[userModel.User], error) {
-				return &appAuth.User[userModel.User]{ID: id}, nil
+			GetUser: func(id string) (*appAuth.User[model.User], error) {
+				return &appAuth.User[model.User]{ID: id}, nil
 			},
-			GetUserByAccount: func(account string) (*appAuth.User[userModel.User], error) {
-				return &appAuth.User[userModel.User]{ID: "user-1"}, nil
+			GetUserByAccount: func(account string) (*appAuth.User[model.User], error) {
+				return &appAuth.User[model.User]{ID: "user-1"}, nil
 			},
-			UpdateSession: func(id string, expiresAt time.Time, _ *sessionModel.Session) (*appAuth.Session[sessionModel.Session], error) {
-				return &appAuth.Session[sessionModel.Session]{ID: id, ExpiresAt: expiresAt}, nil
+			UpdateSession: func(id string, expiresAt time.Time, _ *model.Session) (*appAuth.Session[model.Session], error) {
+				return &appAuth.Session[model.Session]{ID: id, ExpiresAt: expiresAt}, nil
 			},
-			DeleteSession: func(id string) (*appAuth.Session[sessionModel.Session], error) {
-				return &appAuth.Session[sessionModel.Session]{ID: id}, nil
+			DeleteSession: func(id string) (*appAuth.Session[model.Session], error) {
+				return &appAuth.Session[model.Session]{ID: id}, nil
 			},
 		}),
 	})

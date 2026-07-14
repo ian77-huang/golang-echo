@@ -1,8 +1,15 @@
-package session
+package model
 
 import "time"
 
-// Session 代表資料庫中的 Session 資料表結構
+type User struct {
+	Id        int        `json:"id"`
+	Account   string     `json:"cccount"`
+	Password  string     `json:"password"`
+	CreatedAt *time.Time `json:"created_at"`
+	UpdatedAt *time.Time `json:"updated_at"`
+}
+
 type Session struct {
 	ID          string    `gorm:"column:id;type:text;primaryKey"`
 	UserID      string    `gorm:"column:userId;type:text;not null"`

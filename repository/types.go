@@ -1,0 +1,28 @@
+package repository
+
+import (
+	"time"
+
+	"github.com/ian77-huang/golang-echo/model"
+	"gorm.io/gorm"
+)
+
+type userRepository struct {
+	db *gorm.DB
+}
+type sessionRepository struct {
+	db *gorm.DB
+}
+
+type UserRepository interface {
+	IsAccountExist(account string) (bool, error)
+	CreateUser(account string, password string) (*model.User, error)
+	GetUser(id int) (*model.User, error)
+	GetUserByAccount(account string) (*model.User, error)
+}
+type SessionRepository interface {
+	CreateSession(id, userId string, expiresAt time.Time) (*model.Session, error)
+	UpdateSession(id string, expiresAt time.Time, sess *model.Session) (*model.Session, error)
+	DeleteSession(id string) (*model.Session, error)
+	GetSession(id string) (*model.Session, error)
+}

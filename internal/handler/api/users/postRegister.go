@@ -4,10 +4,10 @@ import (
 	"net/http"
 
 	appConfig "github.com/ian77-huang/golang-echo/internal/config"
-	"github.com/ian77-huang/golang-echo/internal/models/session"
-	"github.com/ian77-huang/golang-echo/internal/models/users"
 	"github.com/ian77-huang/golang-echo/internal/response"
 	"github.com/ian77-huang/golang-echo/internal/shared"
+
+	"github.com/ian77-huang/golang-echo/model"
 
 	appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
 
@@ -20,6 +20,9 @@ func (h *ApiUserHandler) PostRegister(c *echo.Context) error {
 	if err := c.Bind(&req); err != nil {
 		return response.Error(c, http.StatusBadRequest, "invalid request")
 	}
+	if err := c.Validate(req); err != nil {
+		return response.ValidationError(c, err)
+	}
 
 	config := appConfig.Load()
 	if len(req.Account) < config.Users.MinLengthAccount {
@@ -30,11 +33,8 @@ func (h *ApiUserHandler) PostRegister(c *echo.Context) error {
 		err := response.NewFieldError("password", "min", config.Users.MinLengthPassword)
 		return response.ValidationCustomError(c, err)
 	}
-	if err := c.Validate(req); err != nil {
-		return response.ValidationError(c, err)
-	}
 
-	auth := appAuth.Load[users.User, session.Session](c)
+	auth := appAuth.Load[model.User, model.Session](c)
 	if auth == nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "auth context not found")
 	}

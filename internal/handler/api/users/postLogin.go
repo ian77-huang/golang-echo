@@ -3,10 +3,9 @@ package users
 import (
 	"net/http"
 
-	"github.com/ian77-huang/golang-echo/internal/models/session"
-	"github.com/ian77-huang/golang-echo/internal/models/users"
 	"github.com/ian77-huang/golang-echo/internal/response"
 	"github.com/ian77-huang/golang-echo/internal/shared"
+	"github.com/ian77-huang/golang-echo/model"
 
 	appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
 
@@ -24,7 +23,7 @@ func (h *ApiUserHandler) PostLogin(c *echo.Context) error {
 		return response.ValidationError(c, err)
 	}
 
-	auth := appAuth.Load[users.User, session.Session](c)
+	auth := appAuth.Load[model.User, model.Session](c)
 	if auth == nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "auth context not found")
 	}
@@ -34,7 +33,7 @@ func (h *ApiUserHandler) PostLogin(c *echo.Context) error {
 		return response.ValidationErrorAuth(c, err)
 	}
 
-	return c.JSON(http.StatusCreated, map[string]interface{}{
+	return c.JSON(http.StatusCreated, map[string]any{
 		"message": shared.T(c, "users.auth.login.success"),
 		"id":      ID,
 	})
