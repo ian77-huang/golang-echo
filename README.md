@@ -4,16 +4,16 @@
 
 ## 目前進度
 
-| 功能 | 狀態 | 說明 |
-| --- | --- | --- |
-| Echo Web 伺服器 | 已完成 | 預設監聽 `http://localhost:1323`。 |
-| HTML 模板 | 已完成 | 包含首頁、登入頁與註冊頁，以及可巢狀使用的 layout。 |
-| 多語系 | 已完成 | 支援繁體中文（`zh-TW`）與英文（`en`）。 |
-| SQLite 與 migrations | 已完成 | 已建立 users、messages、session 三組遷移。 |
-| 使用者註冊 API | 已完成 | 建立帳號、以 Argon2 雜湊密碼並建立 session。 |
-| Session 驗證 | 已完成 | 透過 cookie 與 JWT 處理 session 的建立與刷新。 |
-| 登入 API | 已完成 | 驗證帳號密碼，成功後建立 session 並寫入 cookie。 |
-| 登出 API | 已完成 | 清除 session 並刪除 cookie，重新導向至登入頁。 |
+| 功能                 | 狀態   | 說明                                                |
+| -------------------- | ------ | --------------------------------------------------- |
+| Echo Web 伺服器      | 已完成 | 預設監聽 `http://localhost:1323`。                  |
+| HTML 模板            | 已完成 | 包含首頁、登入頁與註冊頁，以及可巢狀使用的 layout。 |
+| 多語系               | 已完成 | 支援繁體中文（`zh-TW`）與英文（`en`）。             |
+| SQLite 與 migrations | 已完成 | 已建立 users、messages、session 三組遷移。          |
+| 使用者註冊 API       | 已完成 | 建立帳號、以 Argon2 雜湊密碼並建立 session。        |
+| Session 驗證         | 已完成 | 透過 cookie 與 JWT 處理 session 的建立與刷新。      |
+| 登入 API             | 已完成 | 驗證帳號密碼，成功後建立 session 並寫入 cookie。    |
+| 登出 API             | 已完成 | 清除 session 並刪除 cookie，重新導向至登入頁。      |
 
 ## 技術棧
 
@@ -65,12 +65,12 @@ cp .env.example .env
 
 請將 `SECRET_KEY` 換成自己的高強度隨機字串。`.env` 已由 Git 忽略，請勿提交其中的機密值。
 
-| 變數 | 必填 | 用途 | 開發環境範例 |
-| --- | --- | --- | --- |
-| `SECRET_KEY` | 是 | JWT 簽章與 session 驗證金鑰；不可為空。 | `replace-with-a-long-random-secret` |
-| `DATABASE_PATH` | 是 | SQLite 資料庫檔案路徑。 | `databases/main.db` |
-| `USERS_ACCOUNT_MIN_LENGTH` | 是 | 註冊帳號最小長度。 | `6` |
-| `USERS_PASSWORD_MIN_LENGTH` | 是 | 註冊密碼最小長度。 | `8` |
+| 變數                        | 必填 | 用途                                    | 開發環境範例                        |
+| --------------------------- | ---- | --------------------------------------- | ----------------------------------- |
+| `SECRET_KEY`                | 是   | JWT 簽章與 session 驗證金鑰；不可為空。 | `replace-with-a-long-random-secret` |
+| `DATABASE_PATH`             | 是   | SQLite 資料庫檔案路徑。                 | `databases/main.db`                 |
+| `USERS_ACCOUNT_MIN_LENGTH`  | 是   | 註冊帳號最小長度。                      | `6`                                 |
+| `USERS_PASSWORD_MIN_LENGTH` | 是   | 註冊密碼最小長度。                      | `8`                                 |
 
 ### 3. 套用資料庫遷移
 
@@ -95,19 +95,19 @@ air
 
 ## 路由與 API
 
-| 方法 | 路徑 | 說明 |
-| --- | --- | --- |
-| `GET` | `/` | 首頁 |
-| `GET` | `/users` | 使用者首頁 |
-| `GET` | `/users/login` | 登入頁面 |
-| `GET` | `/users/register` | 註冊頁面 |
-| `GET` | `/users/logout` | 登出並重新導向至登入頁 |
-| `GET` | `/api/ping` | 健康檢查 |
-| `POST` | `/api/lang` | 切換語系 |
-| `POST` | `/api/users/register` | 註冊使用者並建立 session |
-| `POST` | `/api/users/login` | 登入並建立 session |
+| 方法   | 路徑                 | 說明                     |
+| ------ | -------------------- | ------------------------ |
+| `GET`  | `/`                  | 首頁                     |
+| `GET`  | `/user`              | 使用者首頁               |
+| `GET`  | `/user/login`        | 登入頁面                 |
+| `GET`  | `/user/register`     | 註冊頁面                 |
+| `GET`  | `/user/logout`       | 登出並重新導向至登入頁   |
+| `GET`  | `/api/ping`          | 健康檢查                 |
+| `POST` | `/api/lang`          | 切換語系                 |
+| `POST` | `/api/user/register` | 註冊使用者並建立 session |
+| `POST` | `/api/user/login`    | 登入並建立 session       |
 
-註冊 API（`POST /api/users/register`）請求內容：
+註冊 API（`POST /api/user/register`）請求內容：
 
 ```json
 {
@@ -117,7 +117,7 @@ air
 }
 ```
 
-登入 API（`POST /api/users/login`）請求內容：
+登入 API（`POST /api/user/login`）請求內容：
 
 ```json
 {

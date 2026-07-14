@@ -15,12 +15,12 @@ func Auth(db *gorm.DB) *appAuth.Auth[model.User, model.Session] {
 	userRepository := repository.NewUserRepository(db)
 	sessionReopository := repository.NewSessionRepository(db)
 	guestOnly := &appAuth.RoutesPaths{
-		Rules:       []string{"/users/login", "/users/register"},
+		Rules:       []string{"/user/login", "/user/register"},
 		RedirectURL: "/",
 	}
 	AuthOnly := &appAuth.RoutesPaths{
 		Rules:       []string{},
-		RedirectURL: "/users/login",
+		RedirectURL: "/user/login",
 	}
 	route := &appAuth.Route[model.User]{
 		GuestOnly: guestOnly,

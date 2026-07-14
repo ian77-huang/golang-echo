@@ -9,6 +9,18 @@ type User struct {
 	CreatedAt *time.Time `json:"created_at"`
 	UpdatedAt *time.Time `json:"updated_at"`
 }
+type UserProfile struct {
+	UserID       int       `gorm:"primaryKey" json:"user_id"`
+	Name         string    `gorm:"type:varchar(100);not null" json:"name"`
+	Email        string    `gorm:"type:varchar(255);not null;unique" json:"email"`
+	Phone        string    `gorm:"type:varchar(50)" json:"phone"`
+	Bio          string    `gorm:"type:text" json:"bio"`
+	AvatarURL    string    `gorm:"type:varchar(512)" json:"avatar_url"`
+	IsEmailNotif bool      `gorm:"default:true" json:"is_email_notif"`
+	IsSMSNotif   bool      `gorm:"default:false" json:"is_sms_notif"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
+}
 
 type Session struct {
 	ID          string    `gorm:"column:id;type:text;primaryKey"`

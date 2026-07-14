@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	"github.com/ian77-huang/golang-echo/internal/handler/api/users"
+	users "github.com/ian77-huang/golang-echo/internal/handler/api/user"
 	"github.com/labstack/echo/v5"
 )
 

@@ -22,5 +22,5 @@ func (h *UserHandler) GetLogout(c *echo.Context) error {
 		return response.ValidationErrorAuth(c, err)
 	}
 
-	return c.Redirect(http.StatusSeeOther, "/users/login")
+	return c.Redirect(http.StatusSeeOther, "/user/login")
 }

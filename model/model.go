@@ -1,7 +1,10 @@
 package model
 
 func (User) TableName() string {
-	return "users"
+	return "user"
+}
+func (UserProfile) TableName() string {
+	return "user_profile"
 }
 
 func (Session) TableName() string {

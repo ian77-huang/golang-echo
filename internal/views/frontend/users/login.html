@@ -44,7 +44,7 @@
                     if (!this.validateAll()) {
                         return;
                     }
-                    const res = await fetch('/api/users/login', {
+                    const res = await fetch('/api/user/login', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

@@ -14,10 +14,10 @@
         <div class="flex w-full flex-row gap-5">
             <ul class="list bg-base-100 rounded-box shadow-md w-60">
                 <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">{{t "users.title"}}</li>
-                <li class="list-row hover:bg-gray-200">
-                    {{range .Users}}
+                {{range .Users}}
+                <li class="list-row hover:bg-gray-200 mx-1 last:mb-1">
                     <div class="list-col-grow">
-                        {{t (print "users." .Name)}}
+                        {{t .Name}}
                     </div>
                     <button class="btn btn-square btn-ghost" @click="gotoUserUrl" data-url="{{.Url}}">
                         <svg class="size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -27,8 +27,8 @@
                             </g>
                         </svg>
                     </button>
-                    {{end}}
                 </li>
+                {{end}}
             </ul>
             <section class="flex-1">
                 <div class="w-full">

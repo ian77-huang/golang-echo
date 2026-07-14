@@ -2,7 +2,7 @@ package routing
 
 import (
 	"github.com/ian77-huang/golang-echo/internal/handler"
-	handlerUsers "github.com/ian77-huang/golang-echo/internal/handler/frontend/users"
+	handlerUsers "github.com/ian77-huang/golang-echo/internal/handler/frontend/user"
 	"github.com/labstack/echo/v5"
 )
 
