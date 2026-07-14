@@ -11,4 +11,5 @@ func New(e *echo.Echo) {
 	users.GET("/login", h.GetLogin)
 	users.GET("/register", h.GetRegister)
 	users.GET("/logout", h.GetLogout)
+	users.GET("/profile", h.GetUserProfile)
 }

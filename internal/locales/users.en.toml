@@ -1,26 +1,26 @@
-[users.title]
+[user.title]
 other = "Users"
 
-[users.login]
+[user.login]
 other = "Login"
 
-[users.logout]
+[user.logout]
 other = "Logout"
 
-[users.register]
+[user.register]
 other = "Register"
 
-[users.auth.account]
+[user.auth.account]
 other = "Account"
 
-[users.auth.password]
+[user.auth.password]
 other = "Password"
 
-[users.auth.confirmPassword]
+[user.auth.confirmPassword]
 other = "Confirm Password"
 
-[users.auth.create.success]
+[user.auth.create.success]
 other = "User created successfully"
 
-[users.auth.login.success]
+[user.auth.login.success]
 other = "Login successfully"

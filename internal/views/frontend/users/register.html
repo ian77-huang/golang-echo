@@ -1,4 +1,4 @@
-{{define "title"}}{{t "users.title"}} - {{t "users.register"}}{{end}}
+{{define "title"}}{{t "user.title"}} - {{t "user.register"}}{{end}}
 
 {{define "content_users"}}
 <script type="text/javascript">
@@ -27,19 +27,19 @@
                 validateField(field) {
                     if (field === 'account') {
                         if (!this.form.account) {
-                            this.setErrorMessage('{{t "error.cannot_be_empty" (kv "Name" (t "users.auth.account"))}}');
+                            this.setErrorMessage('{{t "error.cannot_be_empty" (kv "Name" (t "user.auth.account"))}}');
                         }
                         else if (this.form.account.length < this.minLengthAccount) {
-                            this.setErrorMessage('{{t "error.min_characters_required" (kv "Name" (t "users.auth.account")) (kv "Length" .MinLengthAccount)}}');
+                            this.setErrorMessage('{{t "error.min_characters_required" (kv "Name" (t "user.auth.account")) (kv "Length" .MinLengthAccount)}}');
                         }
                     }
 
                     if (field === 'password') {
                         if (!this.form.password) {
-                            this.setErrorMessage('{{t "error.cannot_be_empty" (kv "Name" (t "users.auth.password"))}}');
+                            this.setErrorMessage('{{t "error.cannot_be_empty" (kv "Name" (t "user.auth.password"))}}');
                         }
                         else if (this.form.password.length < this.minLengthPassword) {
-                            this.setErrorMessage('{{t "error.min_characters_required" (kv "Name" (t "users.auth.password")) (kv "Length" .MinLengthPassword)}}');
+                            this.setErrorMessage('{{t "error.min_characters_required" (kv "Name" (t "user.auth.password")) (kv "Length" .MinLengthPassword)}}');
                         }
 
                         if (this.form.password && this.form.confirmPassword) {
@@ -85,26 +85,26 @@
         })
     })
 </script>
-<div class="divider">{{t "users.register"}}</div>
+<div class="divider">{{t "user.register"}}</div>
 <form method="post" id="formRegister" @submit.prevent="handleSubmit" x-data="registerApp">
     <div class="card bg-base-100 m-auto w-full max-w-sm shrink-0 shadow-2xl">
         <div class="card-body">
             <fieldset class="fieldset">
-                <label class="label">{{t "users.auth.account"}}</label>
+                <label class="label">{{t "user.auth.account"}}</label>
                 <input type="text" class="input" x-model="form.account"
-                    placeholder='{{t "placeholder.input.value" (kv "Name" (t "users.auth.account"))}}'
+                    placeholder='{{t "placeholder.input.value" (kv "Name" (t "user.auth.account"))}}'
                     autocomplete="username" />
-                <label class="label">{{t "users.auth.password"}}</label>
+                <label class="label">{{t "user.auth.password"}}</label>
                 <input type="password" name="password" x-model="form.password" class="input" placeholder='{{t "placeholder.input.value" (kv "Name"
-                (t "users.auth.password" ))}}' autocomplete="new-password" />
-                <label class="label">{{t "users.auth.confirmPassword"}}</label>
+                (t "user.auth.password" ))}}' autocomplete="new-password" />
+                <label class="label">{{t "user.auth.confirmPassword"}}</label>
                 <input type="password" nmae="confirmPassword" x-model="form.confirmPassword" class="input" placeholder='{{t "placeholder.input.value" (kv "Name"
-                (t "users.auth.confirmPassword" ))}}' autocomplete="new-password" />
+                (t "user.auth.confirmPassword" ))}}' autocomplete="new-password" />
                 <div x-show="getErrorMessage() !== ''" role="alert"
                     class="alert alert-error alert-soft whitespace-pre-line mt-3">
                     <span x-html='getErrorMessage()'></span>
                 </div>
-                <button class="btn btn-neutral mt-4">{{t "users.register"}}</button>
+                <button class="btn btn-neutral mt-4">{{t "user.register"}}</button>
             </fieldset>
         </div>
     </div>

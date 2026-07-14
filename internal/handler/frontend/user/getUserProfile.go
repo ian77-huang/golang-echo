@@ -7,5 +7,5 @@ import (
 )
 
 func (h *UserHandler) GetUserProfile(c *echo.Context) error {
-	return c.Render(http.StatusOK, "frontend:users:/login.html", map[string]any{})
+	return c.Render(http.StatusOK, "frontend:users:/userProfile.html", map[string]any{})
 }

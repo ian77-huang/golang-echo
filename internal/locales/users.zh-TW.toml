@@ -1,26 +1,26 @@
-[users.title]
+[user.title]
 other = "使用者"
 
-[users.login]
+[user.login]
 other = "登入"
 
-[users.logout]
+[user.logout]
 other = "登出"
 
-[users.register]
+[user.register]
 other = "註冊"
 
-[users.auth.account]
+[user.auth.account]
 other = "帳號"
 
-[users.auth.password]
+[user.auth.password]
 other = "密碼"
 
-[users.auth.confirmPassword]
+[user.auth.confirmPassword]
 other = "確認密碼"
 
-[users.auth.create.success]
+[user.auth.create.success]
 other = "使用者建立成功"
 
-[users.auth.login.success]
+[user.auth.login.success]
 other = "登入成功"

@@ -45,7 +45,7 @@ func (h *ApiUserHandler) PostRegister(c *echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, map[string]interface{}{
-		"message": shared.T(c, "users.auth.create.success"),
+		"message": shared.T(c, "user.auth.create.success"),
 		"id":      ID,
 	})
 }

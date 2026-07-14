@@ -34,7 +34,7 @@ func (h *ApiUserHandler) PostLogin(c *echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, map[string]any{
-		"message": shared.T(c, "users.auth.login.success"),
+		"message": shared.T(c, "user.auth.login.success"),
 		"id":      ID,
 	})
 }
