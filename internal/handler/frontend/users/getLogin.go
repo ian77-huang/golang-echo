@@ -6,6 +6,6 @@ import (
 	"github.com/labstack/echo/v5"
 )
 
-func GetLogin(c *echo.Context) error {
+func (h *UserHandler) GetLogin(c *echo.Context) error {
 	return c.Render(http.StatusOK, "frontend:users:/login.html", map[string]any{})
 }

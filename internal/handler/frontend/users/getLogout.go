@@ -12,7 +12,7 @@ import (
 	"github.com/labstack/echo/v5"
 )
 
-func GetLogout(c *echo.Context) error {
+func (h *UserHandler) GetLogout(c *echo.Context) error {
 	auth := appAuth.Load[users.User, session.Session](c)
 	if auth == nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "auth context not found")

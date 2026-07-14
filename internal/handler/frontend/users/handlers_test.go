@@ -28,11 +28,12 @@ func (r *captureRenderer) Render(_ *echo.Context, _ io.Writer, name string, data
 func TestRenderHandlers(t *testing.T) {
 	e := echo.New()
 	r := &captureRenderer{}
+	h := &UserHandler{}
 	e.Renderer = r
 	for _, tt := range []struct {
 		name    string
 		handler echo.HandlerFunc
-	}{{"index", GetIndex}, {"login", GetLogin}, {"register", GetRegister}} {
+	}{{"index", h.GetIndex}, {"login", h.GetLogin}, {"register", h.GetRegister}} {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.name == "register" {
 				t.Setenv("USERS_ACCOUNT_MIN_LENGTH", "6")
@@ -49,7 +50,8 @@ func TestRenderHandlers(t *testing.T) {
 
 func TestGetLogoutRequiresAuth(t *testing.T) {
 	e := echo.New()
-	err := GetLogout(e.NewContext(httptest.NewRequest(http.MethodGet, "/users/logout", nil), httptest.NewRecorder()))
+	h := &UserHandler{}
+	err := h.GetLogout(e.NewContext(httptest.NewRequest(http.MethodGet, "/users/logout", nil), httptest.NewRecorder()))
 	he, ok := err.(*echo.HTTPError)
 	if !ok || he.Code != http.StatusInternalServerError {
 		t.Fatalf("unexpected error: %#v", err)
@@ -58,6 +60,7 @@ func TestGetLogoutRequiresAuth(t *testing.T) {
 
 func TestGetLogoutDeletesSessionAndRedirects(t *testing.T) {
 	deleted := false
+	h := &UserHandler{}
 	auth := appAuth.New(&appAuth.Config[userModel.User, sessionModel.Session]{SecretKey: "test-secret", Resolver: &appAuth.Resolver[userModel.User, sessionModel.Session]{
 		IsAccountExist: func(string) (bool, error) { return false, nil }, CreateUser: func(string, string) (*appAuth.User[userModel.User], error) {
 			return &appAuth.User[userModel.User]{ID: "user-1"}, nil
@@ -84,12 +87,13 @@ func TestGetLogoutDeletesSessionAndRedirects(t *testing.T) {
 	c := e.NewContext(httptest.NewRequest(http.MethodGet, "/users/logout", nil), rec)
 	c.Set(appAuth.CONTEXT_KEY_AUTH, auth)
 	c.Set(appAuth.CONTEXT_KEY_USER, &appAuth.User[userModel.User]{ID: "user-1"})
-	if err := GetLogout(c); err != nil || !deleted || rec.Code != http.StatusSeeOther {
+	if err := h.GetLogout(c); err != nil || !deleted || rec.Code != http.StatusSeeOther {
 		t.Fatalf("deleted=%v status=%d err=%v", deleted, rec.Code, err)
 	}
 }
 
 func TestGetLogoutActionLogoutError(t *testing.T) {
+	h := &UserHandler{}
 	auth := appAuth.New(&appAuth.Config[userModel.User, sessionModel.Session]{SecretKey: "test-secret", Resolver: &appAuth.Resolver[userModel.User, sessionModel.Session]{
 		IsAccountExist: func(string) (bool, error) { return false, nil }, CreateUser: func(string, string) (*appAuth.User[userModel.User], error) {
 			return &appAuth.User[userModel.User]{ID: "user-1"}, nil
@@ -116,7 +120,7 @@ func TestGetLogoutActionLogoutError(t *testing.T) {
 	c.Set(appAuth.CONTEXT_KEY_AUTH, auth)
 	c.Set(appAuth.CONTEXT_KEY_USER, &appAuth.User[userModel.User]{ID: "user-1"})
 
-	err := GetLogout(c)
+	err := h.GetLogout(c)
 	if err == nil {
 		t.Fatal("expected error, got nil")
 	}

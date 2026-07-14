@@ -8,11 +8,7 @@ import (
 	"github.com/labstack/echo/v5"
 )
 
-type ChangeLangRequest struct {
-	Code string `json:"code" validate:"required,oneof=zh-TW en"`
-}
-
-func PostChangeLang(c *echo.Context) error {
+func (h *ApiHandler) PostChangeLang(c *echo.Context) error {
 	var req ChangeLangRequest
 
 	if err := c.Bind(&req); err != nil {

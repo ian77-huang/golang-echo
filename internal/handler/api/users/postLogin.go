@@ -13,7 +13,7 @@ import (
 	"github.com/labstack/echo/v5"
 )
 
-func PostLogin(c *echo.Context) error {
+func (h *ApiUserHandler) PostLogin(c *echo.Context) error {
 	var req RequestLogin
 
 	if err := c.Bind(&req); err != nil {

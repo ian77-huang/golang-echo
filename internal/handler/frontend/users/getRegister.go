@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo/v5"
 )
 
-func GetRegister(c *echo.Context) error {
+func (h *UserHandler) GetRegister(c *echo.Context) error {
 
 	config := config.Load()
 

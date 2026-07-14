@@ -1,16 +1,18 @@
 package routing
 
 import (
-	"github.com/labstack/echo/v5"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/labstack/echo/v5"
 )
 
 func TestRoutingRegistersEndpoints(t *testing.T) {
 	e := echo.New()
-	FrontendRouting(e)
-	ApiRouting(e)
+	h := &Routing{}
+	h.Frontend(e)
+	h.Api(e)
 	for _, tt := range []struct {
 		method, path string
 		want         int

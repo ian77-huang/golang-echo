@@ -22,6 +22,7 @@ func TestPostLoginUsesAuthFromMiddleware(t *testing.T) {
 	}
 	e := echo.New()
 	e.Validator = appValidator.New()
+	h := &ApiUserHandler{}
 	auth := appAuth.New(&appAuth.Config[userModel.User, sessionModel.Session]{SecretKey: "test-secret", Resolver: &appAuth.Resolver[userModel.User, sessionModel.Session]{
 		IsAccountExist: func(string) (bool, error) { return false, nil }, CreateUser: func(string, string) (*appAuth.User[userModel.User], error) {
 			return &appAuth.User[userModel.User]{ID: "user-1"}, nil
@@ -46,7 +47,7 @@ func TestPostLoginUsesAuthFromMiddleware(t *testing.T) {
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	if err := auth.Middleware()(PostLogin)(c); err != nil {
+	if err := auth.Middleware()(h.PostLogin)(c); err != nil {
 		t.Fatal(err)
 	}
 	if rec.Code != http.StatusCreated {
@@ -57,16 +58,17 @@ func TestPostLoginUsesAuthFromMiddleware(t *testing.T) {
 func TestPostLoginRejectsInvalidRequestAndMissingAuth(t *testing.T) {
 	e := echo.New()
 	e.Validator = appValidator.New()
+	h := &ApiUserHandler{}
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodPost, "/api/users/login", bytes.NewBufferString(`{"account":""}`))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-	if err := PostLogin(e.NewContext(req, rec)); err != nil || rec.Code != http.StatusBadRequest {
+	if err := h.PostLogin(e.NewContext(req, rec)); err != nil || rec.Code != http.StatusBadRequest {
 		t.Fatalf("validation status=%d err=%v", rec.Code, err)
 	}
 	rec = httptest.NewRecorder()
 	req = httptest.NewRequest(http.MethodPost, "/api/users/login", bytes.NewBufferString(`{"account":"tester","password":"password123"}`))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-	if err := PostLogin(e.NewContext(req, rec)); err == nil {
+	if err := h.PostLogin(e.NewContext(req, rec)); err == nil {
 		t.Fatal("expected missing auth error")
 	}
 }
@@ -74,10 +76,11 @@ func TestPostLoginRejectsInvalidRequestAndMissingAuth(t *testing.T) {
 func TestPostLoginRejectsMalformedJSON(t *testing.T) {
 	e := echo.New()
 	e.Validator = appValidator.New()
+	h := &ApiUserHandler{}
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodPost, "/api/users/login", bytes.NewBufferString(`{"account":`))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-	if err := PostLogin(e.NewContext(req, rec)); err != nil || rec.Code != http.StatusBadRequest {
+	if err := h.PostLogin(e.NewContext(req, rec)); err != nil || rec.Code != http.StatusBadRequest {
 		t.Fatalf("status=%d err=%v", rec.Code, err)
 	}
 }
@@ -85,6 +88,7 @@ func TestPostLoginRejectsMalformedJSON(t *testing.T) {
 func TestPostLoginReturnsErrorWhenActionLoginFails(t *testing.T) {
 	e := echo.New()
 	e.Validator = appValidator.New()
+	h := &ApiUserHandler{}
 	auth := appAuth.New(&appAuth.Config[userModel.User, sessionModel.Session]{SecretKey: "test-secret", Resolver: &appAuth.Resolver[userModel.User, sessionModel.Session]{
 		IsAccountExist: func(string) (bool, error) { return false, nil }, CreateUser: func(string, string) (*appAuth.User[userModel.User], error) {
 			return &appAuth.User[userModel.User]{ID: "user-1"}, nil
@@ -109,7 +113,7 @@ func TestPostLoginReturnsErrorWhenActionLoginFails(t *testing.T) {
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	err := auth.Middleware()(PostLogin)(c)
+	err := auth.Middleware()(h.PostLogin)(c)
 	if err == nil {
 		t.Fatal("expected error from PostLogin when ActionLogin fails, got nil")
 	}

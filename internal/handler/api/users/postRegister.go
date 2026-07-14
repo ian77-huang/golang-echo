@@ -14,7 +14,7 @@ import (
 	"github.com/labstack/echo/v5"
 )
 
-func PostRegister(c *echo.Context) error {
+func (h *ApiUserHandler) PostRegister(c *echo.Context) error {
 	var req RequestRegister
 
 	if err := c.Bind(&req); err != nil {
