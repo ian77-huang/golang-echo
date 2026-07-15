@@ -7,6 +7,48 @@ other = "個人資料"
 [user.profile.read.success]
 other = "個人資料讀取成功"
 
+[user.profile.update.success]
+other = "個人資料更新成功"
+
+[user.profile.read.failed]
+other = "個人資料讀取失敗"
+
+[user.profile.changePicture]
+other = "更換頭像"
+
+[user.profile.basicMember]
+other = "一般會員"
+
+[user.profile.settings.title]
+other = "個人資料設定"
+
+[user.profile.settings.name]
+other = "姓名"
+
+[user.profile.settings.email]
+other = "電子郵件"
+
+[user.profile.settings.phone.title]
+other = "手機號碼"
+
+[profile.settings.phone.invalid_length]
+other = "手機號碼必須為 10 碼"
+
+[user.profile.settings.bio.title]
+other = "個人簡介"
+
+[user.profile.settings.bio.placeholder]
+other = "介紹一下你自己吧..."
+
+[profile.settings.email.readonly]
+other = "電子郵件不可修改"
+
+[profile.settings.button.reset]
+other = "重設"
+
+[profile.settings.button.save]
+other = "儲存修改"
+
 [user.login]
 other = "登入"
 

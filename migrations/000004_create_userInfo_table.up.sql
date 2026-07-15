@@ -5,8 +5,6 @@ CREATE TABLE user_profile (
     phone VARCHAR(50),
     bio TEXT,
     avatar_url VARCHAR(512),
-    is_email_notif BOOLEAN DEFAULT true,
-    is_sms_notif BOOLEAN DEFAULT false,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

@@ -7,6 +7,48 @@ other = "Profile"
 [user.profile.read.success]
 other = "User profile read successfully"
 
+[user.profile.update.success]
+other = "User profile update successfully"
+
+[user.profile.read.failed]
+other = "User profile read failed"
+
+[user.profile.changePicture]
+other = "Change Picture"
+
+[user.profile.basicMember]
+other = "Basic Member"
+
+[user.profile.settings.title]
+other = "Profile Settings"
+
+[user.profile.settings.name]
+other = "Name"
+
+[user.profile.settings.email]
+other = "Email"
+
+[user.profile.settings.phone.title]
+other = "Phone Number"
+
+[profile.settings.phone.invalid_length]
+other = "Phone number must be 10 digits"
+
+[user.profile.settings.bio.title]
+other = "Bio"
+
+[user.profile.settings.bio.placeholder]
+other = "Tell us about yourself..."
+
+[profile.settings.email.readonly]
+other = "Email cannot be changed"
+
+[profile.settings.button.reset]
+other = "Reset"
+
+[profile.settings.button.save]
+other = "Save Changes"
+
 [user.login]
 other = "Login"
 

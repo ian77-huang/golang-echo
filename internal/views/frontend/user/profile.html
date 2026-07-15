@@ -6,15 +6,14 @@
         Alpine.data('profileApp', (initialTitle) => {
             return {
                 loading: false,
+                isEmailDisable: true,
                 form: {
                     id: null,
                     name: '',
                     email: '',
                     phone: '',
                     bio: '',
-                    avatar_url: '',
-                    is_email_notif: true,
-                    is_sms_notif: false
+                    avatar_url: ''
                 },
                 toast: {
                     show: false,
@@ -29,31 +28,39 @@
                 },
                 async initData() {
                     try {
-                        const res = await fetch('/api/uesr/profile');
-                        if (!res.ok) throw new Error('讀取資料失敗');
-                        this.form = await res.json();
+                        const res = await fetch('/api/user/profile');
+                        if (!res.ok) throw new Error('{{t "user.profile.read.failed"}}');
+                        rs = await res.json();
+                        if (rs.data !== null) {
+                            this.form = rs.data;
+                        }
+                        this.isEmailDisable = (this.form.email !== "")
                     } catch (err) {
                         this.showToast(err.message, 'error');
                     }
                 },
-                validateField(field) {
-                    if (field === 'account') {
-                        if (!this.form.account) {
-                            this.setErrorMessage('{{t "error.cannot_be_empty" (kv "Name" (t "user.auth.account"))}}');
-                        }
-                    }
-
-                    if (field === 'password') {
-                        if (!this.form.password) {
-                            this.setErrorMessage('{{t "error.cannot_be_empty" (kv "Name" (t "user.auth.password"))}}');
-                        }
-                    }
-                },
                 validateAll() {
-                    this.setErrorMessage("", true);
-                    this.validateField('account');
-                    this.validateField('password');
-                    return this.__errorMessage.length === 0;
+                    try {
+                        if (this.form.name === "") {
+                            throw '{{t "error.cannot_be_empty" (kv "Name" (t "user.profile.settings.name"))}}';
+                        }
+                        if (this.form.email === "") {
+                            throw '{{t "error.cannot_be_empty" (kv "Name" (t "user.profile.settings.email"))}}';
+                        }
+                        if (this.form.phone === "") {
+                            throw '{{t "error.cannot_be_empty" (kv "Name" (t "user.profile.settings.phone"))}}';
+                        }
+                        if (this.form.phone.length !== 10) {
+                            throw '{{t "profile.settings.phone.invalid_length"}}';
+                        }
+                        if (this.form.bio === "") {
+                            throw '{{t "error.cannot_be_empty" (kv "Name" (t "user.profile.settings.bio"))}}';
+                        }
+                    } catch (err) {
+                        this.showToast(err, 'error');
+                        return false;
+                    }
+                    return true;
                 },
                 async handleSubmit(event) {
                     if (!this.validateAll()) {
@@ -61,15 +68,14 @@
                     }
                     this.loading = true;
                     try {
-                        const res = await fetch('/api/profile', {
+                        const res = await fetch('/api/user/profile', {
                             method: 'PUT',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
                                 name: this.form.name,
                                 phone: this.form.phone,
+                                email: this.form.email,
                                 bio: this.form.bio,
-                                is_email_notif: this.form.is_email_notif,
-                                is_sms_notif: this.form.is_sms_notif
                             })
                         });
 
@@ -87,7 +93,7 @@
         })
     })
 </script>
-<div class="divider">{{t "user.login"}}</div>
+<div class="divider">{{t "user.profile.title"}}</div>
 <div x-data="profileApp()" x-init="initData()">
     <form method="post" @submit.prevent="handleSubmit">
         <div class="max-w-4xl mx-auto px-4">
@@ -130,55 +136,63 @@
                             <!-- 懸停時顯示更換文字 -->
                             <div
                                 class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/40 rounded-full text-white text-xs font-semibold">
-                                更換頭像
+                                {{ t "user.profile.changePicture" }}
                             </div>
                         </div>
 
-                        <h2 class="card-title" x-text="form.name || '載入中...'"></h2>
+                        <h2 class="card-title" x-text="form.name"></h2>
                         <p class="text-sm text-base-content/60" x-text="form.email"></p>
-                        <div class="badge badge-primary mt-2">一般會員</div>
+                        <div class="badge badge-primary mt-2">{{ t "user.profile.basicMember" }}</div>
                     </div>
                 </div>
 
                 <!-- 右側：詳細欄位編輯 -->
                 <div class="card bg-base-100 shadow-xl md:col-span-2 gap-6 p-5">
                     <form @submit.prevent="submitForm" class="card-body gap-6">
-                        <h2 class="card-title border-b pb-2 text-xl font-bold">個人資料設定</h2>
+                        <h2 class="card-title border-b pb-2 text-xl font-bold">{{t "user.profile.settings.title"}}</h2>
 
                         <!-- 基本欄位組 -->
                         <div class="grid gap-4">
                             <div class="form-control w-full">
-                                <label class="label"><span class="label-text font-medium">姓名</span></label>
+                                <label class="label"><span class="label-text font-medium">{{t
+                                        "user.profile.settings.name"}}</span></label>
                                 <input type="text" x-model="form.name" class="input input-bordered w-full" required />
                             </div>
                             <div class="form-control w-full">
-                                <label class="label"><span class="label-text font-medium">電子郵件</span></label>
-                                <input type="email" x-model="form.email" class="input input-bordered w-full" disabled />
-                                <label class="label">
-                                    <span class="label-text-alt text-base-content/50">電子郵件不可修改</span>
-                                </label>
+                                <label class="label"><span class="label-text font-medium">{{t
+                                        "user.profile.settings.email"}}</span></label>
+                                <input type="email" x-model="form.email" class="input input-bordered w-full"
+                                    :disabled="isEmailDisable" />
+                                <template x-if="isEmailDisable">
+                                    <label class="label">
+                                        <span class="label-text-alt text-base-content/50">{{t
+                                            "profile.settings.email.readonly"}}</span>
+                                    </label>
+                                </template>
                             </div>
                         </div>
 
                         <div class="form-control w-full">
-                            <label class="label"><span class="label-text font-medium">手機號碼</span></label>
+                            <label class="label"><span class="label-text font-medium">{{t
+                                    "user.profile.settings.phone.title"}}</span></label>
                             <input type="tel" x-model="form.phone" class="input input-bordered w-full"
                                 placeholder="0912345678" />
                         </div>
 
                         <div class="form-control w-full gap-2.5 grid">
-                            <label class="label"><span class="label-text font-medium">個人簡介</span></label>
-                            <textarea x-model="form.bio" class="textarea textarea-bordered h-24 w-full"
-                                placeholder="介紹一下你自己吧..."></textarea>
+                            <label class="label"><span class="label-text font-medium">{{t
+                                    "user.profile.settings.bio.title"}}</span></label>
+                            <textarea x-model="form.bio" class="textarea textarea-bordered h-24 w-full" placeholder='{{t 
+                                "user.profile.settings.bio.placeholder"}}'></textarea>
                         </div>
 
                         <!-- 按鈕區 -->
                         <div class="card-actions justify-end border-t pt-4">
-                            <button type="button" @click="initData()" class="btn btn-ghost"
-                                :disabled="loading">重設</button>
+                            <button type="button" @click="initData()" class="btn btn-ghost" :disabled="loading">{{t
+                                "profile.settings.button.reset"}}</button>
                             <button type="submit" class="btn btn-primary" :disabled="loading">
                                 <span class="loading loading-spinner" x-show="loading"></span>
-                                儲存修改
+                                {{t "profile.settings.button.save"}}
                             </button>
                         </div>
                     </form>

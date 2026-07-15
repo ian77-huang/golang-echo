@@ -1,7 +1,6 @@
 package user
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/ian77-huang/golang-echo/internal/shared"
@@ -12,8 +11,6 @@ import (
 )
 
 func (h *ApiUserHandler) GetProfile(c *echo.Context) error {
-	log.Printf("\n==== 012345 ======\n")
-	// h.DB
 	user := auth.GetUser[model.User](c)
 
 	userService := service.NewUserService(h.DB)
@@ -21,6 +18,9 @@ func (h *ApiUserHandler) GetProfile(c *echo.Context) error {
 	userProfile, err := userService.GetUserProfile(user.ID)
 	if err != nil {
 		return err
+	}
+	if userProfile == nil {
+		userProfile = &model.UserProfile{}
 	}
 
 	return c.JSON(http.StatusCreated, map[string]any{

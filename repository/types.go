@@ -20,6 +20,7 @@ type UserRepository interface {
 	GetUser(id int) (*model.User, error)
 	GetUserByAccount(account string) (*model.User, error)
 	GetUserProfile(id int) (*model.UserProfile, error)
+	CreateUserProfile(insertData *model.UserProfile) (*model.UserProfile, error)
 	UpdateUserProfile(id int, updateData *model.UserProfile) (*model.UserProfile, error)
 }
 type SessionRepository interface {

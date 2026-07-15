@@ -50,6 +50,9 @@ func Auth(db *gorm.DB) *appAuth.Auth[model.User, model.Session] {
 		},
 		GetUserByAccount: func(account string) (*appAuth.User[model.User], error) {
 			user, err := userRepository.GetUserByAccount(account)
+			if user == nil {
+				return nil, nil
+			}
 			if err != nil {
 				return nil, err
 			}

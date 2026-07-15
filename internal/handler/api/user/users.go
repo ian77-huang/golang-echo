@@ -7,4 +7,5 @@ func New(aup *ApiUserParameter) {
 	users.POST("/register", h.PostRegister)
 	users.POST("/login", h.PostLogin)
 	users.GET("/profile", h.GetProfile)
+	users.PUT("/profile", h.PutProfile)
 }

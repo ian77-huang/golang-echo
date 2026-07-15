@@ -22,3 +22,9 @@ type RequestRegister struct {
 	Password        string `json:"password" validate:"required"`
 	ConfirmPassword string `json:"confirmPassword" validate:"required,eqfield=Password"`
 }
+type RequestPutProfile struct {
+	Name  string `json:"name" validate:"required"`
+	Phone string `json:"phone" validate:"required,numeric,len=10"`
+	Email string `json:"email" validate:"required,email"`
+	Bio   string `json:"bio" validate:"required"`
+}
