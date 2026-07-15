@@ -1,5 +1,9 @@
 package config
 
+import (
+	"github.com/ian77-huang/golang-echo/service"
+)
+
 type Menus struct {
 	Name   string
 	Url    string
@@ -31,4 +35,9 @@ type Config struct {
 	SecretKey string
 	Databases ConfigDatabases
 	Users     ConfigUsers
+}
+
+type AuthParameter struct {
+	UserService    *service.UserService
+	SessionService *service.SessionService
 }

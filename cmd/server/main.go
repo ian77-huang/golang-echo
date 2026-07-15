@@ -8,6 +8,7 @@ import (
 	"github.com/ian77-huang/golang-echo/pkg/database"
 	"github.com/ian77-huang/golang-echo/pkg/renderer"
 	"github.com/ian77-huang/golang-echo/pkg/validator"
+	"github.com/ian77-huang/golang-echo/service"
 
 	"github.com/labstack/echo/v5"
 	echomiddleware "github.com/labstack/echo/v5/middleware"
@@ -39,7 +40,10 @@ func newServer() (*echo.Echo, error) {
 
 	db := database.NewSqlite(config.Databases.Path)
 
-	auth := appConfig.Auth(db)
+	auth := appConfig.Auth(&appConfig.AuthParameter{
+		UserService:    service.NewUserService(db),
+		SessionService: service.NewSessionService(db),
+	})
 
 	e := router.New(&router.RouterParameter{DB: db})
 	t := renderer.New(appConfig.RendererTemplate(

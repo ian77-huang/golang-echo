@@ -10,6 +10,7 @@ import (
 	"github.com/ian77-huang/golang-echo/model"
 	appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
 	"github.com/ian77-huang/golang-echo/repository"
+	"github.com/ian77-huang/golang-echo/service"
 	"github.com/labstack/echo/v5"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -66,7 +67,10 @@ func TestAuthBuildsWorkingResolvers(t *testing.T) {
 	if err := db.AutoMigrate(&model.User{}, &model.Session{}); err != nil {
 		t.Fatal(err)
 	}
-	auth := Auth(db)
+	auth := Auth(&AuthParameter{
+		UserService:    service.NewUserService(db),
+		SessionService: service.NewSessionService(db),
+	})
 	e := echo.New()
 	rec := httptest.NewRecorder()
 	id, err := auth.ActionRegister(e.NewContext(httptest.NewRequest(http.MethodPost, "/", nil), rec), "config-user", "password")
@@ -103,7 +107,10 @@ func TestAuthResolversPropagateDatabaseErrors(t *testing.T) {
 	if err := db.AutoMigrate(&model.User{}, &model.Session{}); err != nil {
 		t.Fatal(err)
 	}
-	auth := Auth(db)
+	auth := Auth(&AuthParameter{
+		UserService:    service.NewUserService(db),
+		SessionService: service.NewSessionService(db),
+	})
 	sqlDB, err := db.DB()
 	if err != nil {
 		t.Fatal(err)
