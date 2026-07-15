@@ -7,10 +7,10 @@ import (
 	"github.com/labstack/echo/v5"
 )
 
-func New() *echo.Echo {
+func New(r *RouterParameter) *echo.Echo {
 	e := echo.New()
 
-	routing.New(e)
+	routing.New(&routing.RoutingParameter{DB: r.DB, Echo: e})
 
 	e.GET("/.well-known/appspecific/com.chrome.devtools.json", func(c *echo.Context) error {
 		return c.NoContent(http.StatusNotFound)

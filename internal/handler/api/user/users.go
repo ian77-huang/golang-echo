@@ -1,11 +1,10 @@
-package users
+package user
 
-import "github.com/labstack/echo/v5"
+func New(aup *ApiUserParameter) {
+	h := &ApiUserHandler{DB: aup.DB}
 
-func New(e *echo.Group) {
-	h := &ApiUserHandler{}
-
-	users := e.Group("/user")
+	users := aup.EchoGroup.Group("/user")
 	users.POST("/register", h.PostRegister)
 	users.POST("/login", h.PostLogin)
+	users.GET("/profile", h.GetProfile)
 }

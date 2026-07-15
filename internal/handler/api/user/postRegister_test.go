@@ -1,4 +1,4 @@
-package users
+package user
 
 import (
 	"bytes"
@@ -14,8 +14,8 @@ import (
 )
 
 func TestPostRegisterUsesAuthFromMiddleware(t *testing.T) {
-	t.Setenv("USERS_ACCOUNT_MIN_LENGTH", "6")
-	t.Setenv("USERS_PASSWORD_MIN_LENGTH", "8")
+	t.Setenv("USER_ACCOUNT_MIN_LENGTH", "6")
+	t.Setenv("USER_PASSWORD_MIN_LENGTH", "8")
 
 	e := echo.New()
 	e.Validator = appValidator.New()
@@ -81,8 +81,8 @@ func TestPostRegisterRequiresAuthContext(t *testing.T) {
 }
 
 func TestPostRegisterRejectsShortValues(t *testing.T) {
-	t.Setenv("USERS_ACCOUNT_MIN_LENGTH", "6")
-	t.Setenv("USERS_PASSWORD_MIN_LENGTH", "8")
+	t.Setenv("USER_ACCOUNT_MIN_LENGTH", "6")
+	t.Setenv("USER_PASSWORD_MIN_LENGTH", "8")
 	e := echo.New()
 	e.Validator = appValidator.New()
 	h := &ApiUserHandler{}
@@ -101,8 +101,8 @@ func TestPostRegisterRejectsShortValues(t *testing.T) {
 }
 
 func TestPostRegisterRejectsMalformedJSONAndValidationMismatch(t *testing.T) {
-	t.Setenv("USERS_ACCOUNT_MIN_LENGTH", "6")
-	t.Setenv("USERS_PASSWORD_MIN_LENGTH", "8")
+	t.Setenv("USER_ACCOUNT_MIN_LENGTH", "6")
+	t.Setenv("USER_PASSWORD_MIN_LENGTH", "8")
 	e := echo.New()
 	e.Validator = appValidator.New()
 	h := &ApiUserHandler{}

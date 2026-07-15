@@ -1,4 +1,4 @@
-package users
+package user
 
 import (
 	"net/http"
@@ -7,5 +7,5 @@ import (
 )
 
 func (h *UserHandler) GetLogin(c *echo.Context) error {
-	return c.Render(http.StatusOK, "frontend:users:/login.html", map[string]any{})
+	return c.Render(http.StatusOK, "frontend:user:/login.html", map[string]any{})
 }

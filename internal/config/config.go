@@ -9,11 +9,11 @@ import (
 )
 
 func Load() Config {
-	minLengthAccount, err := cast.StringToInt(os.Getenv("USERS_ACCOUNT_MIN_LENGTH"), 6)
+	minLengthAccount, err := cast.StringToInt(os.Getenv("USER_ACCOUNT_MIN_LENGTH"), 6)
 	if err != nil {
 		panic(err)
 	}
-	minLengthPassword, err := cast.StringToInt(os.Getenv("USERS_PASSWORD_MIN_LENGTH"), 8)
+	minLengthPassword, err := cast.StringToInt(os.Getenv("USER_PASSWORD_MIN_LENGTH"), 8)
 	if err != nil {
 		panic(err)
 	}

@@ -529,7 +529,7 @@ import (
 )
 
 func Load() Config <span class="cov8" title="1">{
-        minLengthAccount, err := cast.StringToInt(os.Getenv("USERS_ACCOUNT_MIN_LENGTH"), 6)
+        minLengthAccount, err := cast.StringToInt(os.Getenv("USER_ACCOUNT_MIN_LENGTH"), 6)
         if err != nil </span><span class="cov8" title="1">{
                 panic(err)</span>
         }

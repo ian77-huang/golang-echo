@@ -23,8 +23,8 @@ func TestNewServerBuildsRunnableApplication(t *testing.T) {
 	t.Cleanup(func() { _ = os.Chdir(oldWD) })
 	t.Setenv("SECRET_KEY", "test-secret")
 	t.Setenv("DATABASE_PATH", filepath.Join(t.TempDir(), "app.db"))
-	t.Setenv("USERS_ACCOUNT_MIN_LENGTH", "6")
-	t.Setenv("USERS_PASSWORD_MIN_LENGTH", "8")
+	t.Setenv("USER_ACCOUNT_MIN_LENGTH", "6")
+	t.Setenv("USER_PASSWORD_MIN_LENGTH", "8")
 	e, err := newServer()
 	if err != nil {
 		t.Fatal(err)

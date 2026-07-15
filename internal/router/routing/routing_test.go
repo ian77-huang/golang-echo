@@ -11,8 +11,8 @@ import (
 func TestRoutingRegistersEndpoints(t *testing.T) {
 	e := echo.New()
 	h := &Routing{}
-	h.Frontend(e)
-	h.Api(e)
+	h.Frontend()
+	h.Api()
 	for _, tt := range []struct {
 		method, path string
 		want         int

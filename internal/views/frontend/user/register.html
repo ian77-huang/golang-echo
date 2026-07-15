@@ -1,15 +1,18 @@
-{{define "title"}}{{t "user.title"}} - {{t "user.login"}}{{end}}
+{{define "title"}}{{t "user.title"}} - {{t "user.register"}}{{end}}
 
 {{define "content_users"}}
 <script type="text/javascript">
     document.addEventListener('alpine:init', () => {
-        Alpine.data('loginApp', (initialTitle) => {
+        Alpine.data('registerApp', (initialTitle) => {
             return {
                 form: {
                     account: '',
-                    password: ''
+                    password: '',
+                    confirmPassword: ''
                 },
                 __errorMessage: [],
+                minLengthAccount: parseInt('{{.MinLengthAccount}}'),
+                minLengthPassword: parseInt('{{.MinLengthPassword}}'),
                 getErrorMessage() {
                     return this.__errorMessage.join("\n");
                 },
@@ -26,11 +29,27 @@
                         if (!this.form.account) {
                             this.setErrorMessage('{{t "error.cannot_be_empty" (kv "Name" (t "user.auth.account"))}}');
                         }
+                        else if (this.form.account.length < this.minLengthAccount) {
+                            this.setErrorMessage('{{t "error.min_characters_required" (kv "Name" (t "user.auth.account")) (kv "Length" .MinLengthAccount)}}');
+                        }
                     }
 
                     if (field === 'password') {
                         if (!this.form.password) {
                             this.setErrorMessage('{{t "error.cannot_be_empty" (kv "Name" (t "user.auth.password"))}}');
+                        }
+                        else if (this.form.password.length < this.minLengthPassword) {
+                            this.setErrorMessage('{{t "error.min_characters_required" (kv "Name" (t "user.auth.password")) (kv "Length" .MinLengthPassword)}}');
+                        }
+
+                        if (this.form.password && this.form.confirmPassword) {
+                            this.validateField('confirmPassword');
+                        }
+                    }
+
+                    if (field === 'confirmPassword') {
+                        if (this.form.confirmPassword !== this.form.password) {
+                            this.setErrorMessage('{{t "error.passwords_do_not_match"}}');
                         }
                     }
                 },
@@ -44,7 +63,7 @@
                     if (!this.validateAll()) {
                         return;
                     }
-                    const res = await fetch('/api/user/login', {
+                    const res = await fetch('/api/user/register', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -66,8 +85,8 @@
         })
     })
 </script>
-<div class="divider">{{t "user.login"}}</div>
-<form method="post" id="formLogin" @submit.prevent="handleSubmit" x-data="loginApp">
+<div class="divider">{{t "user.register"}}</div>
+<form method="post" id="formRegister" @submit.prevent="handleSubmit" x-data="registerApp">
     <div class="card bg-base-100 m-auto w-full max-w-sm shrink-0 shadow-2xl">
         <div class="card-body">
             <fieldset class="fieldset">
@@ -78,11 +97,14 @@
                 <label class="label">{{t "user.auth.password"}}</label>
                 <input type="password" name="password" x-model="form.password" class="input" placeholder='{{t "placeholder.input.value" (kv "Name"
                 (t "user.auth.password" ))}}' autocomplete="new-password" />
+                <label class="label">{{t "user.auth.confirmPassword"}}</label>
+                <input type="password" nmae="confirmPassword" x-model="form.confirmPassword" class="input" placeholder='{{t "placeholder.input.value" (kv "Name"
+                (t "user.auth.confirmPassword" ))}}' autocomplete="new-password" />
                 <div x-show="getErrorMessage() !== ''" role="alert"
                     class="alert alert-error alert-soft whitespace-pre-line mt-3">
                     <span x-html='getErrorMessage()'></span>
                 </div>
-                <button class="btn btn-neutral mt-4">{{t "user.login"}}</button>
+                <button class="btn btn-primary mt-4">{{t "user.register"}}</button>
             </fieldset>
         </div>
     </div>

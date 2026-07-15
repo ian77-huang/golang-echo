@@ -1,15 +1,13 @@
-package users
+package user
 
-import "github.com/labstack/echo/v5"
+func New(ap *UserParameter) {
+	h := &UserHandler{DB: ap.DB}
 
-func New(e *echo.Echo) {
-	h := &UserHandler{}
-
-	users := e.Group("/user")
+	users := ap.Echo.Group("/user")
 
 	users.GET("", h.GetIndex)
 	users.GET("/login", h.GetLogin)
 	users.GET("/register", h.GetRegister)
 	users.GET("/logout", h.GetLogout)
-	users.GET("/profile", h.GetUserProfile)
+	users.GET("/profile", h.GetProfile)
 }

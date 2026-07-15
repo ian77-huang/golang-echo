@@ -19,12 +19,16 @@ func SetMenusUsers(rule MenuUsersRules) []MenusChilds {
 		if !rule.IsSignedIn {
 			users = append(users, MenusChilds{Name: rule.T("user.login"), Url: "/user/login"})
 		}
+	case "/user/profile":
+		if rule.IsSignedIn {
+			// users = append(users, MenusChilds{Name: rule.T("user.login"), Url: "/user/login"})
+		}
 	default:
 		if !rule.IsSignedIn {
 			users = append(users, MenusChilds{Name: rule.T("user.login"), Url: "/user/login"})
 			users = append(users, MenusChilds{Name: rule.T("user.register"), Url: "/user/register"})
 		} else {
-			users = append(users, MenusChilds{Name: rule.T("user.register"), Url: "/user/register"})
+			users = append(users, MenusChilds{Name: rule.T("user.profile.title"), Url: "/user/profile"})
 		}
 	}
 	return users

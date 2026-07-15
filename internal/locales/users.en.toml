@@ -1,6 +1,12 @@
 [user.title]
 other = "Users"
 
+[user.profile.title]
+other = "Profile"
+
+[user.profile.read.success]
+other = "User profile read successfully"
+
 [user.login]
 other = "Login"
 

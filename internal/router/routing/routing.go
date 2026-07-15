@@ -1,10 +1,8 @@
 package routing
 
-import "github.com/labstack/echo/v5"
+func New(rp *RoutingParameter) {
+	h := &Routing{DB: rp.DB, Echo: rp.Echo}
 
-func New(e *echo.Echo) {
-	h := &Routing{}
-
-	h.Frontend(e)
-	h.Api(e)
+	h.Frontend()
+	h.Api()
 }

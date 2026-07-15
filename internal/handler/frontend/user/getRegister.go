@@ -1,4 +1,4 @@
-package users
+package user
 
 import (
 	"net/http"
@@ -11,7 +11,7 @@ func (h *UserHandler) GetRegister(c *echo.Context) error {
 
 	config := config.Load()
 
-	return c.Render(http.StatusOK, "frontend:users:/register.html", map[string]any{
+	return c.Render(http.StatusOK, "frontend:user:/register.html", map[string]any{
 		"MinLengthAccount":  config.Users.MinLengthAccount,
 		"MinLengthPassword": config.Users.MinLengthPassword,
 	})

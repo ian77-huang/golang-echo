@@ -1,4 +1,4 @@
-package users
+package user
 
 import (
 	"errors"
@@ -35,11 +35,11 @@ func TestRenderHandlers(t *testing.T) {
 	}{{"index", h.GetIndex}, {"login", h.GetLogin}, {"register", h.GetRegister}} {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.name == "register" {
-				t.Setenv("USERS_ACCOUNT_MIN_LENGTH", "6")
-				t.Setenv("USERS_PASSWORD_MIN_LENGTH", "8")
+				t.Setenv("USER_ACCOUNT_MIN_LENGTH", "6")
+				t.Setenv("USER_PASSWORD_MIN_LENGTH", "8")
 			}
 			rec := httptest.NewRecorder()
-			err := tt.handler(e.NewContext(httptest.NewRequest(http.MethodGet, "/users/"+tt.name, nil), rec))
+			err := tt.handler(e.NewContext(httptest.NewRequest(http.MethodGet, "/user/"+tt.name, nil), rec))
 			if err != nil || rec.Code != http.StatusOK || r.name == "" {
 				t.Fatalf("render: name=%q status=%d err=%v", r.name, rec.Code, err)
 			}
@@ -50,7 +50,7 @@ func TestRenderHandlers(t *testing.T) {
 func TestGetLogoutRequiresAuth(t *testing.T) {
 	e := echo.New()
 	h := &UserHandler{}
-	err := h.GetLogout(e.NewContext(httptest.NewRequest(http.MethodGet, "/users/logout", nil), httptest.NewRecorder()))
+	err := h.GetLogout(e.NewContext(httptest.NewRequest(http.MethodGet, "/user/logout", nil), httptest.NewRecorder()))
 	he, ok := err.(*echo.HTTPError)
 	if !ok || he.Code != http.StatusInternalServerError {
 		t.Fatalf("unexpected error: %#v", err)
@@ -83,7 +83,7 @@ func TestGetLogoutDeletesSessionAndRedirects(t *testing.T) {
 	}})
 	e := echo.New()
 	rec := httptest.NewRecorder()
-	c := e.NewContext(httptest.NewRequest(http.MethodGet, "/users/logout", nil), rec)
+	c := e.NewContext(httptest.NewRequest(http.MethodGet, "/user/logout", nil), rec)
 	c.Set(appAuth.CONTEXT_KEY_AUTH, auth)
 	c.Set(appAuth.CONTEXT_KEY_USER, &appAuth.User[model.User]{ID: "user-1"})
 	if err := h.GetLogout(c); err != nil || !deleted || rec.Code != http.StatusSeeOther {
@@ -115,7 +115,7 @@ func TestGetLogoutActionLogoutError(t *testing.T) {
 	}})
 	e := echo.New()
 	rec := httptest.NewRecorder()
-	c := e.NewContext(httptest.NewRequest(http.MethodGet, "/users/logout", nil), rec)
+	c := e.NewContext(httptest.NewRequest(http.MethodGet, "/user/logout", nil), rec)
 	c.Set(appAuth.CONTEXT_KEY_AUTH, auth)
 	c.Set(appAuth.CONTEXT_KEY_USER, &appAuth.User[model.User]{ID: "user-1"})
 

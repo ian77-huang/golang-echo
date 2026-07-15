@@ -4,10 +4,16 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	appConfig "github.com/ian77-huang/golang-echo/internal/config"
+	"github.com/ian77-huang/golang-echo/pkg/database"
 )
 
 func TestRouterRegistersUtilityAndPingRoutes(t *testing.T) {
-	e := New()
+	config := appConfig.Load()
+
+	db := database.NewSqlite(config.Databases.Path)
+	e := New(&RouterParameter{DB: db})
 	for _, tt := range []struct {
 		path string
 		want int

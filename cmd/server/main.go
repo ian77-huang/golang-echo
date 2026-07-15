@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	appConfig "github.com/ian77-huang/golang-echo/internal/config"
 
 	"github.com/ian77-huang/golang-echo/internal/router"
@@ -21,6 +23,7 @@ type Session struct {
 func main() {
 	e, err := newServer()
 	if err != nil {
+		log.Printf("\n===== error = %+v=====\n", err)
 		panic(err)
 	}
 
@@ -41,7 +44,7 @@ func newServer() (*echo.Echo, error) {
 
 	auth := appConfig.Auth(db)
 
-	e := router.New()
+	e := router.New(&router.RouterParameter{DB: db})
 	t := renderer.New(appConfig.RendererTemplate(
 		renderer.WithFuncs(translator.TemplateFuncs),
 	))

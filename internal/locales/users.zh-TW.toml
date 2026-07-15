@@ -1,6 +1,12 @@
 [user.title]
 other = "使用者"
 
+[user.profile.title]
+other = "個人資料"
+
+[user.profile.read.success]
+other = "個人資料讀取成功"
+
 [user.login]
 other = "登入"
 

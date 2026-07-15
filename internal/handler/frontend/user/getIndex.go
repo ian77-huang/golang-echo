@@ -1,4 +1,4 @@
-package users
+package user
 
 import (
 	"net/http"
@@ -7,5 +7,5 @@ import (
 )
 
 func (h *UserHandler) GetIndex(c *echo.Context) error {
-	return c.Render(http.StatusOK, "frontend:users:/index.html", map[string]any{})
+	return c.Render(http.StatusOK, "frontend:user:/index.html", map[string]any{})
 }

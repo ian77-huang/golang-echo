@@ -69,7 +69,7 @@ cp .env.example .env
 | --------------------------- | ---- | --------------------------------------- | ----------------------------------- |
 | `SECRET_KEY`                | 是   | JWT 簽章與 session 驗證金鑰；不可為空。 | `replace-with-a-long-random-secret` |
 | `DATABASE_PATH`             | 是   | SQLite 資料庫檔案路徑。                 | `databases/main.db`                 |
-| `USERS_ACCOUNT_MIN_LENGTH`  | 是   | 註冊帳號最小長度。                      | `6`                                 |
+| `USER_ACCOUNT_MIN_LENGTH`   | 是   | 註冊帳號最小長度。                      | `6`                                 |
 | `USERS_PASSWORD_MIN_LENGTH` | 是   | 註冊密碼最小長度。                      | `8`                                 |
 
 ### 3. 套用資料庫遷移

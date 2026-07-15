@@ -20,7 +20,7 @@ func RendererTemplate(options ...renderer.Option) *renderer.TemplateConfig {
 			"frontend": {
 				FilePath: "layout.html",
 				Layouts: map[string]renderer.TemplateNode{
-					"users": {
+					"user": {
 						FilePath: "layout.html",
 					},
 				},

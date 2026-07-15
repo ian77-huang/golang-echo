@@ -16,8 +16,8 @@ import (
 )
 
 func TestLoadUsesEnvironmentAndDefaults(t *testing.T) {
-	t.Setenv("USERS_ACCOUNT_MIN_LENGTH", "9")
-	t.Setenv("USERS_PASSWORD_MIN_LENGTH", "12")
+	t.Setenv("USER_ACCOUNT_MIN_LENGTH", "9")
+	t.Setenv("USER_PASSWORD_MIN_LENGTH", "12")
 	t.Setenv("SECRET_KEY", "secret")
 	t.Setenv("DATABASE_PATH", "test.db")
 	c := Load()
@@ -27,7 +27,7 @@ func TestLoadUsesEnvironmentAndDefaults(t *testing.T) {
 }
 
 func TestLoadPanicsForInvalidLengthEnvironment(t *testing.T) {
-	for _, key := range []string{"USERS_ACCOUNT_MIN_LENGTH", "USERS_PASSWORD_MIN_LENGTH"} {
+	for _, key := range []string{"USER_ACCOUNT_MIN_LENGTH", "USERS_PASSWORD_MIN_LENGTH"} {
 		t.Run(key, func(t *testing.T) {
 			t.Setenv(key, "invalid")
 			defer func() {

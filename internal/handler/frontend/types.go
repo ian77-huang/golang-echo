@@ -1,14 +1,14 @@
-package user
+package frontend
 
 import (
 	"github.com/labstack/echo/v5"
 	"gorm.io/gorm"
 )
 
-type UserParameter struct {
+type FrontendParameter struct {
 	DB   *gorm.DB
 	Echo *echo.Echo
 }
-type UserHandler struct {
+type FrontendHandler struct {
 	DB *gorm.DB
 }

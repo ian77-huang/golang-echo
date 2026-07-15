@@ -19,6 +19,8 @@ type UserRepository interface {
 	CreateUser(account string, password string) (*model.User, error)
 	GetUser(id int) (*model.User, error)
 	GetUserByAccount(account string) (*model.User, error)
+	GetUserProfile(id int) (*model.UserProfile, error)
+	UpdateUserProfile(id int, updateData *model.UserProfile) (*model.UserProfile, error)
 }
 type SessionRepository interface {
 	CreateSession(id, userId string, expiresAt time.Time) (*model.Session, error)
