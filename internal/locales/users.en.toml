@@ -25,7 +25,7 @@ other = "Profile Settings"
 [user.profile.settings.name]
 other = "Name"
 
-[user.profile.settings.email]
+[user.profile.settings.email.title]
 other = "Email"
 
 [user.profile.settings.phone.title]
@@ -40,14 +40,17 @@ other = "Bio"
 [user.profile.settings.bio.placeholder]
 other = "Tell us about yourself..."
 
-[profile.settings.email.readonly]
+[user.profile.settings.email.readonly]
 other = "Email cannot be changed"
 
-[profile.settings.button.reset]
+[user.profile.settings.button.reset]
 other = "Reset"
 
-[profile.settings.button.save]
+[user.profile.settings.button.save]
 other = "Save Changes"
+
+[user.profile.save.failed]
+other = "Failed to save."
 
 [user.login]
 other = "Login"

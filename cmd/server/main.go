@@ -50,6 +50,7 @@ func newServer() (*echo.Echo, error) {
 		renderer.WithFuncs(translator.TemplateFuncs),
 	))
 
+	e.Static("/assets", "assets")
 	e.Validator = validator.New()
 	e.Renderer = t
 

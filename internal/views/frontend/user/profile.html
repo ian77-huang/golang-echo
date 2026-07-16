@@ -80,15 +80,49 @@
                         });
 
                         const data = await res.json();
-                        if (!res.ok) throw new Error(data.error || '儲存失敗');
+                        if (!res.ok) throw new Error(data.error || '{{t "user.profile.save.failed"}}');
 
-                        this.showToast('資料已成功更新！', 'success');
+                        this.showToast('{{t "user.profile.update.success"}}', 'success');
                     } catch (err) {
                         this.showToast(err.message, 'error');
                     } finally {
                         this.loading = false;
                     }
                 },
+                async uploadAvatar(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+
+                    maxSize = parseInt("{{.MaxSize}}")
+                    if (file.size > maxSize) {
+                        this.showToast('{{t "file.upload.size_exceeded" (kv "Size" "1")}}', 'error');
+                        return;
+                    }
+
+                    const formData = new FormData();
+                    formData.append('avatar', file);
+
+                    this.loading = true;
+                    try {
+                        const res = await fetch('/api/user/profile/avatar', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const data = await res.json();
+                        if (!res.ok) throw new Error(data.error || '{{t "file.upload.failed"}}');
+
+                        // 更新前端對應的 avatar_url (包含防止快取的隨機參數)
+                        this.form.avatar_url = data.avatar_url;
+                        this.showToast('{{t "avatar.update.success"}}', 'success');
+                    } catch (err) {
+                        this.showToast(err.message, 'error');
+                    } finally {
+                        this.loading = false;
+                        // 清空 file input 的值以利重複選取同檔案
+                        event.target.value = '';
+                    }
+                }
             }
         })
     })
@@ -160,13 +194,13 @@
                             </div>
                             <div class="form-control w-full">
                                 <label class="label"><span class="label-text font-medium">{{t
-                                        "user.profile.settings.email"}}</span></label>
+                                        "user.profile.settings.email.title"}}</span></label>
                                 <input type="email" x-model="form.email" class="input input-bordered w-full"
                                     :disabled="isEmailDisable" />
                                 <template x-if="isEmailDisable">
                                     <label class="label">
                                         <span class="label-text-alt text-base-content/50">{{t
-                                            "profile.settings.email.readonly"}}</span>
+                                            "user.profile.settings.email.readonly"}}</span>
                                     </label>
                                 </template>
                             </div>
@@ -189,10 +223,10 @@
                         <!-- 按鈕區 -->
                         <div class="card-actions justify-end border-t pt-4">
                             <button type="button" @click="initData()" class="btn btn-ghost" :disabled="loading">{{t
-                                "profile.settings.button.reset"}}</button>
+                                "user.profile.settings.button.reset"}}</button>
                             <button type="submit" class="btn btn-primary" :disabled="loading">
                                 <span class="loading loading-spinner" x-show="loading"></span>
-                                {{t "profile.settings.button.save"}}
+                                {{t "user.profile.settings.button.save"}}
                             </button>
                         </div>
                     </form>

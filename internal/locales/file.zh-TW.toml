@@ -1,0 +1,32 @@
+[file.upload.read.failed]
+other = "讀取上傳檔案失敗"
+
+[file.upload.open.failed]
+other = "開啟檔案失敗"
+
+[file.upload.create.directory.failed]
+other = "建立目錄失敗"
+
+[file.upload.create.file.failed]
+other = "建立儲存檔案失敗"
+
+[file.upload.write.failed]
+other = "寫入檔案失敗"
+
+[file.upload.invalid_type]
+other = "不支援的檔案格式"
+
+[seek.failed]
+other = "檔案定位失敗"
+
+[file.upload.size_exceeded]
+other = "圖片大小不可超過 {{.Size}}MB"
+
+[avatar.update.success]
+other = "大頭像已更新！"
+
+[file.upload.failed]
+other = "上傳失敗"
+
+[file.upload.success]
+other = "上傳成功"

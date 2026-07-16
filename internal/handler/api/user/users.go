@@ -8,4 +8,5 @@ func New(aup *ApiUserParameter) {
 	users.POST("/login", h.PostLogin)
 	users.GET("/profile", h.GetProfile)
 	users.PUT("/profile", h.PutProfile)
+	users.POST("/profile/avatar", h.PostProfileUploadAvatar)
 }

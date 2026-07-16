@@ -17,8 +17,13 @@ func Load() Config {
 	if err != nil {
 		panic(err)
 	}
+	maxSizeUserProfileAvatar, err := cast.StringToInt(os.Getenv("MAX_SIZE_USER_PROFILE_AVATAR"), 1024*1024)
+	if err != nil {
+		panic(err)
+	}
 	return Config{
-		SecretKey: os.Getenv("SECRET_KEY"),
+		SecretKey:  os.Getenv("SECRET_KEY"),
+		AssetsPath: os.Getenv("ASSETS_PATH"),
 		Databases: ConfigDatabases{
 			Path: os.Getenv("DATABASE_PATH"),
 		},
@@ -26,5 +31,6 @@ func Load() Config {
 			MinLengthAccount:  minLengthAccount,
 			MinLengthPassword: minLengthPassword,
 		},
+		MaxSizeUserProfileAvatar: cast.Megabytes(maxSizeUserProfileAvatar),
 	}
 }

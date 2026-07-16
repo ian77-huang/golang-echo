@@ -36,7 +36,11 @@ func NewFieldError(field, tag string, params ...interface{}) FieldError {
 }
 
 func ErrorInternalServerError(c *echo.Context, code string) error {
-	return echo.NewHTTPError(http.StatusInternalServerError, appi18n.T(c, "error."+code))
+	message := appi18n.T(c, "error."+code)
+	if message == "error."+code {
+		message = appi18n.T(c, code)
+	}
+	return echo.NewHTTPError(http.StatusInternalServerError, message)
 }
 func ErrorBadRequest(c *echo.Context, code string) error {
 	return c.JSON(http.StatusBadRequest, ErrorResponse{

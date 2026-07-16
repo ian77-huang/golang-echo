@@ -1,0 +1,32 @@
+[file.upload.read.failed]
+other = "Failed to read uploaded file."
+
+[file.upload.open.failed]
+other = "Failed to open file."
+
+[file.upload.create.directory.failed]
+other = "Failed to create directory."
+
+[file.upload.create.file.failed]
+other = "Failed to create storage file."
+
+[file.upload.write.failed]
+other = "Failed to write file."
+
+[file.upload.invalid_type]
+other = "Unsupported file type."
+
+[seek.failed]
+other = "Failed to seek file."
+
+[file.upload.size_exceeded]
+other = "Image size cannot exceed {{.Size}}MB."
+
+[avatar.update.success]
+other = "Avatar updated successfully!"
+
+[file.upload.failed]
+other = "Upload failed."
+
+[file.upload.success]
+other = "Upload successful."

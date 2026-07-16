@@ -95,6 +95,7 @@ func (s *UserService) UpdateUserProfile(id string, updateData *model.UserProfile
 			Email:     updateData.Email,
 			Phone:     updateData.Phone,
 			Bio:       updateData.Bio,
+			AvatarURL: updateData.AvatarURL,
 			UpdatedAt: time.Now(),
 		})
 		if err != nil {

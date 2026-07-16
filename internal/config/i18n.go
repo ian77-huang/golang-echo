@@ -15,6 +15,8 @@ func I18n() (*appi18n.I18n, error) {
 			"active.en.toml",
 			"errors.en.toml",
 			"errors.zh-TW.toml",
+			"file.en.toml",
+			"file.zh-TW.toml",
 			"index.en.toml",
 			"index.zh-TW.toml",
 			"placeholders.en.toml",

@@ -25,7 +25,7 @@ other = "個人資料設定"
 [user.profile.settings.name]
 other = "姓名"
 
-[user.profile.settings.email]
+[user.profile.settings.email.title]
 other = "電子郵件"
 
 [user.profile.settings.phone.title]
@@ -40,14 +40,17 @@ other = "個人簡介"
 [user.profile.settings.bio.placeholder]
 other = "介紹一下你自己吧..."
 
-[profile.settings.email.readonly]
+[user.profile.settings.email.readonly]
 other = "電子郵件不可修改"
 
-[profile.settings.button.reset]
+[user.profile.settings.button.reset]
 other = "重設"
 
-[profile.settings.button.save]
+[user.profile.settings.button.save]
 other = "儲存修改"
+
+[user.profile.save.failed]
+other = "儲存失敗"
 
 [user.login]
 other = "登入"

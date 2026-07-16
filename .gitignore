@@ -1,5 +1,7 @@
 .gocache/
 
+assets/uploads/user/profile/avatar
+
 # Binaries
 *.exe
 *.exe~

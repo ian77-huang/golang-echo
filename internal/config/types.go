@@ -32,9 +32,11 @@ type ConfigUsers struct {
 }
 
 type Config struct {
-	SecretKey string
-	Databases ConfigDatabases
-	Users     ConfigUsers
+	SecretKey                string
+	Databases                ConfigDatabases
+	Users                    ConfigUsers
+	AssetsPath               string
+	MaxSizeUserProfileAvatar int
 }
 
 type AuthParameter struct {
