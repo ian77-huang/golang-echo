@@ -1,11 +1,9 @@
 package repository
 
 import (
-	"errors"
 	"time"
 
 	"github.com/ian77-huang/golang-echo/model"
-	"gorm.io/gorm"
 )
 
 func (r *userRepository) IsAccountExist(account string) (bool, error) {
@@ -30,25 +28,17 @@ func (r *userRepository) CreateUser(account string, password string) (*model.Use
 	return newUser, nil
 }
 
-// ===
 func (r *userRepository) GetUser(id int) (*model.User, error) {
 	user := &model.User{}
 	if err := r.db.Where("id = ?", id).First(user).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
 		return nil, err
 	}
 	return user, nil
 }
 
-// ===
 func (r *userRepository) GetUserByAccount(account string) (*model.User, error) {
 	user := &model.User{}
 	if err := r.db.Where("account = ?", account).First(user).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
 		return nil, err
 	}
 	return user, nil
@@ -57,9 +47,6 @@ func (r *userRepository) GetUserByAccount(account string) (*model.User, error) {
 func (r *userRepository) GetUserProfile(id int) (*model.UserProfile, error) {
 	userProfile := &model.UserProfile{}
 	if err := r.db.Where("user_id = ?", id).First(userProfile).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
 		return nil, err
 	}
 	return userProfile, nil

@@ -1,8 +1,6 @@
 package user
 
 import (
-	"net/http"
-
 	appConfig "github.com/ian77-huang/golang-echo/internal/config"
 	"github.com/ian77-huang/golang-echo/internal/response"
 	"github.com/ian77-huang/golang-echo/internal/shared"
@@ -18,7 +16,7 @@ func (h *ApiUserHandler) PostRegister(c *echo.Context) error {
 	var req RequestRegister
 
 	if err := c.Bind(&req); err != nil {
-		return response.Error(c, http.StatusBadRequest, "invalid request")
+		return response.ErrorBadRequest(c, "invalid request")
 	}
 	if err := c.Validate(req); err != nil {
 		return response.ValidationError(c, err)
@@ -36,7 +34,7 @@ func (h *ApiUserHandler) PostRegister(c *echo.Context) error {
 
 	auth := appAuth.Load[model.User, model.Session](c)
 	if auth == nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "auth context not found")
+		return response.ErrorInternalServerError(c, "auth context not found")
 	}
 
 	ID, err := auth.ActionRegister(c, req.Account, req.Password)
@@ -44,7 +42,7 @@ func (h *ApiUserHandler) PostRegister(c *echo.Context) error {
 		return response.ValidationErrorAuth(c, err)
 	}
 
-	return c.JSON(http.StatusCreated, map[string]interface{}{
+	return response.JsonCreated(c, map[string]interface{}{
 		"message": shared.T(c, "user.auth.create.success"),
 		"id":      ID,
 	})

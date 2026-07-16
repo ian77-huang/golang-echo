@@ -1,8 +1,7 @@
 package user
 
 import (
-	"net/http"
-
+	"github.com/ian77-huang/golang-echo/internal/response"
 	"github.com/ian77-huang/golang-echo/internal/shared"
 	"github.com/ian77-huang/golang-echo/model"
 	"github.com/ian77-huang/golang-echo/pkg/auth"
@@ -23,7 +22,7 @@ func (h *ApiUserHandler) GetProfile(c *echo.Context) error {
 		userProfile = &model.UserProfile{}
 	}
 
-	return c.JSON(http.StatusCreated, map[string]any{
+	return response.JsonOk(c, map[string]any{
 		"data":    userProfile,
 		"message": shared.T(c, "user.profile.read.success"),
 	})

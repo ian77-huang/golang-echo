@@ -20,7 +20,7 @@ func (s *UserService) GetUser(id string) (*appAuth.User[model.User], error) {
 		return nil, err
 	}
 	user, err := s.repo.GetUser(userId)
-	if user == nil {
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
 	if err != nil {
@@ -33,7 +33,7 @@ func (s *UserService) GetUser(id string) (*appAuth.User[model.User], error) {
 
 func (s *UserService) GetUserByAccount(account string) (*appAuth.User[model.User], error) {
 	user, err := s.repo.GetUserByAccount(account)
-	if user == nil {
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
 	if err != nil {

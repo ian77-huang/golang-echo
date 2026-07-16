@@ -1,8 +1,6 @@
 package user
 
 import (
-	"net/http"
-
 	"github.com/ian77-huang/golang-echo/internal/response"
 	"github.com/ian77-huang/golang-echo/model"
 
@@ -14,7 +12,7 @@ import (
 func (h *UserHandler) GetLogout(c *echo.Context) error {
 	auth := appAuth.Load[model.User, model.Session](c)
 	if auth == nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "auth context not found")
+		return response.ErrorInternalServerError(c, "auth context not found")
 	}
 
 	_, err := auth.ActionLogout(c)
@@ -22,5 +20,5 @@ func (h *UserHandler) GetLogout(c *echo.Context) error {
 		return response.ValidationErrorAuth(c, err)
 	}
 
-	return c.Redirect(http.StatusSeeOther, "/user/login")
+	return response.Redirect(c, "/user/login")
 }

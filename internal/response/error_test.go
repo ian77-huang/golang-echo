@@ -20,11 +20,11 @@ func testContext() (*echo.Echo, *echo.Context, *httptest.ResponseRecorder) {
 
 func TestResponseHelpers(t *testing.T) {
 	_, c, rec := testContext()
-	if err := JSON(c, map[string]string{"ok": "yes"}); err != nil || rec.Code != http.StatusOK {
+	if err := JsonOk(c, map[string]string{"ok": "yes"}); err != nil || rec.Code != http.StatusOK {
 		t.Fatalf("JSON: status=%d err=%v", rec.Code, err)
 	}
 	_, c, rec = testContext()
-	if err := Error(c, http.StatusForbidden, "forbidden"); err != nil || rec.Code != http.StatusForbidden {
+	if err := ErrorBadRequest(c, "forbidden"); err != nil || rec.Code != http.StatusForbidden {
 		t.Fatalf("Error: status=%d err=%v", rec.Code, err)
 	}
 }

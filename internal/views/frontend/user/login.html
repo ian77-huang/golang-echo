@@ -51,16 +51,13 @@
                         },
                         body: JSON.stringify(this.form),
                     })
-
                     const data = await res.json();
-                    if (typeof data.code !== "undefined" && data.code === "validation_failed") {
-                        alert(data.message)
-                    }
-                    else {
+                    if (res.status === 200) {
                         alert(data.message)
                         window.location.href = "/";
+                    } else {
+                        alert(data.message)
                     }
-                    console.log(data);
                 },
             }
         })

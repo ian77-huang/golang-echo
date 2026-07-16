@@ -1,8 +1,6 @@
 package user
 
 import (
-	"net/http"
-
 	"github.com/ian77-huang/golang-echo/internal/response"
 	"github.com/ian77-huang/golang-echo/internal/shared"
 	"github.com/ian77-huang/golang-echo/model"
@@ -17,7 +15,7 @@ func (h *ApiUserHandler) PutProfile(c *echo.Context) error {
 	var req RequestPutProfile
 
 	if err := c.Bind(&req); err != nil {
-		return response.Error(c, http.StatusBadRequest, "invalid request")
+		return response.ErrorBadRequest(c, "invalid request")
 	}
 
 	if err := c.Validate(req); err != nil {
@@ -35,7 +33,7 @@ func (h *ApiUserHandler) PutProfile(c *echo.Context) error {
 		return response.ValidationErrorAuth(c, err)
 	}
 
-	return c.JSON(http.StatusCreated, map[string]any{
+	return response.JsonOk(c, map[string]any{
 		"message": shared.T(c, "user.profile.update.success"),
 		"data":    profile,
 	})

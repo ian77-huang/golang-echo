@@ -12,7 +12,7 @@ func (h *ApiHandler) PostChangeLang(c *echo.Context) error {
 	var req ChangeLangRequest
 
 	if err := c.Bind(&req); err != nil {
-		return response.Error(c, http.StatusBadRequest, "invalid request")
+		return response.ErrorBadRequest(c, "invalid request")
 	}
 	if err := c.Validate(req); err != nil {
 		return response.ValidationError(c, err)
@@ -27,7 +27,7 @@ func (h *ApiHandler) PostChangeLang(c *echo.Context) error {
 		SameSite: http.SameSiteLaxMode,
 	})
 
-	return response.JSON(c, map[string]any{
+	return response.JsonOk(c, map[string]any{
 		"lang": req.Code,
 	})
 }

@@ -35,12 +35,11 @@ func NewFieldError(field, tag string, params ...interface{}) FieldError {
 	}
 }
 
-func JSON(c *echo.Context, i any) error {
-	return c.JSON(http.StatusOK, i)
+func ErrorInternalServerError(c *echo.Context, code string) error {
+	return echo.NewHTTPError(http.StatusInternalServerError, appi18n.T(c, "error."+code))
 }
-
-func Error(c *echo.Context, status int, code string) error {
-	return c.JSON(status, ErrorResponse{
+func ErrorBadRequest(c *echo.Context, code string) error {
+	return c.JSON(http.StatusBadRequest, ErrorResponse{
 		Code:    code,
 		Message: appi18n.T(c, "error."+code),
 	})
