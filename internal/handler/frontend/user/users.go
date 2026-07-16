@@ -10,4 +10,5 @@ func New(ap *UserParameter) {
 	users.GET("/register", h.GetRegister)
 	users.GET("/logout", h.GetLogout)
 	users.GET("/profile", h.GetProfile)
+	users.GET("/reset-password", h.GetResetPassword)
 }

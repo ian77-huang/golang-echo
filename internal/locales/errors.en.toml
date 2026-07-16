@@ -48,3 +48,6 @@ other = "Logout is error"
 
 [error.auth.login.failed]
 other = "Login is failed"
+
+[error.auth.password.new.same.as.current]
+other = "The new password cannot be the same as the current password."

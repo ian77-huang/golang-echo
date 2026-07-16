@@ -48,3 +48,6 @@ other = "登出失敗"
 
 [error.auth.login.failed]
 other = "登入失敗"
+
+[error.auth.password.new.same.as.current]
+other = "新密碼不可與目前密碼相同"

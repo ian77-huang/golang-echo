@@ -13,7 +13,7 @@ func Auth(p *AuthParameter) *appAuth.Auth[model.User, model.Session] {
 		RedirectURL: "/",
 	}
 	AuthOnly := &appAuth.RoutesPaths{
-		Rules:       []string{},
+		Rules:       []string{"/user/profile", "/user/reset-password"},
 		RedirectURL: "/user/login",
 	}
 	route := &appAuth.Route[model.User]{

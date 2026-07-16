@@ -8,7 +8,7 @@ import (
 
 func (h *UserHandler) GetProfile(c *echo.Context) error {
 	config := appConfig.Load()
-	maxSize := int64(config.MaxSizeUserProfileAvatar) // 5 MB
+	maxSize := int64(config.MaxSizeUserProfileAvatar)
 
 	return response.Render(c, "frontend:user:/profile.html", map[string]any{
 		"MaxSize": maxSize,

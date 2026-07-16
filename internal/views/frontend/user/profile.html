@@ -131,7 +131,6 @@
 <div x-data="profileApp()" x-init="initData()">
     <form method="post" @submit.prevent="handleSubmit">
         <div class="max-w-4xl mx-auto px-4">
-            <!-- 提示訊息 -->
             <div x-show="toast.show" x-transition class="toast toast-top toast-end z-50">
                 <div class="alert" :class="toast.type === 'success' ? 'alert-success' : 'alert-error'">
                     <span x-text="toast.message"></span>
@@ -139,24 +138,16 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-
-                <!-- 左側：大頭貼與基本狀態 -->
                 <div class="card bg-base-100 shadow-xl h-fit">
                     <div class="card-body items-center text-center">
-                        <!-- 隱藏的 file input -->
                         <input type="file" id="avatarInput" class="hidden" accept="image/*"
                             @change="uploadAvatar($event)" />
-
-                        <!-- 點擊頭像即可觸發上傳 -->
                         <div class="avatar placeholder mb-2 cursor-pointer group relative"
                             @click="document.getElementById('avatarInput').click()">
-                            <!-- 有大頭照時顯示 -->
                             <template x-if="form.avatar_url">
                                 <img :src="form.avatar_url" alt="Avatar"
                                     class="group-hover:opacity-50 transition object-cover w-full h-full" />
                             </template>
-
-                            <!-- 沒有大頭照時，直接顯示 SVG -->
                             <template x-if="!form.avatar_url">
                                 <svg class="w-full h-full text-base-content/30" viewBox="0 0 250 250" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -167,25 +158,19 @@
                                         fill="currentColor" class="opacity-40" />
                                 </svg>
                             </template>
-                            <!-- 懸停時顯示更換文字 -->
                             <div
                                 class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/40 rounded-full text-white text-xs font-semibold">
                                 {{ t "user.profile.changePicture" }}
                             </div>
                         </div>
-
                         <h2 class="card-title" x-text="form.name"></h2>
                         <p class="text-sm text-base-content/60" x-text="form.email"></p>
                         <div class="badge badge-primary mt-2">{{ t "user.profile.basicMember" }}</div>
                     </div>
                 </div>
-
-                <!-- 右側：詳細欄位編輯 -->
                 <div class="card bg-base-100 shadow-xl md:col-span-2 gap-6 p-5">
                     <form @submit.prevent="submitForm" class="card-body gap-6">
                         <h2 class="card-title border-b pb-2 text-xl font-bold">{{t "user.profile.settings.title"}}</h2>
-
-                        <!-- 基本欄位組 -->
                         <div class="grid gap-4">
                             <div class="form-control w-full">
                                 <label class="label"><span class="label-text font-medium">{{t
@@ -212,7 +197,6 @@
                             <input type="tel" x-model="form.phone" class="input input-bordered w-full"
                                 placeholder="0912345678" />
                         </div>
-
                         <div class="form-control w-full gap-2.5 grid">
                             <label class="label"><span class="label-text font-medium">{{t
                                     "user.profile.settings.bio.title"}}</span></label>
@@ -220,7 +204,6 @@
                                 "user.profile.settings.bio.placeholder"}}'></textarea>
                         </div>
 
-                        <!-- 按鈕區 -->
                         <div class="card-actions justify-end border-t pt-4">
                             <button type="button" @click="initData()" class="btn btn-ghost" :disabled="loading">{{t
                                 "user.profile.settings.button.reset"}}</button>

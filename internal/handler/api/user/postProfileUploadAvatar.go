@@ -21,7 +21,6 @@ import (
 )
 
 func (h *ApiUserHandler) PostProfileUploadAvatar(c *echo.Context) error {
-
 	file, err := c.FormFile("avatar")
 	if err != nil {
 		return response.ErrorBadRequest(c, shared.T(c, "file.upload.read.failed"))
@@ -46,7 +45,6 @@ func (h *ApiUserHandler) PostProfileUploadAvatar(c *echo.Context) error {
 		return response.ErrorInternalServerError(c, "file.upload.read.failed")
 	}
 
-	// 判斷 MIME Type
 	contentType := http.DetectContentType(buf)
 
 	allowed := map[string]struct{}{
@@ -69,7 +67,6 @@ func (h *ApiUserHandler) PostProfileUploadAvatar(c *echo.Context) error {
 	user := appAuth.GetUser[model.User](c)
 	userService := service.NewUserService(h.DB)
 
-	// 2. 確保儲存目錄存在
 	uploadDir := "/uploads/user/profile/avatar"
 	if err := os.MkdirAll(config.AssetsPath+uploadDir, os.ModePerm); err != nil {
 		return response.ErrorInternalServerError(c, "file.upload.create.directory.failed")
@@ -86,7 +83,6 @@ func (h *ApiUserHandler) PostProfileUploadAvatar(c *echo.Context) error {
 	}
 	defer dst.Close()
 
-	// 4. 複製檔案內容
 	if _, err = io.Copy(dst, src); err != nil {
 		return response.ErrorInternalServerError(c, "file.upload.write.failed")
 	}

@@ -61,6 +61,9 @@ other = "Logout"
 [user.register]
 other = "Register"
 
+[user.reset.password.title]
+other = "Reset Password"
+
 [user.auth.account]
 other = "Account"
 
@@ -75,3 +78,12 @@ other = "User created successfully"
 
 [user.auth.login.success]
 other = "Login successfully"
+
+[user.old.password.title]
+other="Old Password"
+
+[user.new.password.title]
+other="New Password"
+
+[user.confirm.password.title]
+other="Confirm New Password"
