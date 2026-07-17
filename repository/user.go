@@ -36,6 +36,13 @@ func (r *userRepository) GetUser(id int) (*model.User, error) {
 	return user, nil
 }
 
+func (r *userRepository) UpdateUser(id int, updateData *model.User) (*model.User, error) {
+	if err := r.db.Model(&model.User{}).Where("id = ?", id).Updates(updateData).Error; err != nil {
+		return nil, err
+	}
+	return updateData, nil
+}
+
 func (r *userRepository) GetUserByAccount(account string) (*model.User, error) {
 	user := &model.User{}
 	if err := r.db.Where("account = ?", account).First(user).Error; err != nil {
@@ -61,16 +68,9 @@ func (r *userRepository) CreateUserProfile(insertData *model.UserProfile) (*mode
 	return insertData, nil
 }
 func (r *userRepository) UpdateUserProfile(id int, updateData *model.UserProfile) (*model.UserProfile, error) {
-
 	tx := r.db.Model(&model.UserProfile{}).Where("user_id = ?", id).Updates(updateData)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
-	// tx := r.db.Clauses(clause.OnConflict{
-	// 	UpdateAll: true,
-	// }).Where("user_id = ?", id).Create(&updateData)
-	// if tx.Error != nil {
-	// 	return nil, tx.Error
-	// }
 	return updateData, nil
 }

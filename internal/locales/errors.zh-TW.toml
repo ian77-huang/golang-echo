@@ -25,6 +25,9 @@ other = "密碼加密失敗"
 [error.auth.CreateUserError]
 other = "建立使用者失敗"
 
+[error.auth.UpdateUserError]
+other = "更新使用者失敗"
+
 [error.auth.AccountLookupFailed]
 other = "查詢帳號失敗"
 

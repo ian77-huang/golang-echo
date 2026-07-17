@@ -28,3 +28,8 @@ type RequestPutProfile struct {
 	Email string `json:"email" validate:"required,email"`
 	Bio   string `json:"bio" validate:"required"`
 }
+type RequestResetPassword struct {
+	OldPassword        string `json:"oldPassword" validate:"required"`
+	NewPassword        string `json:"newPassword" validate:"required,nefield=oldPassword"`
+	ConfirmNewPassword string `json:"confirmNewPassword" validate:"required,eqfield=NewPassword"`
+}

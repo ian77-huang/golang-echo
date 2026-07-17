@@ -25,6 +25,9 @@ other = "failed to secure password"
 [error.auth.CreateUserError]
 other = "create user error"
 
+[error.auth.UpdateUserError]
+other = "update user error"
+
 [error.auth.AccountLookupFailed]
 other = "failed to look up account"
 

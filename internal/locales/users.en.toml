@@ -87,3 +87,6 @@ other="New Password"
 
 [user.confirm.password.title]
 other="Confirm New Password"
+
+[user.auth.resetPasswordSuccess]
+other="Password reset successful! Redirecting in 3 seconds."

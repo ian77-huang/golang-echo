@@ -18,6 +18,7 @@ type UserRepository interface {
 	IsAccountExist(account string) (bool, error)
 	CreateUser(account string, password string) (*model.User, error)
 	GetUser(id int) (*model.User, error)
+	UpdateUser(id int, updateData *model.User) (*model.User, error)
 	GetUserByAccount(account string) (*model.User, error)
 	GetUserProfile(id int) (*model.UserProfile, error)
 	CreateUserProfile(insertData *model.UserProfile) (*model.UserProfile, error)

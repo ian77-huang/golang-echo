@@ -52,6 +52,27 @@ func (s *UserService) CreateUser(account, password string) (*appAuth.User[model.
 	authUser := &appAuth.User[model.User]{ID: cast.IntToString(user.Id), Password: user.Password, Data: user}
 	return authUser, nil
 }
+func (s *UserService) UpdateUser(id string, updateData *model.User) (*appAuth.User[model.User], error) {
+	userId, err := cast.StringToInt(id, 0)
+	if err != nil {
+		return nil, err
+	}
+	user, err := s.repo.UpdateUser(userId, updateData)
+	if err != nil {
+		return nil, err
+	}
+	authUser := &appAuth.User[model.User]{ID: cast.IntToString(user.Id), Password: user.Password, Data: user}
+	return authUser, nil
+}
+func (s *UserService) UpdateUserPassword(id string, passwordHash string) (*appAuth.User[model.User], error) {
+	updateData := &model.User{Password: passwordHash}
+	user, err := s.UpdateUser(id, updateData)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
 
 func (s *UserService) GetUserProfile(id string) (*model.UserProfile, error) {
 	userId, err := cast.StringToInt(id, 0)

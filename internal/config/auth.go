@@ -21,14 +21,15 @@ func Auth(p *AuthParameter) *appAuth.Auth[model.User, model.Session] {
 		AuthOnly:  AuthOnly,
 	}
 	resolver := &appAuth.Resolver[model.User, model.Session]{
-		IsAccountExist:   p.UserService.IsAccountExist,
-		CreateUser:       p.UserService.CreateUser,
-		GetUser:          p.UserService.GetUser,
-		GetUserByAccount: p.UserService.GetUserByAccount,
-		CreateSession:    p.SessionService.CreateSession,
-		UpdateSession:    p.SessionService.UpdateSession,
-		DeleteSession:    p.SessionService.DeleteSession,
-		GetSession:       p.SessionService.GetSession,
+		IsAccountExist:     p.UserService.IsAccountExist,
+		CreateUser:         p.UserService.CreateUser,
+		GetUser:            p.UserService.GetUser,
+		GetUserByAccount:   p.UserService.GetUserByAccount,
+		UpdateUserPassword: p.UserService.UpdateUserPassword,
+		CreateSession:      p.SessionService.CreateSession,
+		UpdateSession:      p.SessionService.UpdateSession,
+		DeleteSession:      p.SessionService.DeleteSession,
+		GetSession:         p.SessionService.GetSession,
 	}
 	return appAuth.New(&appAuth.Config[model.User, model.Session]{
 		SecretKey: config.SecretKey,

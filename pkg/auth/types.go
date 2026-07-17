@@ -53,10 +53,11 @@ type Config[TUser any, TSession any] struct {
 }
 
 type Resolver[TUser any, TSession any] struct {
-	IsAccountExist   func(account string) (bool, error)
-	CreateUser       func(account string, password string) (*User[TUser], error)
-	GetUser          func(id string) (*User[TUser], error)
-	GetUserByAccount func(account string) (*User[TUser], error)
+	IsAccountExist     func(account string) (bool, error)
+	CreateUser         func(account string, password string) (*User[TUser], error)
+	GetUser            func(id string) (*User[TUser], error)
+	GetUserByAccount   func(account string) (*User[TUser], error)
+	UpdateUserPassword func(id string, passwordHash string) (*User[TUser], error)
 
 	GetSession    func(id string) (*Session[TSession], error)
 	CreateSession func(id string, userId string, expiresAt time.Time) (*Session[TSession], error)
