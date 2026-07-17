@@ -38,7 +38,14 @@ func newServer() (*echo.Echo, error) {
 		return nil, err
 	}
 
-	db := database.NewSqlite(config.Databases.Path)
+	dbConfig := &database.DBConfig{
+		Driver: database.Sqlite, Sqlite: &database.ConfigSqlite{
+			Path: config.Databases.Path,
+		}}
+	db, err := database.New(dbConfig)
+	if err != nil {
+		return nil, err
+	}
 
 	auth := appConfig.Auth(&appConfig.AuthParameter{
 		UserService:    service.NewUserService(db),

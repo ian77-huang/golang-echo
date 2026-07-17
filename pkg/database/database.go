@@ -1,20 +1,12 @@
 package database
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v5"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
-
-func NewSqlite(path string) *gorm.DB {
-	db, err := gorm.Open(sqlite.Open(path), &gorm.Config{})
-	if err != nil {
-		panic("=== Error：Unable to connect to the database. ====")
-	}
-	return db
-}
 
 func GetDBConnect(c *echo.Context) (*gorm.DB, error) {
 	value := c.Get(contextDBKey)
@@ -27,4 +19,27 @@ func GetDBConnect(c *echo.Context) (*gorm.DB, error) {
 	}
 
 	return db, nil
+}
+
+func New(cfg *DBConfig) (*gorm.DB, error) {
+	switch cfg.Driver {
+	case Sqlite:
+		if cfg.Sqlite == nil {
+			return nil, fmt.Errorf("Sqlite configuration is not provided")
+		}
+		return NewSqlite(cfg.Sqlite)
+	case PostgreSQL:
+		if cfg.Pgsql == nil {
+			return nil, fmt.Errorf("Pgsql configuration is not provided")
+		}
+		return NewPostgresSql(cfg.Pgsql)
+	case Mysql:
+		if cfg.Mysql == nil {
+			return nil, fmt.Errorf("Mysql configuration is not provided")
+		}
+		return NewMysql(cfg.Mysql)
+
+	default:
+		return nil, fmt.Errorf("unsupported driver")
+	}
 }

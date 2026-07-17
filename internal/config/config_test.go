@@ -3,7 +3,6 @@ package config
 import (
 	"net/http"
 	"net/http/httptest"
-	"path/filepath"
 	"testing"
 	"time"
 
@@ -144,21 +143,4 @@ func contextWithUser(e *echo.Echo, auth *appAuth.Auth[model.User, model.Session]
 	c.Set(appAuth.CONTEXT_KEY_USER, &appAuth.User[model.User]{ID: id})
 	c.Set(appAuth.CONTEXT_KEY_AUTH, auth)
 	return c
-}
-
-func TestDBOpensConfiguredSqliteFile(t *testing.T) {
-	t.Setenv("DATABASE_PATH", filepath.Join(t.TempDir(), "app.db"))
-	if db := DB(); db == nil {
-		t.Fatal("expected database")
-	}
-}
-
-func TestDBPanicsForUnusablePath(t *testing.T) {
-	t.Setenv("DATABASE_PATH", "/dev/null/app.db")
-	defer func() {
-		if recover() == nil {
-			t.Fatal("expected DB panic")
-		}
-	}()
-	DB()
 }

@@ -12,7 +12,7 @@ import (
 func TestRouterRegistersUtilityAndPingRoutes(t *testing.T) {
 	config := appConfig.Load()
 
-	db := database.NewSqlite(config.Databases.Path)
+	db, _ := database.NewSqlite(&database.ConfigSqlite{Path: config.Databases.Path})
 	e := New(&RouterParameter{DB: db})
 	for _, tt := range []struct {
 		path string
