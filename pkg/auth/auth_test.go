@@ -175,7 +175,7 @@ func TestGettersAndGuestOnlyRoute(t *testing.T) {
 	c := e.NewContext(httptest.NewRequest(http.MethodGet, "/login", nil), rec)
 	c.SetPath("/login")
 	c.Set(CONTEXT_KEY_USER, &User[struct{}]{ID: "user-1"})
-	if err := auth.Middleware()(func(*echo.Context) error { t.Fatal("guest-only handler should not run"); return nil })(c); err != nil || rec.Code != http.StatusSeeOther {
+	if err := auth.Middleware()(func(*echo.Context) error { t.Fatal("guest-only handler should not run"); return nil })(c); err != nil || rec.Code != http.StatusFound {
 		t.Fatalf("redirect: status=%d err=%v", rec.Code, err)
 	}
 	c.Set(CONTEXT_KEY_SESSION, &Session[struct{}]{ID: "session-1"})

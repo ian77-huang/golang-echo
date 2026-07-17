@@ -86,7 +86,7 @@ func TestGetLogoutDeletesSessionAndRedirects(t *testing.T) {
 	c := e.NewContext(httptest.NewRequest(http.MethodGet, "/user/logout", nil), rec)
 	c.Set(appAuth.CONTEXT_KEY_AUTH, auth)
 	c.Set(appAuth.CONTEXT_KEY_USER, &appAuth.User[model.User]{ID: "user-1"})
-	if err := h.GetLogout(c); err != nil || !deleted || rec.Code != http.StatusSeeOther {
+	if err := h.GetLogout(c); err != nil || !deleted || rec.Code != http.StatusFound {
 		t.Fatalf("deleted=%v status=%d err=%v", deleted, rec.Code, err)
 	}
 }

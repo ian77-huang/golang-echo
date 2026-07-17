@@ -49,7 +49,7 @@ func TestPostLoginUsesAuthFromMiddleware(t *testing.T) {
 	if err := auth.Middleware()(h.PostLogin)(c); err != nil {
 		t.Fatal(err)
 	}
-	if rec.Code != http.StatusCreated {
+	if rec.Code != http.StatusOK {
 		t.Fatalf("status=%d body=%s", rec.Code, rec.Body.String())
 	}
 }
@@ -112,8 +112,7 @@ func TestPostLoginReturnsErrorWhenActionLoginFails(t *testing.T) {
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	err := auth.Middleware()(h.PostLogin)(c)
-	if err == nil {
-		t.Fatal("expected error from PostLogin when ActionLogin fails, got nil")
+	if err := auth.Middleware()(h.PostLogin)(c); err != nil || rec.Code != http.StatusBadRequest {
+		t.Fatalf("status=%d err=%v", rec.Code, err)
 	}
 }

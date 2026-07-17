@@ -22,9 +22,11 @@ func TestRunMigrationsAppliesProjectMigrations(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer db.Close()
-	var name string
-	if err := db.QueryRow("SELECT name FROM sqlite_master WHERE type='table' AND name='users'").Scan(&name); err != nil || name != "users" {
-		t.Fatalf("users table: %q %v", name, err)
+	for _, table := range []string{"user", "messages", "session", "user_profile"} {
+		var name string
+		if err := db.QueryRow("SELECT name FROM sqlite_master WHERE type='table' AND name=?", table).Scan(&name); err != nil || name != table {
+			t.Fatalf("%s table: %q %v", table, name, err)
+		}
 	}
 	if err := runMigrations(dbPath, "file://"+migrationsDir); err != nil {
 		t.Fatalf("second migration should be idempotent: %v", err)

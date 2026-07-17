@@ -27,7 +27,7 @@ func TestLoadUsesEnvironmentAndDefaults(t *testing.T) {
 }
 
 func TestLoadPanicsForInvalidLengthEnvironment(t *testing.T) {
-	for _, key := range []string{"USER_ACCOUNT_MIN_LENGTH", "USERS_PASSWORD_MIN_LENGTH"} {
+	for _, key := range []string{"USER_ACCOUNT_MIN_LENGTH", "USER_PASSWORD_MIN_LENGTH"} {
 		t.Run(key, func(t *testing.T) {
 			t.Setenv(key, "invalid")
 			defer func() {

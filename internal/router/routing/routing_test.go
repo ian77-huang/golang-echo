@@ -10,7 +10,7 @@ import (
 
 func TestRoutingRegistersEndpoints(t *testing.T) {
 	e := echo.New()
-	h := &Routing{}
+	h := &Routing{Echo: e}
 	h.Frontend()
 	h.Api()
 	for _, tt := range []struct {

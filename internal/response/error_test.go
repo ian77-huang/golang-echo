@@ -24,7 +24,7 @@ func TestResponseHelpers(t *testing.T) {
 		t.Fatalf("JSON: status=%d err=%v", rec.Code, err)
 	}
 	_, c, rec = testContext()
-	if err := ErrorBadRequest(c, "forbidden"); err != nil || rec.Code != http.StatusForbidden {
+	if err := ErrorBadRequest(c, "forbidden"); err != nil || rec.Code != http.StatusBadRequest {
 		t.Fatalf("Error: status=%d err=%v", rec.Code, err)
 	}
 }
