@@ -11,7 +11,9 @@ import (
 
 func (h *ApiUserHandler) GetProfile(c *echo.Context) error {
 	user := auth.GetUser[model.User](c)
-
+	if user == nil {
+		return response.ErrorUnauthorized(c, "unauthorized")
+	}
 	userService := service.NewUserService(h.DB)
 
 	userProfile, err := userService.GetUserProfile(user.ID)

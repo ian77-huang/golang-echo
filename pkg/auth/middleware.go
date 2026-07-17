@@ -63,8 +63,9 @@ func (a *Auth[TUser, TSession]) Middleware() echo.MiddlewareFunc {
 				routeCondition = route.GuestOnly
 			}
 			if slices.Contains(routeCondition.Rules, c.Path()) {
-				return c.Redirect(http.StatusSeeOther, routeCondition.RedirectURL)
+				return c.Redirect(http.StatusFound, routeCondition.RedirectURL)
 			}
+
 			validateRule := &ValidateRule[TUser]{IsSignedIn: isSignedIn, Path: c.Path(), User: nil}
 			if validateRule.IsSignedIn {
 				validateRule.User = GetUser[TUser](c)

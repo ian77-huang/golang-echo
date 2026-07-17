@@ -1,6 +1,9 @@
 [error.invalid_request]
 other = "Invalid request"
 
+[error.unauthorized]
+other = "Unauthorized"
+
 [error.validation_failed]
 other = "Validation failed"
 

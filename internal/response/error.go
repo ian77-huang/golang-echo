@@ -42,6 +42,14 @@ func ErrorInternalServerError(c *echo.Context, code string) error {
 	}
 	return echo.NewHTTPError(http.StatusInternalServerError, message)
 }
+
+func ErrorUnauthorized(c *echo.Context, code string) error {
+	return c.JSON(http.StatusUnauthorized, ErrorResponse{
+		Code:    code,
+		Message: appi18n.T(c, "error."+code),
+	})
+}
+
 func ErrorBadRequest(c *echo.Context, code string) error {
 	return c.JSON(http.StatusBadRequest, ErrorResponse{
 		Code:    code,

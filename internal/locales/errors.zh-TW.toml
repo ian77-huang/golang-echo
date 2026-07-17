@@ -1,6 +1,9 @@
 [error.invalid_request]
 other = "請求格式錯誤"
 
+[error.unauthorized]
+other = "未授權"
+
 [error.validation_failed]
 other = "驗證失敗"
 

@@ -9,7 +9,7 @@
 | Echo Web 伺服器      | 已完成 | 預設監聽 `http://localhost:1323`。                  |
 | HTML 模板            | 已完成 | 包含首頁、登入頁與註冊頁，以及可巢狀使用的 layout。 |
 | 多語系               | 已完成 | 支援繁體中文（`zh-TW`）與英文（`en`）。             |
-| SQLite 與 migrations | 已完成 | 已建立 users、messages、session 三組遷移。          |
+| SQLite 與 migrations | 已完成 | 已建立 users、messages、session、userInfo 四組遷移。 |
 | 使用者註冊 API       | 已完成 | 建立帳號、以 Argon2 雜湊密碼並建立 session。        |
 | Session 驗證         | 已完成 | 透過 cookie 與 JWT 處理 session 的建立與刷新。      |
 | 登入 API             | 已完成 | 驗證帳號密碼，成功後建立 session 並寫入 cookie。    |
@@ -135,5 +135,11 @@ go test ./...
 ## 開發注意事項
 
 - `.env`、本機資料庫與日誌都不應提交至 Git。
-- 變更資料表時，請新增一組 `.up.sql` 與 `.down.sql` migration，再執行遷移指令。
+- 變更資料表時，請先建立一組 `.up.sql` 與 `.down.sql` migration：
+
+  ```bash
+  migrate create -ext sql -dir migrations -seq create_userInfo_table
+  ```
+
+  再執行遷移指令。
 - 新增前端頁面時，請同步建立模板、handler 與路由；新增 API 時，請建立 handler 並在 `internal/router/routing/api.go` 註冊。

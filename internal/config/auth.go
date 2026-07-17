@@ -9,11 +9,20 @@ func Auth(p *AuthParameter) *appAuth.Auth[model.User, model.Session] {
 	config := Load()
 
 	guestOnly := &appAuth.RoutesPaths{
-		Rules:       []string{"/user/login", "/user/register"},
+		Rules: []string{
+			"/user/login",
+			"/user/register",
+		},
 		RedirectURL: "/",
 	}
 	AuthOnly := &appAuth.RoutesPaths{
-		Rules:       []string{"/user/profile", "/user/reset-password"},
+		Rules: []string{
+			"/user/profile",
+			"/user/reset-password",
+			"/api/user/profile",
+			"/api/user/reset-password",
+			"/api/user/profile/avatar",
+		},
 		RedirectURL: "/user/login",
 	}
 	route := &appAuth.Route[model.User]{
