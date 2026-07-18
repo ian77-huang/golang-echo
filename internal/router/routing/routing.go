@@ -5,4 +5,5 @@ func New(rp *RoutingParameter) {
 
 	h.Frontend()
 	h.Api()
+	h.Admin()
 }

@@ -6,6 +6,8 @@ type User struct {
 	Id        int        `json:"id"`
 	Account   string     `json:"cccount"`
 	Password  string     `json:"password"`
+	IsActive  bool       `gorm:"default:true"`
+	IsAdmin   bool       `gorm:"default:false"`
 	CreatedAt *time.Time `json:"created_at"`
 	UpdatedAt *time.Time `json:"updated_at"`
 }

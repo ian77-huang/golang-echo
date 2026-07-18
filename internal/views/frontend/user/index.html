@@ -1,5 +1,112 @@
 {{define "title"}} Home2 {{end}}
 
 {{define "content_users"}}
-<h2 class="">Users Page</h2>
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+    <div>
+        <!-- 頂部頁籤與基本帳號資訊 -->
+        <div class="navbar bg-base-100 rounded-box shadow-md mb-6 px-6">
+            <div class="flex-1">
+                <span class="text-xl font-bold text-primary">User Dashboard</span>
+            </div>
+            <div class="flex-none gap-4">
+                {{ if .user.Account }}
+                <div class="badge badge-outline">帳號：{{ .user.Account }}</div>
+                {{ end }}
+                {{ if .user.IsAdmin }}
+                <div class="badge badge-secondary">管理員</div>
+                {{ else }}
+                <div class="badge badge-primary">一般會員</div>
+                {{ end }}
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="card bg-base-100 shadow-md">
+                <div class="card-body items-center text-center">
+                    <div class="avatar placeholder mb-4">
+                        <div class="text-neutral-content rounded-full w-24">
+                            {{if and .profile .profile.AvatarURL }}
+                            <img src='{{ .profile.AvatarURL }}' alt="Avatar" />
+                            {{else}}
+                            <svg class="w-full h-full text-base-content/30" viewBox="0 0 250 250" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect width="250" height="250" fill="currentColor" class="opacity-10" />
+                                <circle cx="125" cy="100" r="35" fill="currentColor" class="opacity-40" />
+                                <path
+                                    d="M60 190C60 156.863 86.863 130 120 130H130C163.137 130 190 156.863 190 190V205H60V190Z"
+                                    fill="currentColor" class="opacity-40" />
+                            </svg>
+                            {{end}}
+                        </div>
+                    </div>
+                    <h2 class="card-title">
+                        {{if and .profile .profile.Name}}
+                        <p>姓名：{{.profile.Name}}</p>
+                        {{else}}
+                        尚未設定姓名
+                        {{end}}
+                    </h2>
+                    <p class="text-sm text-base-content/60">
+                        {{if and .profile .profile.Email}}
+                        {{.profile.Email}}
+                        {{else}}
+                        電子郵件未設定
+                        {{end}}
+                    </p>
+                    <div class="divider my-2"></div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm">帳號狀態:</span>
+                        {{if and .user .user.IsActive}}
+                        <span class="badge badge-success">已啟用</span>
+                        {{else}}
+                        <span class="badge badge-error">停用</span>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+            <div class="card bg-base-100 shadow-md md:col-span-2">
+                <div class="card-body">
+                    {{if and .profile}}
+                    <div>
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-lg font-bold">個人詳細資料</h3>
+                            <a class="btn btn-primary" href="/user/profile">
+                                立即填寫資料
+                            </a>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <span class="text-xs text-base-content/50 block">真實姓名</span>
+                                <p class="font-medium">{{.profile.Name}}</p>
+                            </div>
+                            <div>
+                                <span class="text-xs text-base-content/50 block">電子信箱</span>
+                                <p class="font-medium">{{.profile.Email}}</p>
+                            </div>
+                            <div>
+                                <span class="text-xs text-base-content/50 block">電話號碼</span>
+                                <p class="font-medium">{{.profile.Phone}}</p>
+                            </div>
+                            <div>
+                                <span class="text-xs text-base-content/50 block">個人簡介</span>
+                                <p class="font-medium whitespace-pre-line">
+                                    {{.profile.Bio}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {{else}}
+                    <div class="text-center py-8">
+                        <div class="text-5xl mb-4">📝</div>
+                        <h3 class="text-lg font-bold">尚未填寫個人詳細資料</h3>
+                        <p class="text-base-content/60 mt-1 mb-6 text-sm">填寫完整的聯絡資訊與簡介，讓您的帳號更完整。</p>
+                        <a class="btn btn-primary" href="/user/profile">
+                            立即填寫資料
+                        </a>
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {{end}}
