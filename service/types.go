@@ -11,3 +11,7 @@ type UserService struct {
 type SessionService struct {
 	repo repository.SessionRepository
 }
+
+type BibleService struct {
+	repo repository.BibleRepository
+}

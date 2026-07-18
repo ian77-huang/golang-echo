@@ -9,3 +9,7 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 func NewSessionRepository(db *gorm.DB) SessionRepository {
 	return &sessionRepository{db: db}
 }
+
+func NewBibleRepository(db *gorm.DB) BibleRepository {
+	return &bibleRepository{db: db}
+}

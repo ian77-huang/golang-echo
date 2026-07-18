@@ -12,3 +12,7 @@ func NewUserService(db *gorm.DB) *UserService {
 func NewSessionService(db *gorm.DB) *SessionService {
 	return &SessionService{repo: repository.NewSessionRepository(db)}
 }
+
+func NewBibleService(db *gorm.DB) *BibleService {
+	return &BibleService{repo: repository.NewBibleRepository(db)}
+}

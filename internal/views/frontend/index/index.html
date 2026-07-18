@@ -1,19 +1,10 @@
 {{define "title"}} Home2 {{end}}
 
-{{define "content"}}
-<h2>Home Page</h2>
-<p>{{t "welcome" (kv "Name" .Name)}}</p>
-
-<script type="text/javascript">
-    document.addEventListener('alpine:init', () => {
-        Alpine.data('todoApp', () => ({
-            // title: initialTitle,
-            // tags: ["a", "b", "c", "d", "e"]
-        }))
-        console.log(`alpine:init...`)
-    })
-</script>
-<div x-data="todoApp('yien')">
-
+{{define "content_index"}}
+<div class="card w-full bg-base-100 card-md shadow-sm mt-5">
+    <div class="card-body">
+        <h2 class="card-title">每日經文</h2>
+        <p class="text-2xl p-5">{{.bible.Verses}}</p>
+    </div>
 </div>
 {{end}}

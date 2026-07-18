@@ -13,6 +13,9 @@ type userRepository struct {
 type sessionRepository struct {
 	db *gorm.DB
 }
+type bibleRepository struct {
+	db *gorm.DB
+}
 
 type UserRepository interface {
 	IsAccountExist(account string) (bool, error)
@@ -29,4 +32,7 @@ type SessionRepository interface {
 	UpdateSession(id string, expiresAt time.Time, sess *model.Session) (*model.Session, error)
 	DeleteSession(id string) (*model.Session, error)
 	GetSession(id string) (*model.Session, error)
+}
+type BibleRepository interface {
+	GetBible(id int) (*model.Bible, error)
 }
