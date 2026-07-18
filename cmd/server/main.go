@@ -38,11 +38,7 @@ func newServer() (*echo.Echo, error) {
 		return nil, err
 	}
 
-	dbConfig := &database.DBConfig{
-		Driver: database.Sqlite, Sqlite: &database.ConfigSqlite{
-			Path: config.Databases.Path,
-		}}
-	db, err := database.New(dbConfig)
+	db, err := appConfig.DB(config.Databases.Path)
 	if err != nil {
 		return nil, err
 	}
@@ -56,6 +52,10 @@ func newServer() (*echo.Echo, error) {
 	t := renderer.New(appConfig.RendererTemplate(
 		renderer.WithFuncs(translator.TemplateFuncs),
 	))
+
+	e.Use(echomiddleware.GzipWithConfig(echomiddleware.GzipConfig{
+		Level: 5,
+	}))
 
 	e.Static("/assets", "assets")
 	e.Validator = validator.New()

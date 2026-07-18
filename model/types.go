@@ -4,7 +4,7 @@ import "time"
 
 type User struct {
 	Id        int        `json:"id"`
-	Account   string     `json:"cccount"`
+	Account   string     `json:"account"`
 	Password  string     `json:"password"`
 	IsActive  bool       `gorm:"default:true"`
 	IsAdmin   bool       `gorm:"default:false"`
@@ -30,4 +30,10 @@ type Session struct {
 	UpdatedAt   time.Time `gorm:"column:updatedAt;type:datetime;not null"`
 	Status      int       `gorm:"column:status;type:integer;not null;default:0"` // 0: normal, 1: logout, 99: delete
 	CountUpdate int       `gorm:"column:countUpdate;type:integer;not null;default:0"`
+}
+
+type Bible struct {
+	ID     int    `gorm:"primaryKey;autoIncrement" json:"id"`
+	Locale string `gorm:"type:varchar(20);not null" json:"locale"`
+	Verses string `gorm:"type:text;not null" json:"verses"`
 }

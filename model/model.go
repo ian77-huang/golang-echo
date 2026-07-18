@@ -10,3 +10,7 @@ func (UserProfile) TableName() string {
 func (Session) TableName() string {
 	return "session"
 }
+
+func (Bible) TableName() string {
+	return "bible"
+}
