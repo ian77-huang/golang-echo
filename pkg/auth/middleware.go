@@ -1,9 +1,6 @@
 package auth
 
 import (
-	"net/http"
-	"slices"
-
 	"github.com/labstack/echo/v5"
 )
 
@@ -15,7 +12,6 @@ func (a *Auth[TUser, TSession]) Middleware() echo.MiddlewareFunc {
 			if err != nil {
 				return err
 			}
-
 			resolver := config.Resolver
 
 			token, err := a.getAccessToken(c)
@@ -53,25 +49,15 @@ func (a *Auth[TUser, TSession]) Middleware() echo.MiddlewareFunc {
 				a.deleteAccessToken(c)
 			}
 
-			isSignedIn := IsSignedIn[TUser](c)
-			route := config.Route
-			var routeCondition *RoutesPaths
-			if !isSignedIn {
-				routeCondition = route.AuthOnly
-
-			} else {
-				routeCondition = route.GuestOnly
-			}
-			if slices.Contains(routeCondition.Rules, c.Path()) {
-				return c.Redirect(http.StatusFound, routeCondition.RedirectURL)
-			}
-
-			validateRule := &ValidateRule[TUser]{IsSignedIn: isSignedIn, Path: c.Path(), User: nil}
+			validateRule := &ValidateRule[TUser]{IsSignedIn: IsSignedIn[TUser](c), User: nil}
 			if validateRule.IsSignedIn {
 				validateRule.User = GetUser[TUser](c)
 			}
 
-			route.SpecialValidate(c, validateRule)
+			handled, err := config.ValidateRoute(c, validateRule)
+			if !handled {
+				return err
+			}
 
 			c.Set(CONTEXT_KEY_AUTH, a)
 

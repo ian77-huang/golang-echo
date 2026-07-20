@@ -30,23 +30,10 @@ func (a *Auth[TUser, TSession]) IsAccountExist(account string) (bool, error) {
 	return exists, nil
 }
 func checkRoute[TUser any, TSession any](config *Config[TUser, TSession]) {
-	if config.Route == nil {
-		config.Route = &Route[TUser]{}
-	}
-	if config.Route.AuthOnly == nil {
-		config.Route.AuthOnly = &RoutesPaths{}
-	}
-	if config.Route.GuestOnly == nil {
-		config.Route.GuestOnly = &RoutesPaths{}
-	}
-	if config.Route.AuthOnly.Rules == nil {
-		config.Route.AuthOnly.Rules = []string{}
-	}
-	if config.Route.GuestOnly.Rules == nil {
-		config.Route.GuestOnly.Rules = []string{}
-	}
-	if config.Route.SpecialValidate == nil {
-		config.Route.SpecialValidate = func(c *echo.Context, validateRule *ValidateRule[TUser]) {}
+	if config.ValidateRoute == nil {
+		config.ValidateRoute = func(c *echo.Context, validateRule *ValidateRule[TUser]) (bool, error) {
+			return false, nil
+		}
 	}
 }
 func checkResolver[TUser any, TSession any](config *Config[TUser, TSession]) error {

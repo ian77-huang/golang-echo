@@ -25,18 +25,8 @@ type Session[T any] struct {
 	Data      *T
 }
 type ValidateRule[TUser any] struct {
-	Path       string
 	IsSignedIn bool
 	User       *User[TUser]
-}
-type RoutesPaths struct {
-	Rules       []string
-	RedirectURL string
-}
-type Route[TUser any] struct {
-	GuestOnly       *RoutesPaths
-	AuthOnly        *RoutesPaths
-	SpecialValidate func(c *echo.Context, validateRule *ValidateRule[TUser])
 }
 
 type Auth[TUser any, TSession any] struct {
@@ -49,7 +39,7 @@ type Config[TUser any, TSession any] struct {
 	SessionExpiresAt int
 	SessionRefreshAt int
 	Resolver         *Resolver[TUser, TSession]
-	Route            *Route[TUser]
+	ValidateRoute    func(c *echo.Context, validateRule *ValidateRule[TUser]) (bool, error)
 }
 
 type Resolver[TUser any, TSession any] struct {

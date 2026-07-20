@@ -15,12 +15,14 @@
         </div>
     </div>
 </header>
+{{if and .bible .bible.Verses }}
 <div class="card w-full bg-base-100 card-md shadow-sm mt-5">
     <div class="card-body">
         <h2 class="card-title">每日經文</h2>
         <p class="text-xl p-5">{{.bible.Verses}}</p>
     </div>
 </div>
+{{end}}
 <main class="w-full mx-auto py-12">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div class="md:col-span-2 space-y-8">

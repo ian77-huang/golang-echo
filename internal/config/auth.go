@@ -1,34 +1,17 @@
 package config
 
 import (
+	"net/http"
+	"slices"
+	"strings"
+
 	"github.com/ian77-huang/golang-echo/model"
 	appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
+	"github.com/labstack/echo/v5"
 )
 
 func Auth(p *AuthParameter) *appAuth.Auth[model.User, model.Session] {
 	config := Load()
-
-	guestOnly := &appAuth.RoutesPaths{
-		Rules: []string{
-			"/user/login",
-			"/user/register",
-		},
-		RedirectURL: "/",
-	}
-	AuthOnly := &appAuth.RoutesPaths{
-		Rules: []string{
-			"/user/profile",
-			"/user/reset-password",
-			"/api/user/profile",
-			"/api/user/reset-password",
-			"/api/user/profile/avatar",
-		},
-		RedirectURL: "/user/login",
-	}
-	route := &appAuth.Route[model.User]{
-		GuestOnly: guestOnly,
-		AuthOnly:  AuthOnly,
-	}
 	resolver := &appAuth.Resolver[model.User, model.Session]{
 		IsAccountExist:     p.UserService.IsAccountExist,
 		CreateUser:         p.UserService.CreateUser,
@@ -43,6 +26,39 @@ func Auth(p *AuthParameter) *appAuth.Auth[model.User, model.Session] {
 	return appAuth.New(&appAuth.Config[model.User, model.Session]{
 		SecretKey: config.SecretKey,
 		Resolver:  resolver,
-		Route:     route,
+		ValidateRoute: func(c *echo.Context, validateRule *appAuth.ValidateRule[model.User]) (bool, error) {
+			rule := validateRule
+			if rule.IsSignedIn {
+				paths := []string{
+					"/user/login",
+					"/user/register",
+				}
+				if slices.Contains(paths, c.Path()) {
+					return false, c.Redirect(http.StatusFound, "/user")
+				}
+			} else {
+				paths := []string{
+					"/user",
+					"/user/profile",
+					"/user/reset-password",
+					"/api/user/profile",
+					"/api/user/reset-password",
+					"/api/user/profile/avatar",
+				}
+				if slices.Contains(paths, c.Path()) {
+					return false, c.Redirect(http.StatusFound, "/user/login")
+				}
+			}
+			if rule.User != nil && rule.User.Data != nil {
+				user := rule.User.Data
+				if !user.IsAdmin {
+					if strings.HasPrefix(c.Path(), "/admin") {
+						return false, c.Redirect(http.StatusFound, "/")
+					}
+				}
+			}
+
+			return true, nil
+		},
 	})
 }
