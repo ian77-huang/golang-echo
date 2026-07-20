@@ -1,3 +1,16 @@
+[user]
+role_admin = "Administrator"
+role_member = "Regular Member"
+name_not_set = "Name not set"
+email_not_set = "Email not set"
+account_status = "Account Status:"
+status_enabled = "Active"
+status_disabled = "Disabled"
+profile_incomplete = "Profile incomplete"
+profile_hint = "Fill out your contact info and bio to complete your profile."
+profile_details = "Personal Profile"
+fill_profile_now = "Complete Profile Now"
+
 [user.title]
 other = "Users"
 

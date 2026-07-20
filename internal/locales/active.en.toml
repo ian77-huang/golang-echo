@@ -1,2 +1,11 @@
 [welcome]
 other = "Welcome, {{.Name}}"
+
+[index]
+core_features = "Core Features"
+auth_mechanism = "Authentication Mechanism"
+i18n_support = "Multilingual"
+db_migration = "Database Migrations"
+nested_template = "Nested HTML Templates"
+server_status = "Server Status"
+running = "Running"

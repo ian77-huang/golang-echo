@@ -1,10 +1,64 @@
 {{define "title"}} Home2 {{end}}
 
 {{define "content_index"}}
+<header class="bg-white py-6 border-b border-gray-200">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+        <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight sm:text-5xl">
+            Go - Echo v5 Web
+        </h1>
+        <div class="mt-6 flex justify-center space-x-4 text-sm text-gray-500">
+            <span>⚡ Go 1.26.1</span>
+            <span>•</span>
+            <span>📦 Echo v5</span>
+            <span>•</span>
+            <span>💾 SQLite + GORM</span>
+        </div>
+    </div>
+</header>
 <div class="card w-full bg-base-100 card-md shadow-sm mt-5">
     <div class="card-body">
         <h2 class="card-title">每日經文</h2>
-        <p class="text-2xl p-5">{{.bible.Verses}}</p>
+        <p class="text-xl p-5">{{.bible.Verses}}</p>
     </div>
 </div>
+<main class="w-full mx-auto py-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="md:col-span-2 space-y-8">
+            <section class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                    <span class="w-2 h-6 bg-indigo-600 rounded mr-2 inline-block"></span>
+                    {{t "index.core_features"}}
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <div class="font-semibold text-gray-900">🔒 {{t "index.auth_mechanism"}}</div>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <div class="font-semibold text-gray-900">🌐 {{t "index.i18n_support"}}</div>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <div class="font-semibold text-gray-900">🗃️ {{t "index.db_migration"}}</div>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <div class="font-semibold text-gray-900">📐 {{ t "index.nested_template"}}</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                    {{t "index.server_status"}}
+                </h3>
+                <div class="flex items-center space-x-2 text-sm text-gray-700">
+                    <span class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></span>
+                    <span>
+                        {{t "index.running"}}：
+                        <code class="bg-gray-100 px-1 rounded text-xs">http://localhost:1323</code>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 {{end}}

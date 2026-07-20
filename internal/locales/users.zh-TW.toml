@@ -1,3 +1,16 @@
+[user]
+role_admin = "管理員"
+role_member = "一般會員"
+name_not_set = "尚未設定姓名"
+email_not_set = "電子郵件未設定"
+account_status = "帳號狀態:"
+status_enabled = "已啟用"
+status_disabled = "停用"
+profile_incomplete = "尚未填寫個人詳細資料"
+profile_hint = "填寫完整的聯絡資訊與簡介，讓您的帳號更完整。"
+profile_details = "個人詳細資料"
+fill_profile_now = "立即填寫資料"
+
 [user.title]
 other = "使用者"
 

@@ -1,2 +1,11 @@
 [welcome]
 other = "歡迎，{{.Name}}"
+
+[index]
+core_features = "系統核心功能"
+auth_mechanism = "安全驗證機制"
+i18n_support = "多國語系"
+db_migration = "資料庫自動遷移"
+nested_template = "巢狀 HTML 模板"
+server_status = "伺服器狀態"
+running = "運行中"
