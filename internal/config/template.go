@@ -1,6 +1,8 @@
 package config
 
 import (
+	"strings"
+
 	"github.com/ian77-huang/golang-echo/internal/shared"
 	"github.com/ian77-huang/golang-echo/model"
 	appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
@@ -40,9 +42,16 @@ func RendererTemplate(options ...renderer.Option) *renderer.TemplateConfig {
 
 			isSignedIn := appAuth.IsSignedIn[model.User](c)
 
-			users := SetMenusUsers(MenuUsersRules{Path: realPath, IsSignedIn: isSignedIn, T: shared.TFactory(c)})
+			var menus []Menus
+			var users []MenusChilds
 
-			menus := SetMenus(MenuRules{users: users, T: shared.TFactory(c)})
+			if strings.HasPrefix(c.Path(), "/admin") {
+				menus = SetMenusAdmin(MenuRules{T: shared.TFactory(c)})
+			} else {
+				users := SetMenusUsers(MenuUsersRules{Path: realPath, IsSignedIn: isSignedIn, T: shared.TFactory(c)})
+
+				menus = SetMenus(MenuRules{users: users, T: shared.TFactory(c)})
+			}
 
 			return map[string]any{
 				"Lang":       lang,

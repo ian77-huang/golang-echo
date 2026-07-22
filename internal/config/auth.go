@@ -49,12 +49,13 @@ func Auth(p *AuthParameter) *appAuth.Auth[model.User, model.Session] {
 					return false, c.Redirect(http.StatusFound, "/user/login")
 				}
 			}
-			if rule.User != nil && rule.User.Data != nil {
-				user := rule.User.Data
-				if !user.IsAdmin {
-					if strings.HasPrefix(c.Path(), "/admin") {
-						return false, c.Redirect(http.StatusFound, "/")
-					}
+
+			isAdmin := rule != nil && rule.User != nil && rule.User.Data != nil && rule.User.Data.IsAdmin
+
+			if !isAdmin {
+				prefixes := []string{"/admin", "/api/admin"}
+				if slices.ContainsFunc(prefixes, func(p string) bool { return strings.HasPrefix(c.Path(), p) }) {
+					return false, c.Redirect(http.StatusFound, "/")
 				}
 			}
 

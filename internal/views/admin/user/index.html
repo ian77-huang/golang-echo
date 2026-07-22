@@ -1,0 +1,161 @@
+{{define "title"}} {{t "user.title"}}{{t "user.list"}} {{end}}
+
+{{define "admin_content"}}
+<script type="text/javascript">
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('AdminUserApp', (initialTitle) => ({
+            form: {
+                id: "",
+                account: "",
+                isActive: false,
+                isAdmin: false,
+                isLoading: false
+            },
+            toast: {
+                show: false,
+                message: '',
+                type: 'success'
+            },
+            showToast(msg, type = 'success') {
+                this.toast.message = msg;
+                this.toast.type = type;
+                this.toast.show = true;
+                setTimeout(() => this.toast.show = false, 3000);
+            },
+            async handlerEdit(item) {
+                this.form.id = `${item.id}`;
+                this.form.account = item.account;
+                this.form.isActive = item.isActive;
+                this.form.isAdmin = item.isAdmin;
+                my_modal_1.showModal()
+            },
+            async handerSubmit(event) {
+                this.loading = true;
+                try {
+                    const res = await fetch('/api/admin/user', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(this.form)
+                    });
+
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || '{{t "user_modify_failed"}}');
+
+                    this.showToast('{{t "user_modify_success"}}', 'success');
+
+                    window.location.reload();
+                } catch (err) {
+                    this.showToast(err.message, 'error');
+                } finally {
+                    this.loading = false;
+                }
+            }
+        }))
+    })
+</script>
+<div class="text-xl">{{t "user.title"}}{{t "user.list"}}</div>
+<div class="min-h-dvh" x-data="AdminUserApp">
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>{{t "user.auth.account"}}</th>
+                <th>{{t "user.role"}}</th>
+                <th>{{t "user.status"}}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{if .data}}
+            {{range $item := .data}}
+            <tr>
+                <th>{{$item.Id}}</th>
+                <td>{{$item.Account}}</td>
+                <td>
+                    {{if $item.IsAdmin}}
+                    <div class="badge badge-secondary">{{t "user.role_admin"}}</div>
+                    {{else}}
+                    <div class="badge badge-primary">{{t "user.role_member"}}</div>
+                    {{end}}
+                </td>
+                <td>
+                    {{if $item.IsActive}}
+                    <div class="badge badge-success">{{t "user.status_enabled"}}</div>
+                    {{else}}
+                    <div class="badge badge-warning">{{t "user.status_disabled"}}</div>
+                    {{end}}
+                </td>
+                <td>
+                    <button class="btn btn-warning" @click='handlerEdit({{toJson $item}})'>
+                        {{t "user.btn_edit"}}
+                    </button>
+                </td>
+            </tr>
+            {{end}}
+            {{end}}
+        </tbody>
+    </table>
+    <div class="text-center">
+        <div class="join">
+            {{range .pagination.Pages}}
+            {{if .IsCurrentPage}}
+            <a class="join-item btn">{{.Value}}</a>
+            {{else}}
+            <a class="join-item btn" href="/admin/user/{{.Value}}">{{.Value}}</a>
+            {{end}}
+            {{end}}
+        </div>
+    </div>
+    <dialog id="my_modal_1" class="modal">
+        <div class="modal-box">
+            <h3 class="text-lg font-bold">{{t "user.title" }}{{t "user.btn_edit"}}</h3>
+            <div class="divider"></div>
+            <form method="post" id="formLogin" @submit.prevent="handleSubmit">
+                <div class="mt-1 gap-2.5 grid">
+                    <div>{{t "user.auth.account"}}</div>
+                    <div><input class="input w-full" type="text" x-model="form.account" disabled /></div>
+                </div>
+                <div class="mt-2.5">
+                    <div>{{t "user.role"}}</div>
+                    <div class="grid grid-cols-2 mt-2.5">
+                        <div class="flex-1">
+                            <input type="radio" name="is_admin" class="radio radio-md" x-model.boolean="form.isAdmin"
+                                :value="true" /> {{t "user.role_admin"}}
+                        </div>
+                        <div class="flex-1">
+                            <input type="radio" name="is_admin" class="radio radio-md" x-model.boolean="form.isAdmin"
+                                :value="false" /> {{t "user.role_member"}}
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2.5">
+                    <div>{{t "user.status"}}</div>
+                    <div class="grid grid-cols-2 mt-2.5">
+                        <div class="flex-1">
+                            <input type="radio" name="is_active" class="radio radio-md" x-model.boolean="form.isActive"
+                                :value="true" />
+                            {{t "user.status_enabled"}}
+                        </div>
+                        <div class="flex-1">
+                            <input type="radio" name="is_active" class="radio radio-md" x-model.boolean="form.isActive"
+                                :value="false" />
+                            {{t "user.status_disabled"}}
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-action">
+                <button class="btn btn-primary" @click="handerSubmit">{{t "user.btn_modify"}}</button>
+                <form method="dialog">
+                    <button class="btn">{{t "user.btn_cancel"}}</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+    <div x-show="toast.show" x-transition class="toast toast-top toast-end z-50">
+        <div class="alert" :class="toast.type === 'success' ? 'alert-success' : 'alert-error'">
+            <span x-text="toast.message"></span>
+        </div>
+    </div>
+</div>
+{{end}}

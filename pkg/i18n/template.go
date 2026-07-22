@@ -1,6 +1,7 @@
 package i18n
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"strings"
@@ -23,6 +24,10 @@ func (i *I18n) TemplateFuncs(c *echo.Context, _ map[string]any) template.FuncMap
 		"kv": KV,
 		"t": func(messageID string, pairs ...any) string {
 			return t(localizer, messageID, pairs...)
+		},
+		"toJson": func(v interface{}) template.JS {
+			a, _ := json.Marshal(v)
+			return template.JS(a)
 		},
 	}
 }
@@ -48,6 +53,10 @@ func fallbackTemplateFuncs() template.FuncMap {
 		"kv": KV,
 		"t": func(messageID string, _ ...any) string {
 			return messageID
+		},
+		"toJson": func(v interface{}) template.JS {
+			a, _ := json.Marshal(v)
+			return template.JS(a)
 		},
 	}
 }

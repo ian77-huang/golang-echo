@@ -7,6 +7,13 @@ func SetMenus(rule MenuRules) []Menus {
 	}
 	return menus
 }
+func SetMenusAdmin(rule MenuRules) []Menus {
+	menus := []Menus{
+		{Name: rule.T("index.title"), Url: "/"},
+		{Name: rule.T("user.title"), Url: "/admin/user"},
+	}
+	return menus
+}
 func SetMenusUsers(rule MenuUsersRules) []MenusChilds {
 	users := []MenusChilds{}
 

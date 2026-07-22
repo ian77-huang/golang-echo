@@ -7,6 +7,9 @@ other = "Unauthorized"
 [error.validation_failed]
 other = "Validation failed"
 
+[error.ServerError]
+other = "Server Error({{.No}})"
+
 [error.is_required]
 other = "{{.Name}} is required."
 

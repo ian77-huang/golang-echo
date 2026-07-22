@@ -35,10 +35,10 @@ func NewFieldError(field, tag string, params ...interface{}) FieldError {
 	}
 }
 
-func ErrorInternalServerError(c *echo.Context, code string) error {
-	message := appi18n.T(c, "error."+code)
+func ErrorInternalServerError(c *echo.Context, code string, pairs ...any) error {
+	message := appi18n.T(c, "error."+code, pairs...)
 	if message == "error."+code {
-		message = appi18n.T(c, code)
+		message = appi18n.T(c, code, pairs...)
 	}
 	return echo.NewHTTPError(http.StatusInternalServerError, message)
 }

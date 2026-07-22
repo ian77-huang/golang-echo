@@ -7,6 +7,9 @@ other = "未授權"
 [error.validation_failed]
 other = "驗證失敗"
 
+[error.ServerError]
+other = "伺服器發生錯誤({{.No}})"
+
 [error.is_required]
 other = "{{.Name}} 是必填的"
 

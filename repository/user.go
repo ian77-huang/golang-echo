@@ -4,17 +4,24 @@ import (
 	"time"
 
 	"github.com/ian77-huang/golang-echo/model"
+	"gorm.io/gorm"
 )
 
-func (r *userRepository) IsAccountExist(account string) (bool, error) {
+func (r *userRepository) CountUser(query interface{}, args ...interface{}) (int, error) {
 	var count int64
 
-	err := r.db.Model(&model.User{}).Where("account = ?", account).Count(&count).Error
-	if err != nil {
-		return false, err
+	tx := r.db.Model(&model.User{})
+
+	if query != nil && query != "" {
+		tx = tx.Where(query, args...)
 	}
 
-	return count > 0, nil
+	err := tx.Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return int(count), nil
 }
 
 func (r *userRepository) CreateUser(account string, password string) (*model.User, error) {
@@ -36,11 +43,39 @@ func (r *userRepository) GetUser(id int) (*model.User, error) {
 	return user, nil
 }
 
+func (r *userRepository) GetPaginate(page, pageSize int, dest any) error {
+	offset := (page - 1) * pageSize
+
+	if err := r.db.Model(&model.User{}).Offset(offset).Limit(pageSize).Find(dest).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r *userRepository) UpdateUser(id int, updateData *model.User) (*model.User, error) {
 	if err := r.db.Model(&model.User{}).Where("id = ?", id).Updates(updateData).Error; err != nil {
 		return nil, err
 	}
 	return updateData, nil
+}
+func (r *userRepository) UpdateUserMap(id int, updateData map[string]interface{}) (*model.User, error) {
+	result := r.db.Model(&model.User{}).Where("id = ?", id).Updates(updateData)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return nil, gorm.ErrRecordNotFound
+	}
+
+	var updatedUser model.User
+	if err := r.db.First(&updatedUser, id).Error; err != nil {
+		return nil, err
+	}
+
+	return &updatedUser, nil
 }
 
 func (r *userRepository) GetUserByAccount(account string) (*model.User, error) {

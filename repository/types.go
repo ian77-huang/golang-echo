@@ -18,10 +18,12 @@ type bibleRepository struct {
 }
 
 type UserRepository interface {
-	IsAccountExist(account string) (bool, error)
+	CountUser(query interface{}, args ...interface{}) (int, error)
 	CreateUser(account string, password string) (*model.User, error)
 	GetUser(id int) (*model.User, error)
+	GetPaginate(page, pageSize int, dest any) error
 	UpdateUser(id int, updateData *model.User) (*model.User, error)
+	UpdateUserMap(id int, updateData map[string]interface{}) (*model.User, error)
 	GetUserByAccount(account string) (*model.User, error)
 	GetUserProfile(id int) (*model.UserProfile, error)
 	CreateUserProfile(insertData *model.UserProfile) (*model.UserProfile, error)

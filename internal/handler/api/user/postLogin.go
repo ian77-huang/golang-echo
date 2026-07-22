@@ -4,6 +4,7 @@ import (
 	"github.com/ian77-huang/golang-echo/internal/response"
 	"github.com/ian77-huang/golang-echo/internal/shared"
 	"github.com/ian77-huang/golang-echo/model"
+	"github.com/ian77-huang/golang-echo/service"
 
 	appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
 
@@ -28,6 +29,17 @@ func (h *ApiUserHandler) PostLogin(c *echo.Context) error {
 	ID, err := auth.ActionLogin(c, req.Account, req.Password)
 	if err != nil {
 		return response.ValidationErrorAuth(c, err)
+	}
+
+	userService := service.NewUserService(h.DB)
+	sessionService := service.NewSessionService(h.DB)
+	user, err := userService.GetUserByAccount(req.Account)
+	if err != nil {
+		return err
+	}
+	if !user.Data.IsActive {
+		sessionService.DeleteSession(user.ID)
+		return response.ErrorInternalServerError(c, "user.account_is_disabled")
 	}
 
 	return response.JsonOk(c, map[string]any{

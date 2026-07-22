@@ -11,7 +11,16 @@ import (
 )
 
 func (s *UserService) IsAccountExist(account string) (bool, error) {
-	return s.repo.IsAccountExist(account)
+	count, err := s.repo.CountUser("account = ?", account)
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
+}
+
+func (s *UserService) CountUserAll() (int, error) {
+	return s.repo.CountUser(nil, nil)
 }
 
 func (s *UserService) GetUser(id string) (*appAuth.User[model.User], error) {
@@ -29,6 +38,31 @@ func (s *UserService) GetUser(id string) (*appAuth.User[model.User], error) {
 
 	authUser := &appAuth.User[model.User]{ID: cast.IntToString(user.Id), Data: user, Password: user.Password}
 	return authUser, nil
+}
+
+func (s *UserService) GetPaginate(page, pageSize int) ([]UserOmitPassword, error) {
+	if page <= 0 {
+		page = 1
+	}
+
+	switch {
+	case pageSize > 100:
+		pageSize = 100
+	case pageSize <= 0:
+		pageSize = 10
+	}
+
+	var users []UserOmitPassword
+	err := s.repo.GetPaginate(page, pageSize, &users)
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
 }
 
 func (s *UserService) GetUserByAccount(account string) (*appAuth.User[model.User], error) {
@@ -58,6 +92,18 @@ func (s *UserService) UpdateUser(id string, updateData *model.User) (*appAuth.Us
 		return nil, err
 	}
 	user, err := s.repo.UpdateUser(userId, updateData)
+	if err != nil {
+		return nil, err
+	}
+	authUser := &appAuth.User[model.User]{ID: cast.IntToString(user.Id), Password: user.Password, Data: user}
+	return authUser, nil
+}
+func (s *UserService) UpdateUserMap(id string, updateData map[string]interface{}) (*appAuth.User[model.User], error) {
+	userId, err := cast.StringToInt(id, 0)
+	if err != nil {
+		return nil, err
+	}
+	user, err := s.repo.UpdateUserMap(userId, updateData)
 	if err != nil {
 		return nil, err
 	}

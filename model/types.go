@@ -6,8 +6,8 @@ type User struct {
 	Id        int        `json:"id"`
 	Account   string     `json:"account"`
 	Password  string     `json:"password"`
-	IsActive  bool       `gorm:"default:true"`
-	IsAdmin   bool       `gorm:"default:false"`
+	IsActive  bool       `json:"isActive" gorm:"default:true"`
+	IsAdmin   bool       `json:"isAdmin" gorm:"default:false"`
 	CreatedAt *time.Time `json:"created_at"`
 	UpdatedAt *time.Time `json:"updated_at"`
 }

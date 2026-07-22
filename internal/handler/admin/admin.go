@@ -1,5 +1,9 @@
 package admin
 
+import (
+	adminUser "github.com/ian77-huang/golang-echo/internal/handler/admin/user"
+)
+
 func New(ap *AdminParameter) AdminHandler {
 	h := &adminHandler{DB: ap.DB}
 
@@ -7,7 +11,10 @@ func New(ap *AdminParameter) AdminHandler {
 
 	admin.GET("", h.GetIndex)
 
-	// user.New(&user.UserParameter{DB: ap.DB, Echo: ap.Echo})
+	adminUser.New(&adminUser.AdminUserParameter{
+		DB:        ap.DB,
+		EchoGroup: admin,
+	})
 
 	return h
 }
