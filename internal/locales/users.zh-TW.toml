@@ -1,4 +1,5 @@
 [user]
+admin_panel_page= "管理後台頁面"
 role_admin = "管理員"
 role_member = "一般會員"
 name_not_set = "尚未設定姓名"

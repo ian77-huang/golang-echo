@@ -29,10 +29,16 @@ func SetMenusUsers(rule MenuUsersRules) []MenusChilds {
 	case "/user/profile":
 		if rule.IsSignedIn {
 			users = append(users, MenusChilds{Name: rule.T("user.reset.password.title"), Url: "/user/reset-password"})
+			if rule.IsAdmin {
+				users = append(users, MenusChilds{Name: rule.T("user.admin_panel_page"), Url: "/admin"})
+			}
 		}
 	case "/user/reset-password":
 		if rule.IsSignedIn {
 			users = append(users, MenusChilds{Name: rule.T("user.profile.title"), Url: "/user/profile"})
+			if rule.IsAdmin {
+				users = append(users, MenusChilds{Name: rule.T("user.admin_panel_page"), Url: "/admin"})
+			}
 		}
 	default:
 		if !rule.IsSignedIn {
@@ -41,6 +47,9 @@ func SetMenusUsers(rule MenuUsersRules) []MenusChilds {
 		} else {
 			users = append(users, MenusChilds{Name: rule.T("user.profile.title"), Url: "/user/profile"})
 			users = append(users, MenusChilds{Name: rule.T("user.reset.password.title"), Url: "/user/reset-password"})
+			if rule.IsAdmin {
+				users = append(users, MenusChilds{Name: rule.T("user.admin_panel_page"), Url: "/admin"})
+			}
 		}
 	}
 	return users

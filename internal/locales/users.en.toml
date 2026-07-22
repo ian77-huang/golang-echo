@@ -1,4 +1,5 @@
 [user]
+admin_panel_page= "Admin panel page"
 role_admin = "Administrator"
 role_member = "Regular Member"
 name_not_set = "Name not set"

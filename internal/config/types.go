@@ -20,6 +20,7 @@ type MenuRules struct {
 type MenuUsersRules struct {
 	Path       string
 	IsSignedIn bool
+	IsAdmin    bool
 	T          func(messageID string, pairs ...any) string
 }
 

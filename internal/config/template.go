@@ -40,7 +40,13 @@ func RendererTemplate(options ...renderer.Option) *renderer.TemplateConfig {
 			realPath := c.Request().URL.Path
 			lang, _ := c.Get("lang").(string)
 
+			user := appAuth.GetUser[model.User](c)
+
 			isSignedIn := appAuth.IsSignedIn[model.User](c)
+			isAdmin := false
+			if user != nil && user.Data != nil {
+				isAdmin = user.Data.IsAdmin
+			}
 
 			var menus []Menus
 			var users []MenusChilds
@@ -48,7 +54,7 @@ func RendererTemplate(options ...renderer.Option) *renderer.TemplateConfig {
 			if strings.HasPrefix(c.Path(), "/admin") {
 				menus = SetMenusAdmin(MenuRules{T: shared.TFactory(c)})
 			} else {
-				users := SetMenusUsers(MenuUsersRules{Path: realPath, IsSignedIn: isSignedIn, T: shared.TFactory(c)})
+				users := SetMenusUsers(MenuUsersRules{Path: realPath, IsSignedIn: isSignedIn, IsAdmin: isAdmin, T: shared.TFactory(c)})
 
 				menus = SetMenus(MenuRules{users: users, T: shared.TFactory(c)})
 			}
