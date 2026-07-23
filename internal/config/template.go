@@ -54,7 +54,7 @@ func RendererTemplate(options ...renderer.Option) *renderer.TemplateConfig {
 			if strings.HasPrefix(c.Path(), "/admin") {
 				menus = SetMenusAdmin(MenuRules{T: shared.TFactory(c)})
 			} else {
-				users := SetMenusUsers(MenuUsersRules{Path: realPath, IsSignedIn: isSignedIn, IsAdmin: isAdmin, T: shared.TFactory(c)})
+				users = SetMenusUsers(MenuUsersRules{Path: realPath, IsSignedIn: isSignedIn, IsAdmin: isAdmin, T: shared.TFactory(c)})
 
 				menus = SetMenus(MenuRules{users: users, T: shared.TFactory(c)})
 			}

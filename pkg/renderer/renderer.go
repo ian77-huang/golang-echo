@@ -22,14 +22,31 @@ func (t *TemplateRenderer) Render(c *echo.Context, w io.Writer, name string, dat
 		return t.executeTemplate(c, w, tmpl, data)
 	}
 
+	// 先拿到寫鎖，確保同時只有 1 個連線能進行建構與寫入
+	t.mu.Lock()
+	// 雙重檢查：可能前一個拿到 Lock 的連線已經建構好了
+	if tmpl, ok := t.cache[name]; ok {
+		t.mu.Unlock()
+		return t.executeTemplate(c, w, tmpl, data)
+	}
+
 	tmpl, err = t.buildTemplate(name)
 	if err != nil {
+		t.mu.Unlock()
 		return err
 	}
 
-	t.mu.Lock()
 	t.cache[name] = tmpl
 	t.mu.Unlock()
+
+	// tmpl, err = t.buildTemplate(name)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// t.mu.Lock()
+	// t.cache[name] = tmpl
+	// t.mu.Unlock()
 
 	return t.executeTemplate(c, w, tmpl, data)
 }
