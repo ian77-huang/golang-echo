@@ -7,6 +7,7 @@ import (
 
 	"github.com/ian77-huang/golang-echo/pkg/database"
 	"github.com/ian77-huang/golang-echo/pkg/renderer"
+	"github.com/ian77-huang/golang-echo/pkg/store"
 	"github.com/ian77-huang/golang-echo/pkg/validator"
 	"github.com/ian77-huang/golang-echo/service"
 
@@ -48,6 +49,8 @@ func newServer() (*echo.Echo, error) {
 		SessionService: service.NewSessionService(db),
 	})
 
+	storeServer := appConfig.Store(config.RedisURL)
+
 	e := router.New(&router.RouterParameter{DB: db})
 	t := renderer.New(appConfig.RendererTemplate(
 		renderer.WithFuncs(translator.TemplateFuncs),
@@ -65,23 +68,9 @@ func newServer() (*echo.Echo, error) {
 	e.Use(echomiddleware.Recover())
 	e.Use(translator.Middleware())
 	e.Use(database.Middleware(db))
+	e.Use(store.Middleware(storeServer))
 
 	e.Use(auth.Middleware())
 
 	return e, nil
 }
-
-// .
-// ├── cmd/
-// │   └── api/
-// │       └── main.go
-// ├── internal/
-// │   ├── config/
-// │   ├── handler/
-// │   ├── service/
-// │   ├── repository/
-// │   └── model/
-// ├── pkg/
-// ├── migrations/
-// ├── go.mod
-// └── .env

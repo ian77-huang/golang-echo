@@ -24,6 +24,7 @@ func Load() Config {
 	return Config{
 		SecretKey:  os.Getenv("SECRET_KEY"),
 		AssetsPath: os.Getenv("ASSETS_PATH"),
+		RedisURL:   os.Getenv("REDIS_URL"),
 		Databases: ConfigDatabases{
 			Path: os.Getenv("DATABASE_PATH"),
 		},

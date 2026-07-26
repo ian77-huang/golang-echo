@@ -37,6 +37,7 @@ type Config struct {
 	Databases                ConfigDatabases
 	Users                    ConfigUsers
 	AssetsPath               string
+	RedisURL                 string
 	MaxSizeUserProfileAvatar int
 }
 
