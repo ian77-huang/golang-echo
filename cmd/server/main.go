@@ -32,7 +32,7 @@ func main() {
 		port = ":1323"
 	}
 
-	e, err := newServer()
+	e, err := newServer(name)
 	if err != nil {
 		panic(err)
 	}
@@ -42,7 +42,7 @@ func main() {
 	}
 }
 
-func newServer() (*echo.Echo, error) {
+func newServer(serverName string) (*echo.Echo, error) {
 	config := appConfig.Load()
 
 	translator, err := appConfig.I18n()
@@ -75,6 +75,7 @@ func newServer() (*echo.Echo, error) {
 	e.Validator = validator.New()
 	e.Renderer = t
 
+	e.Use(appConfig.Middleware(&appConfig.ConfigMiddleware{ServerName: serverName}))
 	e.Use(echomiddleware.RequestLogger())
 	e.Use(echomiddleware.Recover())
 	e.Use(translator.Middleware())

@@ -1,0 +1,15 @@
+.git
+.gitignore
+.air.toml
+.vscode
+.gocache
+tmp
+coverage.out
+coverage.html
+*.md
+.DS_Store
+.env
+.env.example
+.env.docker
+docker-compose.yml
+nginx/

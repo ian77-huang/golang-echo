@@ -42,6 +42,7 @@ tmp/
 .env
 .env.*
 !.env.example
+!.env.docker
 
 # Databases
 databases/

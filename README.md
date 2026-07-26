@@ -93,6 +93,62 @@ go install github.com/air-verse/air@latest
 air
 ```
 
+## Docker
+
+### 架構
+
+```text
+Client → Nginx (:80) → upstream (least_conn)
+                          ├─ app1 (:1323)
+                          ├─ app2 (:1323)
+                          └─ app3 (:1323)
+
+Redis (:6379)    ← 快取 / PubSub
+SQLite (volume)  ← 3 個 app 共用
+```
+
+### 啟動
+
+```bash
+docker compose up --build -d
+```
+
+服務位址：`http://localhost:80`
+
+### 停止
+
+```bash
+docker compose down
+```
+
+### 重新建置
+
+更新程式碼後，重新 build 並重啟：
+
+```bash
+docker compose up --build -d
+```
+
+### 查看 logs
+
+```bash
+docker compose logs -f
+```
+
+### 效能測試（ab）
+
+以 ab 實測 Docker 架構（Nginx + 3 Go Echo instances）：
+
+| 並發數 | RPS   | 平均回應 | 99th    | Failed |
+| ------ | ----- | -------- | ------- | ------ |
+| 10     | 2,971 | 3.3ms    | 13ms    | 0      |
+| 50     | 3,868 | 12.9ms   | 31ms    | 0      |
+| 100    | 4,325 | 23.1ms   | 61ms    | 0      |
+| 200    | 4,666 | 42.9ms   | 112ms   | 0      |
+| 500    | 3,410 | 146.6ms  | 1,005ms | 0      |
+
+峰值約 **4,600 RPS**（並發 200）。
+
 ## 路由與 API
 
 | 方法   | 路徑                 | 說明                     |
@@ -143,4 +199,4 @@ go test ./...
 
   再執行遷移指令。
 
-- 新增前端頁面時，請同步建立模板、handler 與路由；新增 API 時，請建立 handler 並在 `internal/router/routing/api.go` 註冊。
+- 新增前端頁面時，請同步建立模板、handler 與路由、新增 API 時，請建立 handler 並在 `internal/router/routing/routing.go` 註冊。

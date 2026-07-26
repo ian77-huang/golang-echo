@@ -25,7 +25,7 @@ func TestNewServerBuildsRunnableApplication(t *testing.T) {
 	t.Setenv("DATABASE_PATH", filepath.Join(t.TempDir(), "app.db"))
 	t.Setenv("USER_ACCOUNT_MIN_LENGTH", "6")
 	t.Setenv("USER_PASSWORD_MIN_LENGTH", "8")
-	e, err := newServer()
+	e, err := newServer("")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -53,7 +53,7 @@ func TestNewServerRedirectsGuestFromProtectedAPIs(t *testing.T) {
 	t.Setenv("DATABASE_PATH", filepath.Join(t.TempDir(), "app.db"))
 	t.Setenv("USER_ACCOUNT_MIN_LENGTH", "6")
 	t.Setenv("USER_PASSWORD_MIN_LENGTH", "8")
-	e, err := newServer()
+	e, err := newServer("")
 	if err != nil {
 		t.Fatal(err)
 	}

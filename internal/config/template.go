@@ -39,6 +39,7 @@ func RendererTemplate(options ...renderer.Option) *renderer.TemplateConfig {
 		SharedData: func(c *echo.Context, layoutNames []string) map[string]any {
 			realPath := c.Request().URL.Path
 			lang, _ := c.Get("lang").(string)
+			serverName := LoadServerName(c)
 
 			user := appAuth.GetUser[model.User](c)
 
@@ -60,6 +61,7 @@ func RendererTemplate(options ...renderer.Option) *renderer.TemplateConfig {
 			}
 
 			return map[string]any{
+				"ServerName": serverName,
 				"Lang":       lang,
 				"Users":      users,
 				"Menus":      menus,

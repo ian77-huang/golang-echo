@@ -6,7 +6,7 @@ import (
 )
 
 type FrontendParameter struct {
-	DB   *gorm.DB
+	DB *gorm.DB
 	Echo *echo.Echo
 }
 type FrontendHandler struct {

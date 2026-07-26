@@ -25,7 +25,7 @@ import (
 
 func NewSqlite(cfg *ConfigSqlite) (*gorm.DB, error) {
 	if cfg.maxOpenConns == 0 {
-		cfg.maxOpenConns = 1
+		cfg.maxOpenConns = 10
 	}
 	if cfg.maxIdleConns == 0 {
 		cfg.maxIdleConns = 1
