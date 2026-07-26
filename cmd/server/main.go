@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	appConfig "github.com/ian77-huang/golang-echo/internal/config"
 
 	"github.com/ian77-huang/golang-echo/internal/router"
@@ -21,13 +23,22 @@ type Session struct {
 }
 
 func main() {
+	name := os.Args[1]
+	if name == "" {
+		name = "echo"
+	}
+	port := os.Args[2]
+	if port == "" {
+		port = ":1323"
+	}
+
 	e, err := newServer()
 	if err != nil {
 		panic(err)
 	}
 
-	if err := e.Start(":1323"); err != nil {
-		e.Logger.Error("failed to start server", "error", err)
+	if err := e.Start(port); err != nil {
+		e.Logger.Error("failed to start server", "name", name, "error", err)
 	}
 }
 
