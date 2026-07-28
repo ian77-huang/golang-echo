@@ -30,7 +30,6 @@ func (f *FrontendHandler) GetIndex(c *echo.Context) error {
 
 	if bible == nil {
 		g.Go(func() error {
-
 			bibleService := service.NewBibleService(f.DB)
 			bible, err = bibleService.GetBibleByDate()
 			if err != nil {

@@ -81,6 +81,12 @@ func Auth(p *AuthParameter, ss *store.StoreServer) *appAuth.Auth[model.User, mod
 				if err != nil {
 					return nil, err
 				}
+
+				go func() {
+					if ss != nil {
+						ss.Set(CACHE_KEY_SESSION_ID+id, sess, time.Until(sess.Data.ExpiresAt))
+					}
+				}()
 			}
 
 			return sess, nil
