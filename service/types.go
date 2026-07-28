@@ -3,6 +3,8 @@ package service
 import (
 	"time"
 
+	"golang.org/x/sync/singleflight"
+
 	"github.com/ian77-huang/golang-echo/model"
 	appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
 	"github.com/ian77-huang/golang-echo/repository"
@@ -41,6 +43,7 @@ type BibleService interface {
 }
 type bibleService struct {
 	repo repository.BibleRepository
+	g    singleflight.Group
 }
 
 type UserOmitPassword struct {
