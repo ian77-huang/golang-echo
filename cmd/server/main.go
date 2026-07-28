@@ -55,12 +55,12 @@ func newServer(serverName string) (*echo.Echo, error) {
 		return nil, err
 	}
 
+	storeServer := appConfig.Store(config.RedisURL)
+
 	auth := appConfig.Auth(&appConfig.AuthParameter{
 		UserService:    service.NewUserService(db),
 		SessionService: service.NewSessionService(db),
-	})
-
-	storeServer := appConfig.Store(config.RedisURL)
+	}, storeServer)
 
 	e := router.New(&router.RouterParameter{DB: db})
 	t := renderer.New(appConfig.RendererTemplate(

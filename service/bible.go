@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func (s *BibleService) GetBible(id int) (*model.Bible, error) {
+func (s *bibleService) GetBible(id int) (*model.Bible, error) {
 	bible, err := s.repo.GetBible(id)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
@@ -21,7 +21,7 @@ func (s *BibleService) GetBible(id int) (*model.Bible, error) {
 	return bible, nil
 }
 
-func (s *BibleService) GetBibleByDate() (*model.Bible, error) {
+func (s *bibleService) GetBibleByDate() (*model.Bible, error) {
 	now := time.Now()
 	dateStr := now.Format("2006-01-02")
 

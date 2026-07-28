@@ -30,6 +30,10 @@ func (a *Auth[TUser, TSession]) createSession(c *echo.Context, userId string) (b
 
 	sessionId := a.GenerateID(sessionToken)
 
+	if _, err := resolver.DeleteSession(userId); err != nil {
+		return false, err
+	}
+
 	if resolver.CreateSession == nil {
 		a.deleteAccessToken(c)
 		return false, NewError("error.auth.FailedToWriteSession", "session storage is not configured")

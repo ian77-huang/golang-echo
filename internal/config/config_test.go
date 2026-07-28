@@ -66,10 +66,11 @@ func TestAuthBuildsWorkingResolvers(t *testing.T) {
 	if err := db.AutoMigrate(&model.User{}, &model.Session{}); err != nil {
 		t.Fatal(err)
 	}
+
 	auth := Auth(&AuthParameter{
 		UserService:    service.NewUserService(db),
 		SessionService: service.NewSessionService(db),
-	})
+	}, nil)
 	e := echo.New()
 	rec := httptest.NewRecorder()
 	id, err := auth.ActionRegister(e.NewContext(httptest.NewRequest(http.MethodPost, "/", nil), rec), "config-user", "password")
@@ -109,7 +110,7 @@ func TestAuthResolversPropagateDatabaseErrors(t *testing.T) {
 	auth := Auth(&AuthParameter{
 		UserService:    service.NewUserService(db),
 		SessionService: service.NewSessionService(db),
-	})
+	}, nil)
 	sqlDB, err := db.DB()
 	if err != nil {
 		t.Fatal(err)

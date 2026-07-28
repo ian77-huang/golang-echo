@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func (s *UserService) IsAccountExist(account string) (bool, error) {
+func (s *userService) IsAccountExist(account string) (bool, error) {
 	count, err := s.repo.CountUser("account = ?", account)
 	if err != nil {
 		return false, err
@@ -19,11 +19,11 @@ func (s *UserService) IsAccountExist(account string) (bool, error) {
 	return count > 0, nil
 }
 
-func (s *UserService) CountUserAll() (int, error) {
+func (s *userService) CountUserAll() (int, error) {
 	return s.repo.CountUser(nil, nil)
 }
 
-func (s *UserService) GetUser(id string) (*appAuth.User[model.User], error) {
+func (s *userService) GetUser(id string) (*appAuth.User[model.User], error) {
 	userId, err := cast.StringToInt(id, 0)
 	if err != nil {
 		return nil, err
@@ -40,7 +40,7 @@ func (s *UserService) GetUser(id string) (*appAuth.User[model.User], error) {
 	return authUser, nil
 }
 
-func (s *UserService) GetPaginate(page, pageSize int) ([]UserOmitPassword, error) {
+func (s *userService) GetPaginate(page, pageSize int) ([]UserOmitPassword, error) {
 	if page <= 0 {
 		page = 1
 	}
@@ -65,7 +65,7 @@ func (s *UserService) GetPaginate(page, pageSize int) ([]UserOmitPassword, error
 	return users, nil
 }
 
-func (s *UserService) GetUserByAccount(account string) (*appAuth.User[model.User], error) {
+func (s *userService) GetUserByAccount(account string) (*appAuth.User[model.User], error) {
 	user, err := s.repo.GetUserByAccount(account)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
@@ -78,7 +78,7 @@ func (s *UserService) GetUserByAccount(account string) (*appAuth.User[model.User
 	return authUser, nil
 }
 
-func (s *UserService) CreateUser(account, password string) (*appAuth.User[model.User], error) {
+func (s *userService) CreateUser(account, password string) (*appAuth.User[model.User], error) {
 	user, err := s.repo.CreateUser(account, password)
 	if err != nil {
 		return nil, err
@@ -86,7 +86,7 @@ func (s *UserService) CreateUser(account, password string) (*appAuth.User[model.
 	authUser := &appAuth.User[model.User]{ID: cast.IntToString(user.Id), Password: user.Password, Data: user}
 	return authUser, nil
 }
-func (s *UserService) UpdateUser(id string, updateData *model.User) (*appAuth.User[model.User], error) {
+func (s *userService) UpdateUser(id string, updateData *model.User) (*appAuth.User[model.User], error) {
 	userId, err := cast.StringToInt(id, 0)
 	if err != nil {
 		return nil, err
@@ -98,7 +98,7 @@ func (s *UserService) UpdateUser(id string, updateData *model.User) (*appAuth.Us
 	authUser := &appAuth.User[model.User]{ID: cast.IntToString(user.Id), Password: user.Password, Data: user}
 	return authUser, nil
 }
-func (s *UserService) UpdateUserMap(id string, updateData map[string]interface{}) (*appAuth.User[model.User], error) {
+func (s *userService) UpdateUserMap(id string, updateData map[string]interface{}) (*appAuth.User[model.User], error) {
 	userId, err := cast.StringToInt(id, 0)
 	if err != nil {
 		return nil, err
@@ -110,7 +110,7 @@ func (s *UserService) UpdateUserMap(id string, updateData map[string]interface{}
 	authUser := &appAuth.User[model.User]{ID: cast.IntToString(user.Id), Password: user.Password, Data: user}
 	return authUser, nil
 }
-func (s *UserService) UpdateUserPassword(id string, passwordHash string) (*appAuth.User[model.User], error) {
+func (s *userService) UpdateUserPassword(id string, passwordHash string) (*appAuth.User[model.User], error) {
 	updateData := &model.User{Password: passwordHash}
 	user, err := s.UpdateUser(id, updateData)
 	if err != nil {
@@ -120,7 +120,7 @@ func (s *UserService) UpdateUserPassword(id string, passwordHash string) (*appAu
 	return user, nil
 }
 
-func (s *UserService) GetUserProfile(id string) (*model.UserProfile, error) {
+func (s *userService) GetUserProfile(id string) (*model.UserProfile, error) {
 	userId, err := cast.StringToInt(id, 0)
 	if err != nil {
 		return nil, err
@@ -135,7 +135,7 @@ func (s *UserService) GetUserProfile(id string) (*model.UserProfile, error) {
 	return profile, nil
 }
 
-func (s *UserService) UpdateUserProfile(id string, updateData *model.UserProfile) (*model.UserProfile, error) {
+func (s *userService) UpdateUserProfile(id string, updateData *model.UserProfile) (*model.UserProfile, error) {
 	userId, err := cast.StringToInt(id, 0)
 	if err != nil {
 		return nil, err

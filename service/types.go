@@ -3,18 +3,43 @@ package service
 import (
 	"time"
 
+	"github.com/ian77-huang/golang-echo/model"
+	appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
 	"github.com/ian77-huang/golang-echo/repository"
 )
 
-type UserService struct {
+type UserService interface {
+	IsAccountExist(account string) (bool, error)
+	CountUserAll() (int, error)
+	GetUser(id string) (*appAuth.User[model.User], error)
+	GetPaginate(page, pageSize int) ([]UserOmitPassword, error)
+	GetUserByAccount(account string) (*appAuth.User[model.User], error)
+	CreateUser(account, password string) (*appAuth.User[model.User], error)
+	UpdateUser(id string, updateData *model.User) (*appAuth.User[model.User], error)
+	UpdateUserMap(id string, updateData map[string]interface{}) (*appAuth.User[model.User], error)
+	UpdateUserPassword(id string, passwordHash string) (*appAuth.User[model.User], error)
+	GetUserProfile(id string) (*model.UserProfile, error)
+	UpdateUserProfile(id string, updateData *model.UserProfile) (*model.UserProfile, error)
+}
+type userService struct {
 	repo repository.UserRepository
 }
 
-type SessionService struct {
+type SessionService interface {
+	CreateSession(id, userId string, expiresAt time.Time) (*appAuth.Session[model.Session], error)
+	UpdateSession(id string, expiresAt time.Time, sess *model.Session) (*appAuth.Session[model.Session], error)
+	DeleteSession(id string) (*appAuth.Session[model.Session], error)
+	GetSession(id string) (*appAuth.Session[model.Session], error)
+}
+type sessionService struct {
 	repo repository.SessionRepository
 }
 
-type BibleService struct {
+type BibleService interface {
+	GetBible(id int) (*model.Bible, error)
+	GetBibleByDate() (*model.Bible, error)
+}
+type bibleService struct {
 	repo repository.BibleRepository
 }
 

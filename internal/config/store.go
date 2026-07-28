@@ -20,7 +20,7 @@ func Store(redisURL string) *store.StoreServer {
 	})
 
 	server.NewRedisPubSub(func(msg *redis.Message) {
-
+		server.Delete(msg.Payload)
 	})
 
 	return server

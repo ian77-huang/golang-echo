@@ -4,13 +4,17 @@ import (
 	"net/http"
 	"slices"
 	"strings"
+	"time"
 
 	"github.com/ian77-huang/golang-echo/model"
 	appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
+	"github.com/ian77-huang/golang-echo/pkg/store"
 	"github.com/labstack/echo/v5"
 )
 
-func Auth(p *AuthParameter) *appAuth.Auth[model.User, model.Session] {
+const CACHE_KEY_SESSION_ID = "session:"
+
+func Auth(p *AuthParameter, ss *store.StoreServer) *appAuth.Auth[model.User, model.Session] {
 	config := Load()
 	resolver := &appAuth.Resolver[model.User, model.Session]{
 		IsAccountExist:     p.UserService.IsAccountExist,
@@ -18,10 +22,69 @@ func Auth(p *AuthParameter) *appAuth.Auth[model.User, model.Session] {
 		GetUser:            p.UserService.GetUser,
 		GetUserByAccount:   p.UserService.GetUserByAccount,
 		UpdateUserPassword: p.UserService.UpdateUserPassword,
-		CreateSession:      p.SessionService.CreateSession,
-		UpdateSession:      p.SessionService.UpdateSession,
-		DeleteSession:      p.SessionService.DeleteSession,
-		GetSession:         p.SessionService.GetSession,
+		CreateSession: func(id, userId string, expiresAt time.Time) (*appAuth.Session[model.Session], error) {
+			sess, err := p.SessionService.CreateSession(id, userId, expiresAt)
+			if err != nil {
+				return nil, err
+			}
+
+			if ss != nil {
+				ss.Set(CACHE_KEY_SESSION_ID+id, sess, time.Until(sess.Data.ExpiresAt))
+			}
+
+			return sess, nil
+		},
+		UpdateSession: func(id string, expiresAt time.Time, sessData *model.Session) (*appAuth.Session[model.Session], error) {
+			var sess *appAuth.Session[model.Session]
+			var err error
+
+			if sess, err = p.SessionService.UpdateSession(id, expiresAt, sessData); err != nil {
+				return nil, err
+			}
+
+			if ss != nil {
+				if err = ss.Delete(CACHE_KEY_SESSION_ID + id); err != nil {
+					return nil, err
+				}
+			}
+
+			return sess, nil
+		},
+		DeleteSession: func(id string) (*appAuth.Session[model.Session], error) {
+			var sess *appAuth.Session[model.Session]
+			var err error
+
+			if sess, err = p.SessionService.DeleteSession(id); err != nil {
+				return nil, err
+			}
+
+			if ss != nil {
+				if err := ss.Delete(CACHE_KEY_SESSION_ID + id); err != nil {
+					return nil, err
+				}
+			}
+
+			return sess, nil
+		},
+		GetSession: func(id string) (*appAuth.Session[model.Session], error) {
+			var sess *appAuth.Session[model.Session]
+			var err error
+
+			if ss != nil {
+				if err = ss.GetByte(CACHE_KEY_SESSION_ID+id, &sess); err != nil {
+					return nil, err
+				}
+			}
+
+			if sess == nil {
+				sess, err = p.SessionService.GetSession(id)
+				if err != nil {
+					return nil, err
+				}
+			}
+
+			return sess, nil
+		},
 	}
 	return appAuth.New(&appAuth.Config[model.User, model.Session]{
 		SecretKey: config.SecretKey,

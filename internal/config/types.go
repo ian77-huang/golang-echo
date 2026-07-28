@@ -42,6 +42,6 @@ type Config struct {
 }
 
 type AuthParameter struct {
-	UserService    *service.UserService
-	SessionService *service.SessionService
+	UserService    service.UserService
+	SessionService service.SessionService
 }

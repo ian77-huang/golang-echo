@@ -5,14 +5,14 @@ import (
 	"gorm.io/gorm"
 )
 
-func NewUserService(db *gorm.DB) *UserService {
-	return &UserService{repo: repository.NewUserRepository(db)}
+func NewUserService(db *gorm.DB) UserService {
+	return &userService{repo: repository.NewUserRepository(db)}
 }
 
-func NewSessionService(db *gorm.DB) *SessionService {
-	return &SessionService{repo: repository.NewSessionRepository(db)}
+func NewSessionService(db *gorm.DB) SessionService {
+	return &sessionService{repo: repository.NewSessionRepository(db)}
 }
 
-func NewBibleService(db *gorm.DB) *BibleService {
-	return &BibleService{repo: repository.NewBibleRepository(db)}
+func NewBibleService(db *gorm.DB) BibleService {
+	return &bibleService{repo: repository.NewBibleRepository(db)}
 }
