@@ -1,12 +1,14 @@
 package frontend
 
 import (
+	"context"
 	"time"
+
+	"golang.org/x/sync/errgroup"
 
 	"github.com/ian77-huang/golang-echo/internal/response"
 	"github.com/ian77-huang/golang-echo/model"
 	"github.com/ian77-huang/golang-echo/pkg/store"
-	storeRedis "github.com/ian77-huang/golang-echo/pkg/store/redis"
 	"github.com/ian77-huang/golang-echo/service"
 	"github.com/labstack/echo/v5"
 )
@@ -24,34 +26,35 @@ func (f *FrontendHandler) GetIndex(c *echo.Context) error {
 		return err
 	}
 
-	needUpdateData := []store.RedisMSET{}
+	g, _ := errgroup.WithContext(context.Background())
 
 	if bible == nil {
-		bibleService := service.NewBibleService(f.DB)
-		bible, err = bibleService.GetBibleByDate()
-		if err != nil {
-			return response.ErrorInternalServerError(c, "invalid_request")
-		}
+		g.Go(func() error {
 
-		now := time.Now()
+			bibleService := service.NewBibleService(f.DB)
+			bible, err = bibleService.GetBibleByDate()
+			if err != nil {
+				return err
+			}
 
-		endOfDay := time.Date(
-			now.Year(), now.Month(), now.Day(),
-			23, 59, 59, 999999999,
-			now.Location(),
-		)
+			now := time.Now()
 
-		duration := endOfDay.Sub(now)
+			endOfDay := time.Date(
+				now.Year(), now.Month(), now.Day(),
+				23, 59, 59, 999999999,
+				now.Location(),
+			)
 
-		needUpdateData = append(needUpdateData, storeRedis.RedisMSET{
-			Key: CACHE_KEY_BIBLE, Value: bible, Expiration: duration,
+			duration := endOfDay.Sub(now)
+
+			storeServer.Set(CACHE_KEY_BIBLE, bible, duration)
+
+			return nil
 		})
 	}
 
-	if len(needUpdateData) != 0 {
-		if err := storeServer.MSet(needUpdateData); err != nil {
-			return err
-		}
+	if err := g.Wait(); err != nil {
+		return err
 	}
 
 	return response.Render(c, "frontend:index:/index.html", map[string]any{
