@@ -23,6 +23,7 @@ services:
 
   app1: &app
     build: .
+    restart: always
     command: ["./server", "app1", ":1323"]
     env_file: .env.docker
     volumes:
