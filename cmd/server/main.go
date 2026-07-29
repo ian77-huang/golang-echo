@@ -1,7 +1,13 @@
 package main
 
 import (
+	"context"
+	"errors"
+	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	appConfig "github.com/ian77-huang/golang-echo/internal/config"
 
@@ -37,8 +43,27 @@ func main() {
 		panic(err)
 	}
 
-	if err := e.Start(port); err != nil {
-		e.Logger.Error("failed to start server", "name", name, "error", err)
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
+	s := &http.Server{
+		Addr:    port,
+		Handler: e,
+	}
+
+	go func() {
+		if err := s.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			e.Logger.Error("failed to start server", "error", err)
+		}
+	}()
+
+	<-ctx.Done()
+
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	if err := s.Shutdown(shutdownCtx); err != nil {
+		e.Logger.Error("failed to stop server", "error", err)
 	}
 }
 
