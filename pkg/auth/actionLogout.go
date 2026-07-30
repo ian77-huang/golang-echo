@@ -11,9 +11,12 @@ func (a *Auth[TUser, TSession]) ActionLogout(c *echo.Context) (bool, error) {
 	}
 	resolver := config.Resolver
 
-	user := GetUser[TUser](c)
-
-	_, err = resolver.DeleteSession(user.ID)
+	// user := GetUser[TUser](c)
+	sess := GetSession[TSession](c)
+	sesss, err := resolver.DeleteSession(sess.ID)
+	if sesss == nil && err == nil {
+		return false, nil
+	}
 	if err != nil {
 		return false, err
 	}

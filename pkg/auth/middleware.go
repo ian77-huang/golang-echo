@@ -32,7 +32,7 @@ func (a *Auth[TUser, TSession]) Middleware() echo.MiddlewareFunc {
 								isValid = false
 							}
 						}
-						// sess.UserID
+
 						c.Set(CONTEXT_KEY_SESSION, sess)
 
 						user, err := resolver.GetUser(sess.UserID)

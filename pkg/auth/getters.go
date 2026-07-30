@@ -1,6 +1,8 @@
 package auth
 
-import "github.com/labstack/echo/v5"
+import (
+	"github.com/labstack/echo/v5"
+)
 
 func GetUser[TUser any](c *echo.Context) *User[TUser] {
 	if sess, ok := c.Get(CONTEXT_KEY_USER).(*User[TUser]); ok {

@@ -16,6 +16,11 @@ func (a *Auth[TUser, TSession]) ActionResetPassword(c *echo.Context, userId stri
 		return nil, NewError("error.auth.AccountLookupFailed", "error.auth - Account lookup Failed")
 	}
 
+	sess := GetSession[TSession](c)
+	if sess == nil {
+		return nil, NewError("error.auth.AccountLookupFailed", "error.auth - Account lookup Failed")
+	}
+
 	verify, err := VerifyPassword(oldPassword, user.Password)
 	if err != nil {
 		return nil, NewError("error.auth.AccountLookupFailed", "error.auth - Account lookup Failed")
@@ -34,7 +39,7 @@ func (a *Auth[TUser, TSession]) ActionResetPassword(c *echo.Context, userId stri
 		return nil, NewError("error.auth.login.failed", "error.auth - Auth login failed")
 	}
 
-	_, err = resolver.DeleteSession(user.ID)
+	_, err = resolver.DeleteSession(sess.ID)
 	if err != nil {
 		return nil, err
 	}

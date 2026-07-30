@@ -24,6 +24,9 @@ func (s *sessionService) UpdateSession(id string, expiresAt time.Time, sess *mod
 }
 func (s *sessionService) DeleteSession(id string) (*appAuth.Session[model.Session], error) {
 	sess, err := s.repo.DeleteSession(id)
+	if sess == nil {
+		return nil, nil
+	}
 	if err != nil {
 		return nil, err
 	}

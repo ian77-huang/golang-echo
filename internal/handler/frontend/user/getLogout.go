@@ -1,6 +1,8 @@
 package user
 
 import (
+	"log"
+
 	"github.com/ian77-huang/golang-echo/internal/response"
 	"github.com/ian77-huang/golang-echo/model"
 
@@ -14,11 +16,12 @@ func (h *UserHandler) GetLogout(c *echo.Context) error {
 	if auth == nil {
 		return response.ErrorInternalServerError(c, "auth context not found")
 	}
-
+	log.Printf("\n===== GetLogout 1 =====\n")
 	_, err := auth.ActionLogout(c)
+	log.Printf("\n===== GetLogout 2 =====\n")
 	if err != nil {
 		return response.ValidationErrorAuth(c, err)
 	}
-
+	log.Printf("\n===== GetLogout 3 =====\n")
 	return response.Redirect(c, "/user/login")
 }

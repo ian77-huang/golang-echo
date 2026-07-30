@@ -23,12 +23,8 @@ import (
 	echomiddleware "github.com/labstack/echo/v5/middleware"
 )
 
-type User struct {
-}
-type Session struct {
-}
-
 func main() {
+
 	name := os.Args[1]
 	if name == "" {
 		name = "echo"

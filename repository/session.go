@@ -1,11 +1,11 @@
 package repository
 
 import (
+	"errors"
 	"time"
 
-	"github.com/ian77-huang/golang-echo/pkg/cast"
-
 	"github.com/ian77-huang/golang-echo/model"
+	"gorm.io/gorm"
 )
 
 func (r *sessionRepository) CreateSession(id, userId string, expiresAt time.Time) (*model.Session, error) {
@@ -35,18 +35,23 @@ func (r *sessionRepository) UpdateSession(id string, expiresAt time.Time, sess *
 }
 
 func (r *sessionRepository) DeleteSession(id string) (*model.Session, error) {
-	deleteSession := &model.Session{UpdatedAt: time.Now(), Status: 1}
+	var sess *model.Session
+	txSess := r.db.Model(&model.Session{}).Where("id = ?", id).First(&sess)
 
-	ID, err := cast.StringToInt(id, 0)
-	if err != nil {
-		return nil, err
-	}
+	if txSess.Error != nil && !errors.Is(txSess.Error, gorm.ErrRecordNotFound) {
+		return nil, txSess.Error
+	} else {
+		if sess == nil {
+			return nil, nil
+		}
+		deleteSession := &model.Session{UpdatedAt: time.Now(), Status: 1}
+		tx := r.db.Model(&model.Session{}).Where("userId = ?", sess.UserID).Updates(deleteSession)
+		if tx.Error != nil {
+			return nil, tx.Error
+		}
 
-	tx := r.db.Model(&model.Session{}).Where("userId = ?", ID).Updates(deleteSession)
-	if tx.Error != nil {
-		return nil, tx.Error
+		return sess, nil
 	}
-	return deleteSession, nil
 }
 
 func (r *sessionRepository) GetSession(id string) (*model.Session, error) {
