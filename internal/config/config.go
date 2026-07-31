@@ -32,6 +32,6 @@ func Load() Config {
 			MinLengthAccount:  minLengthAccount,
 			MinLengthPassword: minLengthPassword,
 		},
-		MaxSizeUserProfileAvatar: cast.Megabytes(maxSizeUserProfileAvatar),
+		MaxSizeUserProfileAvatar: cast.MBToBytes(maxSizeUserProfileAvatar),
 	}
 }

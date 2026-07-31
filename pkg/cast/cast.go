@@ -22,6 +22,6 @@ func IntToString(val int) string {
 	return strconv.Itoa(val)
 }
 
-func Megabytes(val int) int {
+func MBToBytes(val int) int {
 	return 1024 * 1024 * val
 }
