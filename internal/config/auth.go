@@ -23,14 +23,14 @@ func Auth(p *AuthParameter, ss *store.StoreServer) *appAuth.Auth[model.User, mod
 		GetUser:            p.UserService.GetUser,
 		GetUserByAccount:   p.UserService.GetUserByAccount,
 		UpdateUserPassword: p.UserService.UpdateUserPassword,
-		CreateSession: func(id, userId string, expiresAt time.Time) (*appAuth.Session[model.Session], error) {
-			sess, err := p.SessionService.CreateSession(id, userId, expiresAt)
+		CreateSession: func(sess *appAuth.Session[model.Session]) (*appAuth.Session[model.Session], error) {
+			sess, err := p.SessionService.CreateSession(sess.ID, sess.UserID, sess.ExpiresAt)
 			if err != nil {
 				return nil, err
 			}
 
 			if ss != nil {
-				ss.Set(CACHE_KEY_SESSION_ID+id, sess, time.Until(sess.Data.ExpiresAt))
+				ss.Set(CACHE_KEY_SESSION_ID+sess.ID, sess, time.Until(sess.Data.ExpiresAt))
 			}
 
 			return sess, nil

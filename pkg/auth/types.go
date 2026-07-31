@@ -50,7 +50,7 @@ type Resolver[TUser any, TSession any] struct {
 	UpdateUserPassword func(id string, passwordHash string) (*User[TUser], error)
 
 	GetSession    func(id string) (*Session[TSession], error)
-	CreateSession func(id string, userId string, expiresAt time.Time) (*Session[TSession], error)
+	CreateSession func(sess *Session[TSession]) (*Session[TSession], error)
 	UpdateSession func(id string, expiresAt time.Time, sess *TSession) (*Session[TSession], error)
 	DeleteSession func(id string) (*Session[TSession], error)
 }

@@ -112,9 +112,9 @@ func TestActionLoginRejectsMissingUser(t *testing.T) {
 func TestActionRegisterCreatesSessionAndCookie(t *testing.T) {
 	created := false
 	auth := New(&Config[struct{}, struct{}]{SecretKey: "test-secret", Resolver: testResolver(func(r *Resolver[struct{}, struct{}]) {
-		r.CreateSession = func(id, userID string, expires time.Time) (*Session[struct{}], error) {
-			created = id != "" && userID == "user-1" && expires.After(time.Now())
-			return &Session[struct{}]{ID: id, UserID: userID, ExpiresAt: expires}, nil
+		r.CreateSession = func(sess *Session[struct{}]) (*Session[struct{}], error) {
+			created = sess.ID != "" && sess.UserID == "user-1" && sess.ExpiresAt.After(time.Now())
+			return &Session[struct{}]{ID: sess.ID, UserID: sess.UserID, ExpiresAt: sess.ExpiresAt}, nil
 		}
 	})})
 	e := echo.New()
@@ -294,7 +294,7 @@ func TestCreateUserAndRegisterReturnResolverErrors(t *testing.T) {
 
 func TestSessionErrorsReturnErrors(t *testing.T) {
 	auth := New(&Config[struct{}, struct{}]{SecretKey: "test-secret", Resolver: testResolver(func(r *Resolver[struct{}, struct{}]) {
-		r.CreateSession = func(string, string, time.Time) (*Session[struct{}], error) {
+		r.CreateSession = func(sess *Session[struct{}]) (*Session[struct{}], error) {
 			return nil, errors.New("session write failed")
 		}
 	})})
@@ -377,7 +377,7 @@ func TestActionMethodsReturnConfigurationAndSessionErrors(t *testing.T) {
 	}
 	auth := New(&Config[struct{}, struct{}]{SecretKey: "test-secret", Resolver: testResolver(func(r *Resolver[struct{}, struct{}]) {
 		r.GetUserByAccount = func(string) (*User[struct{}], error) { return &User[struct{}]{ID: "u", Password: hash}, nil }
-		r.CreateSession = func(string, string, time.Time) (*Session[struct{}], error) { return nil, errors.New("write") }
+		r.CreateSession = func(sess *Session[struct{}]) (*Session[struct{}], error) { return nil, errors.New("write") }
 	})})
 	if _, err := auth.ActionRegister(c, "u", "p"); err == nil {
 		t.Fatal("expected register session error")
@@ -411,7 +411,9 @@ func TestMiddlewareReturnsAndHandlesFailureStates(t *testing.T) {
 		t.Fatal(err)
 	}
 	cookie := &http.Cookie{Name: DEFAULT_SESSION_COOKIE_NAME, Value: token}
-	auth.config.Resolver.GetSession = func(string) (*Session[struct{}], error) { return nil, errors.New("missing session") }
+	auth.config.Resolver.GetSession = func(id string) (*Session[struct{}], error) {
+		return nil, errors.New("missing session")
+	}
 	if err := auth.Middleware()(func(*echo.Context) error { return nil })(newContext(cookie)); err != nil {
 		t.Fatal(err)
 	}
@@ -475,9 +477,11 @@ func testResolver(update func(*Resolver[struct{}, struct{}])) *Resolver[struct{}
 		CreateUser:       func(string, string) (*User[struct{}], error) { return &User[struct{}]{ID: "user-1"}, nil },
 		GetUser:          func(id string) (*User[struct{}], error) { return &User[struct{}]{ID: id}, nil },
 		GetUserByAccount: func(string) (*User[struct{}], error) { return &User[struct{}]{ID: "user-1"}, nil },
-		GetSession:       func(id string) (*Session[struct{}], error) { return &Session[struct{}]{ID: id}, nil },
-		CreateSession: func(id, userID string, expires time.Time) (*Session[struct{}], error) {
-			return &Session[struct{}]{ID: id, UserID: userID, ExpiresAt: expires}, nil
+		GetSession: func(id string) (*Session[struct{}], error) {
+			return &Session[struct{}]{ID: id}, nil
+		},
+		CreateSession: func(sess *Session[struct{}]) (*Session[struct{}], error) {
+			return &Session[struct{}]{ID: sess.ID, UserID: sess.UserID, ExpiresAt: sess.ExpiresAt}, nil
 		},
 		UpdateSession: func(id string, expires time.Time, _ *struct{}) (*Session[struct{}], error) {
 			return &Session[struct{}]{ID: id, ExpiresAt: expires}, nil

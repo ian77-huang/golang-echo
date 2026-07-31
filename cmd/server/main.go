@@ -17,6 +17,7 @@ import (
 	"github.com/ian77-huang/golang-echo/pkg/renderer"
 	"github.com/ian77-huang/golang-echo/pkg/store"
 	"github.com/ian77-huang/golang-echo/pkg/validator"
+	"github.com/ian77-huang/golang-echo/pkg/ws"
 	"github.com/ian77-huang/golang-echo/service"
 
 	"github.com/labstack/echo/v5"
@@ -24,6 +25,7 @@ import (
 )
 
 func main() {
+	wsHub := ws.NewWebSocketHub()
 
 	name := os.Args[1]
 	if name == "" {
@@ -38,6 +40,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	e.Use(ws.Middleware(wsHub))
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()

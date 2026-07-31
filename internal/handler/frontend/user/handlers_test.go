@@ -71,8 +71,9 @@ func TestGetLogoutDeletesSessionAndRedirects(t *testing.T) {
 		},
 		GetSession: func(id string) (*appAuth.Session[model.Session], error) {
 			return &appAuth.Session[model.Session]{ID: id}, nil
-		}, CreateSession: func(id, userID string, expires time.Time) (*appAuth.Session[model.Session], error) {
-			return &appAuth.Session[model.Session]{ID: id, UserID: userID, ExpiresAt: expires}, nil
+		},
+		CreateSession: func(sess *appAuth.Session[model.Session]) (*appAuth.Session[model.Session], error) {
+			return &appAuth.Session[model.Session]{ID: sess.ID, UserID: sess.UserID, ExpiresAt: sess.ExpiresAt}, nil
 		},
 		UpdateSession: func(id string, expires time.Time, _ *model.Session) (*appAuth.Session[model.Session], error) {
 			return &appAuth.Session[model.Session]{ID: id, ExpiresAt: expires}, nil
@@ -104,8 +105,9 @@ func TestGetLogoutActionLogoutError(t *testing.T) {
 		},
 		GetSession: func(id string) (*appAuth.Session[model.Session], error) {
 			return &appAuth.Session[model.Session]{ID: id}, nil
-		}, CreateSession: func(id, userID string, expires time.Time) (*appAuth.Session[model.Session], error) {
-			return &appAuth.Session[model.Session]{ID: id, UserID: userID, ExpiresAt: expires}, nil
+		},
+		CreateSession: func(sess *appAuth.Session[model.Session]) (*appAuth.Session[model.Session], error) {
+			return &appAuth.Session[model.Session]{ID: sess.ID, UserID: sess.UserID, ExpiresAt: sess.ExpiresAt}, nil
 		},
 		UpdateSession: func(id string, expires time.Time, _ *model.Session) (*appAuth.Session[model.Session], error) {
 			return &appAuth.Session[model.Session]{ID: id, ExpiresAt: expires}, nil

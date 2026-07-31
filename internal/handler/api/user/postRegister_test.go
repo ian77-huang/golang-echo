@@ -30,8 +30,8 @@ func TestPostRegisterUsesAuthFromMiddleware(t *testing.T) {
 			CreateUser: func(account string, password string) (*appAuth.User[model.User], error) {
 				return &appAuth.User[model.User]{ID: "user-1"}, nil
 			},
-			CreateSession: func(id string, userID string, expiresAt time.Time) (*appAuth.Session[model.Session], error) {
-				return &appAuth.Session[model.Session]{ID: id, ExpiresAt: expiresAt}, nil
+			CreateSession: func(sess *appAuth.Session[model.Session]) (*appAuth.Session[model.Session], error) {
+				return &appAuth.Session[model.Session]{ID: sess.ID, ExpiresAt: sess.ExpiresAt}, nil
 			},
 			GetSession: func(id string) (*appAuth.Session[model.Session], error) {
 				return &appAuth.Session[model.Session]{ID: id}, nil
