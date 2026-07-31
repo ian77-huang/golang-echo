@@ -32,6 +32,7 @@ type UserRepository interface {
 type SessionRepository interface {
 	CreateSession(id, userId string, expiresAt time.Time) (*model.Session, error)
 	UpdateSession(id string, expiresAt time.Time, sess *model.Session) (*model.Session, error)
+	DeleteSessionUserId(userId string) error
 	DeleteSession(id string) (*model.Session, error)
 	GetSession(id string) (*model.Session, error)
 }

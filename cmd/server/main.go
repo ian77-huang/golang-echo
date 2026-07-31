@@ -25,7 +25,7 @@ import (
 )
 
 func main() {
-	wsHub := ws.NewWebSocketHub()
+	wsHub := ws.NewHub()
 
 	name := os.Args[1]
 	if name == "" {

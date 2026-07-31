@@ -32,6 +32,13 @@ func (s *sessionService) DeleteSession(id string) (*appAuth.Session[model.Sessio
 	}
 	return (&appAuth.Session[model.Session]{ID: sess.ID, UserID: sess.UserID, ExpiresAt: sess.ExpiresAt, Data: sess}), nil
 }
+func (s *sessionService) DeleteSessionUserId(userId string) error {
+	err := s.repo.DeleteSessionUserId(userId)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 func (s *sessionService) GetSession(id string) (*appAuth.Session[model.Session], error) {
 	sess, err := s.repo.GetSession(id)
 	if err != nil {

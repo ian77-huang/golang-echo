@@ -1,6 +1,8 @@
 package user
 
 import (
+	"log"
+
 	"github.com/ian77-huang/golang-echo/internal/response"
 	"github.com/ian77-huang/golang-echo/internal/shared"
 	"github.com/ian77-huang/golang-echo/model"
@@ -37,7 +39,10 @@ func (h *ApiUserHandler) PostLogin(c *echo.Context) error {
 	if err != nil {
 		return err
 	}
+	log.Printf("\n====== user = %+v ======\n", user)
+	log.Printf("\n====== user Data = %+v ======\n", user.Data)
 	if !user.Data.IsActive {
+		log.Printf("\n====== user 1 ======\n")
 		sessionService.DeleteSession(user.ID)
 		return response.ErrorInternalServerError(c, "user.account_is_disabled")
 	}

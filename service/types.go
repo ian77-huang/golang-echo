@@ -31,6 +31,7 @@ type SessionService interface {
 	CreateSession(id, userId string, expiresAt time.Time) (*appAuth.Session[model.Session], error)
 	UpdateSession(id string, expiresAt time.Time, sess *model.Session) (*appAuth.Session[model.Session], error)
 	DeleteSession(id string) (*appAuth.Session[model.Session], error)
+	DeleteSessionUserId(userId string) error
 	GetSession(id string) (*appAuth.Session[model.Session], error)
 }
 type sessionService struct {

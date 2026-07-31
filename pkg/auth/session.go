@@ -30,7 +30,7 @@ func (a *Auth[TUser, TSession]) createSession(c *echo.Context, userId string) (b
 
 	sessionId := a.GenerateID(sessionToken)
 
-	if _, err := resolver.DeleteSession(sessionId); err != nil {
+	if err := resolver.DeleteSessionUserId(userId); err != nil {
 		return false, err
 	}
 

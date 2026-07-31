@@ -53,6 +53,15 @@ func (r *sessionRepository) DeleteSession(id string) (*model.Session, error) {
 		return sess, nil
 	}
 }
+func (r *sessionRepository) DeleteSessionUserId(userId string) error {
+	deleteSession := &model.Session{UpdatedAt: time.Now(), Status: 1}
+	tx := r.db.Model(&model.Session{}).Where("userId = ?", userId).Updates(deleteSession)
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	return nil
+}
 
 func (r *sessionRepository) GetSession(id string) (*model.Session, error) {
 	getSession := &model.Session{}

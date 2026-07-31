@@ -1,7 +1,6 @@
 package config
 
 import (
-	"log"
 	"net/http"
 	"slices"
 	"strings"
@@ -55,11 +54,9 @@ func Auth(p *AuthParameter, ss *store.StoreServer) *appAuth.Auth[model.User, mod
 			var sess *appAuth.Session[model.Session]
 			var err error
 
-			log.Printf("\n=====DeleteSession 1 =======\n")
 			if sess, err = p.SessionService.DeleteSession(id); err != nil {
 				return nil, err
 			}
-			log.Printf("\n=====DeleteSession = %+v=======\n", sess)
 			if ss != nil {
 				if err := ss.Delete(CACHE_KEY_SESSION_ID + sess.ID); err != nil {
 					return nil, err
@@ -67,6 +64,12 @@ func Auth(p *AuthParameter, ss *store.StoreServer) *appAuth.Auth[model.User, mod
 			}
 
 			return sess, nil
+		},
+		DeleteSessionUserId: func(userId string) error {
+			if err := p.SessionService.DeleteSessionUserId(userId); err != nil {
+				return err
+			}
+			return nil
 		},
 		GetSession: func(id string) (*appAuth.Session[model.Session], error) {
 			var sess *appAuth.Session[model.Session]

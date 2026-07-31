@@ -16,6 +16,7 @@ type WebSocketPacket struct {
 type webSocketHub struct {
 	clients    map[string]*websocket.Conn
 	broadcast  chan []byte
+	single     chan *MessagePacket
 	register   chan *WebSocketPacket
 	unregister chan *WebSocketPacket
 	mu         sync.Mutex
@@ -23,47 +24,49 @@ type webSocketHub struct {
 
 type WebSocketHub interface {
 	Run()
-	New(c *echo.Context) error
+	New(c *echo.Context, ID string, callbackMessage func(messageType int, p []byte)) error
+	Single(p *MessagePacket)
 }
 
-func NewWebSocketUpgrader() *websocket.Upgrader {
+type MessagePacket struct {
+	ID      string
+	Message []byte
+}
+
+func upgrader() *websocket.Upgrader {
 	return &websocket.Upgrader{}
 }
 
-func NewWebSocketHub() WebSocketHub {
+func NewHub() WebSocketHub {
 	return &webSocketHub{
 		clients:    make(map[string]*websocket.Conn),
 		broadcast:  make(chan []byte),
+		single:     make(chan *MessagePacket),
 		register:   make(chan *WebSocketPacket),
 		unregister: make(chan *WebSocketPacket),
 	}
 }
 
-func (h *webSocketHub) New(c *echo.Context) error {
-	conn, err := NewWebSocketUpgrader().Upgrade(c.Response(), c.Request(), nil)
+func (h *webSocketHub) New(c *echo.Context, ID string, callbackMessage func(messageType int, p []byte)) error {
+	conn, err := upgrader().Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
 		return err
 	}
 	defer conn.Close()
 
-	// 註冊 Client
-	h.register <- &WebSocketPacket{ID: "q22312", Conn: conn}
+	h.register <- &WebSocketPacket{ID: ID, Conn: conn}
 
-	// 處理離開時的清除機制與關閉連線
 	defer func() {
-		h.unregister <- &WebSocketPacket{ID: "q22312", Conn: conn}
+		h.unregister <- &WebSocketPacket{ID: ID, Conn: conn}
 		conn.Close()
 	}()
 
-	// 持續讀取該 Client 發送過來的訊息
 	for {
-		_, message, err := conn.ReadMessage()
+		messageType, message, err := conn.ReadMessage()
 		if err != nil {
-			// 斷開連線或發生錯誤時跳出迴圈
 			break
 		}
-		// 收到任何訊息，丟進廣播 channel 發給所有人
-		h.broadcast <- message
+		callbackMessage(messageType, message)
 	}
 
 	return nil
@@ -89,6 +92,17 @@ func (h *webSocketHub) Run() {
 				h.mu.Unlock()
 				log.Println("用戶離開，目前連線數：", len(h.clients))
 
+			case packet := <-h.single:
+				h.mu.Lock()
+
+				if conn, ok := h.clients[packet.ID]; ok {
+					err := conn.WriteMessage(websocket.TextMessage, packet.Message)
+					if err != nil {
+						log.Println("發送失敗，關閉連線：", err)
+					}
+				}
+
+				h.mu.Unlock()
 			case message := <-h.broadcast:
 				h.mu.Lock()
 				// 將訊息發送給所有在線的 client
@@ -105,6 +119,10 @@ func (h *webSocketHub) Run() {
 			}
 		}
 	}()
+}
+
+func (h *webSocketHub) Single(p *MessagePacket) {
+	h.single <- p
 }
 
 // func (h *webSocketHub) Run() {
