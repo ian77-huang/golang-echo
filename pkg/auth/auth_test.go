@@ -126,7 +126,9 @@ func TestActionRegisterCreatesSessionAndCookie(t *testing.T) {
 }
 
 func TestMiddlewareSetsAuthForGuestRequest(t *testing.T) {
-	auth := New(&Config[struct{}, struct{}]{SecretKey: "test-secret", Resolver: testResolver(nil)})
+	auth := New(&Config[struct{}, struct{}]{SecretKey: "test-secret", Resolver: testResolver(nil), ValidateRoute: func(*echo.Context, *ValidateRule[struct{}]) (bool, error) {
+		return true, nil
+	}})
 	e := echo.New()
 	c := e.NewContext(httptest.NewRequest(http.MethodGet, "/", nil), httptest.NewRecorder())
 	called := false
@@ -162,6 +164,7 @@ func TestSessionRefreshAndLogout(t *testing.T) {
 		t.Fatalf("refresh: ok=%v updated=%v cookies=%#v err=%v", ok, updated, rec.Result().Cookies(), err)
 	}
 	c.Set(CONTEXT_KEY_USER, &User[struct{}]{ID: "user-1"})
+	c.Set(CONTEXT_KEY_SESSION, &Session[struct{}]{ID: "user-1"})
 	ok, err = auth.ActionLogout(c)
 	if err != nil || !ok || !deleted {
 		t.Fatalf("logout: ok=%v deleted=%v err=%v", ok, deleted, err)
@@ -212,7 +215,9 @@ func TestMiddlewareLoadsValidSession(t *testing.T) {
 			return &Session[struct{}]{ID: id, UserID: "user-1", ExpiresAt: time.Now().Add(20 * 24 * time.Hour)}, nil
 		}
 		r.GetUser = func(id string) (*User[struct{}], error) { return &User[struct{}]{ID: id}, nil }
-	})})
+	}), ValidateRoute: func(*echo.Context, *ValidateRule[struct{}]) (bool, error) {
+		return true, nil
+	}})
 	token, err := auth.createToken("token-id", time.Now().Add(time.Hour))
 	if err != nil {
 		t.Fatal(err)
@@ -338,6 +343,7 @@ func TestAuthActionErrorBranches(t *testing.T) {
 	})
 	c := context()
 	c.Set(CONTEXT_KEY_USER, &User[struct{}]{ID: "u"})
+	c.Set(CONTEXT_KEY_SESSION, &Session[struct{}]{ID: "u"})
 	if ok, err := auth.ActionLogout(c); ok || err == nil {
 		t.Fatal("expected delete error")
 	}
@@ -401,7 +407,9 @@ func TestMiddlewareReturnsAndHandlesFailureStates(t *testing.T) {
 	if err := auth.Middleware()(func(*echo.Context) error { return nil })(newContext(nil)); err == nil {
 		t.Fatal("expected middleware configuration error")
 	}
-	auth = New(&Config[struct{}, struct{}]{SecretKey: "test-secret", Resolver: testResolver(nil)})
+	auth = New(&Config[struct{}, struct{}]{SecretKey: "test-secret", Resolver: testResolver(nil), ValidateRoute: func(*echo.Context, *ValidateRule[struct{}]) (bool, error) {
+		return true, nil
+	}})
 	called := false
 	if err := auth.Middleware()(func(*echo.Context) error { called = true; return nil })(newContext(&http.Cookie{Name: DEFAULT_SESSION_COOKIE_NAME, Value: "not-a-jwt"})); err != nil || !called {
 		t.Fatalf("invalid token: called=%v err=%v", called, err)
@@ -487,6 +495,7 @@ func testResolver(update func(*Resolver[struct{}, struct{}])) *Resolver[struct{}
 			return &Session[struct{}]{ID: id, ExpiresAt: expires}, nil
 		},
 		DeleteSession: func(id string) (*Session[struct{}], error) { return &Session[struct{}]{ID: id}, nil },
+		DeleteSessionUserId: func(string) error { return nil },
 	}
 	if update != nil {
 		update(r)
@@ -552,7 +561,9 @@ func TestMiddlewareSessionRefreshFails(t *testing.T) {
 			return &Session[struct{}]{ID: id, UserID: "user-1", ExpiresAt: time.Now().Add(5 * 24 * time.Hour)}, nil
 		}
 		r.GetUser = func(id string) (*User[struct{}], error) { return &User[struct{}]{ID: id}, nil }
-	})})
+	}), ValidateRoute: func(*echo.Context, *ValidateRule[struct{}]) (bool, error) {
+		return true, nil
+	}})
 	auth.config.Resolver.UpdateSession = nil
 
 	token, err := auth.createToken("token", time.Now().Add(20*24*time.Hour))

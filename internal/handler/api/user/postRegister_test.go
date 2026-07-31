@@ -48,7 +48,11 @@ func TestPostRegisterUsesAuthFromMiddleware(t *testing.T) {
 			DeleteSession: func(id string) (*appAuth.Session[model.Session], error) {
 				return &appAuth.Session[model.Session]{ID: id}, nil
 			},
+			DeleteSessionUserId: func(string) error { return nil },
 		}),
+		ValidateRoute: func(*echo.Context, *appAuth.ValidateRule[model.User]) (bool, error) {
+			return true, nil
+		},
 	})
 
 	body := bytes.NewBufferString(`{"account":"tester","password":"password123","confirmPassword":"password123"}`)

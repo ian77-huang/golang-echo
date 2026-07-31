@@ -5,12 +5,15 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 	"time"
 
 	"github.com/ian77-huang/golang-echo/model"
 	appAuth "github.com/ian77-huang/golang-echo/pkg/auth"
 	"github.com/labstack/echo/v5"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 type captureRenderer struct {
@@ -27,7 +30,18 @@ func (r *captureRenderer) Render(_ *echo.Context, _ io.Writer, name string, data
 func TestRenderHandlers(t *testing.T) {
 	e := echo.New()
 	r := &captureRenderer{}
-	h := &UserHandler{}
+	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := db.AutoMigrate(&model.User{}, &model.UserProfile{}); err != nil {
+		t.Fatal(err)
+	}
+	user := &model.User{Account: "tester"}
+	if err := db.Create(user).Error; err != nil {
+		t.Fatal(err)
+	}
+	h := &UserHandler{DB: db}
 	e.Renderer = r
 	for _, tt := range []struct {
 		name    string
@@ -39,9 +53,33 @@ func TestRenderHandlers(t *testing.T) {
 				t.Setenv("USER_PASSWORD_MIN_LENGTH", "8")
 			}
 			rec := httptest.NewRecorder()
-			err := tt.handler(e.NewContext(httptest.NewRequest(http.MethodGet, "/user/"+tt.name, nil), rec))
+			c := e.NewContext(httptest.NewRequest(http.MethodGet, "/user/"+tt.name, nil), rec)
+			if tt.name == "index" {
+				c.Set(appAuth.CONTEXT_KEY_USER, &appAuth.User[model.User]{ID: strconv.Itoa(user.Id)})
+			}
+			err := tt.handler(c)
 			if err != nil || rec.Code != http.StatusOK || r.name == "" {
 				t.Fatalf("render: name=%q status=%d err=%v", r.name, rec.Code, err)
+			}
+		})
+	}
+}
+
+func TestGetProfileAndResetPasswordRender(t *testing.T) {
+	e := echo.New()
+	r := &captureRenderer{}
+	e.Renderer = r
+	h := &UserHandler{}
+	for _, tt := range []struct {
+		name    string
+		handler echo.HandlerFunc
+		want    string
+	}{{"profile", h.GetProfile, "frontend:user:/profile.html"}, {"reset-password", h.GetResetPassword, "frontend:user:/reset-password.html"}} {
+		t.Run(tt.name, func(t *testing.T) {
+			rec := httptest.NewRecorder()
+			c := e.NewContext(httptest.NewRequest(http.MethodGet, "/user/"+tt.name, nil), rec)
+			if err := tt.handler(c); err != nil || rec.Code != http.StatusOK || r.name != tt.want {
+				t.Fatalf("render: name=%q want=%q status=%d err=%v", r.name, tt.want, rec.Code, err)
 			}
 		})
 	}
@@ -87,6 +125,7 @@ func TestGetLogoutDeletesSessionAndRedirects(t *testing.T) {
 	c := e.NewContext(httptest.NewRequest(http.MethodGet, "/user/logout", nil), rec)
 	c.Set(appAuth.CONTEXT_KEY_AUTH, auth)
 	c.Set(appAuth.CONTEXT_KEY_USER, &appAuth.User[model.User]{ID: "user-1"})
+	c.Set(appAuth.CONTEXT_KEY_SESSION, &appAuth.Session[model.Session]{ID: "user-1"})
 	if err := h.GetLogout(c); err != nil || !deleted || rec.Code != http.StatusFound {
 		t.Fatalf("deleted=%v status=%d err=%v", deleted, rec.Code, err)
 	}
@@ -120,6 +159,7 @@ func TestGetLogoutActionLogoutError(t *testing.T) {
 	c := e.NewContext(httptest.NewRequest(http.MethodGet, "/user/logout", nil), rec)
 	c.Set(appAuth.CONTEXT_KEY_AUTH, auth)
 	c.Set(appAuth.CONTEXT_KEY_USER, &appAuth.User[model.User]{ID: "user-1"})
+	c.Set(appAuth.CONTEXT_KEY_SESSION, &appAuth.Session[model.Session]{ID: "user-1"})
 
 	err := h.GetLogout(c)
 	if err == nil {

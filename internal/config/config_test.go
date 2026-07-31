@@ -50,6 +50,9 @@ func TestI18nAndRendererTemplate(t *testing.T) {
 	if err := translator.Middleware()(func(c *echo.Context) error { return nil })(c); err != nil {
 		t.Fatal(err)
 	}
+	if err := Middleware(&ConfigMiddleware{})(func(c *echo.Context) error { return nil })(c); err != nil {
+		t.Fatal(err)
+	}
 	template := RendererTemplate()
 	data := template.SharedData(c, []string{"frontend"})
 	if template.BasePath != "internal/views" || data["Lang"] == "" || data["Menus"] == nil {
@@ -89,7 +92,7 @@ func TestAuthBuildsWorkingResolvers(t *testing.T) {
 	if err := auth.Middleware()(func(c *echo.Context) error { return nil })(e.NewContext(requestWithCookie(loginRec.Result().Cookies()[0]), httptest.NewRecorder())); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := auth.ActionLogout(contextWithUser(e, auth, id)); err != nil {
+	if _, err := auth.ActionLogout(contextWithUser(e, auth, id, saved.ID)); err != nil {
 		t.Fatal(err)
 	}
 	sessionRepository := repository.NewSessionRepository(db)
@@ -129,6 +132,7 @@ func TestAuthResolversPropagateDatabaseErrors(t *testing.T) {
 	}
 	c := echo.New().NewContext(httptest.NewRequest(http.MethodPost, "/", nil), httptest.NewRecorder())
 	c.Set(appAuth.CONTEXT_KEY_USER, &appAuth.User[model.User]{ID: "1"})
+	c.Set(appAuth.CONTEXT_KEY_SESSION, &appAuth.Session[model.Session]{ID: "1"})
 	if _, err := auth.ActionLogout(c); err == nil {
 		t.Fatal("expected delete session error")
 	}
@@ -139,9 +143,10 @@ func requestWithCookie(cookie *http.Cookie) *http.Request {
 	req.AddCookie(cookie)
 	return req
 }
-func contextWithUser(e *echo.Echo, auth *appAuth.Auth[model.User, model.Session], id string) *echo.Context {
+func contextWithUser(e *echo.Echo, auth *appAuth.Auth[model.User, model.Session], id, sessionID string) *echo.Context {
 	c := e.NewContext(httptest.NewRequest(http.MethodPost, "/", nil), httptest.NewRecorder())
 	c.Set(appAuth.CONTEXT_KEY_USER, &appAuth.User[model.User]{ID: id})
+	c.Set(appAuth.CONTEXT_KEY_SESSION, &appAuth.Session[model.Session]{ID: sessionID})
 	c.Set(appAuth.CONTEXT_KEY_AUTH, auth)
 	return c
 }
